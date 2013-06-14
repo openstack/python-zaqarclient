@@ -1,20 +1,18 @@
-# Packaging
-distribute>=0.6.24
-
 # Unit testing
 discover
-fixtures
-mox
+fixtures>=0.3.12
+mock>=0.8.0
+mox>=0.5.3
 python-subunit
-testrepository
-testtools
-
+testrepository>=0.0.13
+testtools>=0.9.32
 # Test runner
 nose
 nose-exclude
-openstack.nose_plugin
-
+openstack.nose_plugin>=0.7
 # Metrics and style
-coverage
-flake8
-hacking
+coverage>=3.6
+flake8==2.0
+hacking>=0.5.6,<0.6
+pep8==1.4.5
+pyflakes==0.7.2

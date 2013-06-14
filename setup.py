@@ -15,34 +15,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import setuptools
 
-name = 'python-marconiclient'
-
-
-def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setuptools.setup(
-    name=name,
-    version="0.1",
-    description='Client Library for OpenStack Marconi Queueing API',
-    long_description=read('README.rst'),
-    url='https://launchpad.net/python-marconiclient',
-    license='Apache License (2.0)',
-    author='OpenStack, LLC.',
-    author_email='openstack-admins@lists.launchpad.net',
-    packages=setuptools.find_packages(exclude=['tests', 'tests.*']),
-    classifiers=[
-        'Development Status :: 4 - Beta',
-        'Environment :: Console',
-        'Environment :: OpenStack',
-        'Intended Audience :: Developers',
-        'Intended Audience :: Information Technology',
-        'License :: OSI Approved :: Apache Software License',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2.7',
-        'Environment :: No Input/Output (Daemon)',
-    ],
-)
+    setup_requires=['d2to1>=0.2.10,<0.3', 'pbr>=0.5,<0.6'],
+    d2to1=True)
