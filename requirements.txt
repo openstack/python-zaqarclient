@@ -1,2 +1,6 @@
 d2to1>=0.2.10,<0.3
 pbr>=0.5.16,<0.6
+six>=1.3.0
+
+-f http://tarballs.openstack.org/oslo.config/oslo.config-1.2.0a3.tar.gz#egg=oslo.config-1.2.0a3
+oslo.config>=1.2.0a3
