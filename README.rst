@@ -1,8 +1,43 @@
-python-marconiclient
-====================
+*********************
+Python Marconi Client
+*********************
 
+:version: 0.1.0
+:Wiki: `Marconi Wiki`_
+:Trello: `Marconi Trello`_
+:Review: `Code Review`_
 :Design: `Client Wiki`_
+:IRC: #openstack-marconi @ freenode
 
-TODO: Put some useful information here.
+Welcome to the `Marconi`_ Client Python bindings project!
 
+**Table of Contents**
+
+.. contents::
+    :local:
+    :depth: 2
+    :backlinks: none
+
+============
+Installation
+============
+
+Until this project is on `PyPi`_, the official way to install these bindings are to::
+
+    pip install git+https://github.com/cabrera/python-marconiclient.git
+
+============
+Contributing
+============
+
+The primary maintainer of this project is: TBA
+
+Be sure to reference the `HACKING`_ file for all the details.
+
+.. _Marconi: https://github.com/stackforge/marconi
+.. _PyPi: https://pypi.python.org
+.. _HACKING: https://github.com/stackforge/python-marconiclient/tree/master/HACKING.rst
+.. _Marconi Wiki: https://wiki.openstack.org/wiki/Marconi
+.. _Marconi Trello: https://trello.com/board/openstack-marconi/511403287d138cd6200078e0
+.. _Code Review: https://review.openstack.org/#/q/status:open+project:stackforge/python-marconiclient,n,z
 .. _Client Wiki: https://wiki.openstack.org/wiki/Python_Marconi_Client
