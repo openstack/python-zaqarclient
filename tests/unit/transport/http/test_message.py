@@ -16,8 +16,8 @@ import unittest
 
 import mock
 
+from marconiclient.queues.transport.http import message
 from marconiclient.tests.mock import message as mock_message
-from marconiclient.transport.http import message
 
 
 HREF = '/v1/queue/dgq/messages/my_msg_is_chocolate'
