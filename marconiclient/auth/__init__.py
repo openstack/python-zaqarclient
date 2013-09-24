@@ -13,13 +13,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 from oslo.config import cfg
+import six
 
 from marconiclient.auth import base
+
+if not six.PY3:
+    from marconiclient.auth import keystone
+else:
+    keystone = None
+    # NOTE(flaper87): Replace with logging
+    print('Keystone auth does not support Py3K')
 
 _BACKENDS = {
     'noauth': base.NoAuth,
 }
+
+if keystone:
+    _BACKENDS['keystone'] = keystone.KeystoneAuth
 
 
 def _register_opts(conf):
