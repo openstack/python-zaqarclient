@@ -44,5 +44,5 @@ class TestBase(testtools.TestCase):
         All overrides are automatically cleared at the end of the current
         test by the tearDown() method.
         """
-        for k, v in kw.iteritems():
+        for k, v in kw.items():
             self.conf.set_override(k, v, group)
