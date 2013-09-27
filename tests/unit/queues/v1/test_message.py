@@ -16,7 +16,7 @@ import unittest
 
 import mock
 
-from marconiclient.queues.transport.http import message
+from marconiclient.queues.v1 import message
 from marconiclient.tests.mock import message as mock_message
 
 
