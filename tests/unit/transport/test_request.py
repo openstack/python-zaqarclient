@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
+
 from marconiclient.tests import base
 from marconiclient.transport import request
 
@@ -46,3 +48,14 @@ class TestRequest(base.TestBase):
         req = request.Request(endpoint=HREF, operation='delete_queue',
                               params=dict(queue_name='xy', WAT='!?'))
         self.assertEqual("Invalid params: 'WAT'", req.validate())
+
+    def test_prepare_request(self):
+        req = request.prepare_request(self.conf)
+        self.assertTrue(isinstance(req, request.Request))
+        self.assertIsNone(req.content)
+
+    def test_prepare_request_with_data(self):
+        data = {"data": "tons of GBs"}
+        req = request.prepare_request(self.conf, data)
+        self.assertTrue(isinstance(req, request.Request))
+        self.assertEquals(req.content, json.dumps(data))
