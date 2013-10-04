@@ -15,27 +15,14 @@
 
 from marconiclient import errors
 from marconiclient.tests import base
-from marconiclient.transport import api
-
-
-class FakeApi(api.Api):
-    schema = {
-        'test_operation': {
-            'properties': {
-                'name': {'type': 'string'}
-            },
-
-            'additionalProperties': False,
-            'required': ['name']
-        }
-    }
+from marconiclient.tests.transport import api as tapi
 
 
 class TestApi(base.TestBase):
 
     def setUp(self):
         super(TestApi, self).setUp()
-        self.api = FakeApi()
+        self.api = tapi.FakeApi()
 
     def test_valid_params(self):
         self.assertTrue(self.api.validate('test_operation',

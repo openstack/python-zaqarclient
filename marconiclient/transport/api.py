@@ -24,6 +24,26 @@ class Api(object):
     schema = {}
     validators = {}
 
+    def get_schema(self, operation):
+        """Returns the schema for an operation
+
+        :param operation: Operation for which params need
+            to be validated.
+        :type operation: `six.text_type`
+
+        :returns: Operation's schema
+        :rtype: dict
+
+        :raises: `errors.InvalidOperation` if the operation
+            does not exist
+        """
+        try:
+            return self.schema[operation]
+        except KeyError:
+            # TODO(flaper87): gettext support
+            msg = '{0} is not a valid operation'.format(operation)
+            raise errors.InvalidOperation(msg)
+
     def validate(self, operation, params):
         """Validates the request data
 
@@ -44,13 +64,8 @@ class Api(object):
         """
 
         if operation not in self.validators:
-            try:
-                schema = self.schema[operation]
-                self.validators[operation] = validators.Draft4Validator(schema)
-            except KeyError:
-                # TODO(flaper87): gettext support
-                msg = '{0} is not a valid operation'.format(operation)
-                raise errors.InvalidOperation(msg)
+            schema = self.get_schema(operation)
+            self.validators[operation] = validators.Draft4Validator(schema)
 
         try:
             self.validators[operation].validate(params)

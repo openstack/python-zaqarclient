@@ -23,6 +23,10 @@ class Client(object):
     def __init__(self, *args, **kwargs):
         self.session = requests.session(*args, **kwargs)
 
+    def request(self, *args, **kwargs):
+        """Raw request."""
+        return self.session.request(*args, **kwargs)
+
     def get(self, *args, **kwargs):
         """Does  http GET."""
         return self.session.get(*args, **kwargs)
