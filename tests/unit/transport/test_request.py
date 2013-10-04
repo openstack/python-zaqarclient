@@ -1,4 +1,5 @@
 # Copyright (c) 2013 Rackspace, Inc.
+# Copyright (c) 2013 Red Hat, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,6 +32,6 @@ class TestRequest(base.TestBase):
 
     def test_prepare_request_with_data(self):
         data = {"data": "tons of GBs"}
-        req = request.prepare_request(self.conf, data)
+        req = request.prepare_request(self.conf, data=data)
         self.assertTrue(isinstance(req, request.Request))
         self.assertEquals(req.content, json.dumps(data))

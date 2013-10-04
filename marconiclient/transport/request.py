@@ -15,11 +15,15 @@
 # limitations under the License.
 
 import json
+from stevedore import driver
 
 from marconiclient import auth
+from marconiclient import errors
 
 
-def prepare_request(conf, data=None):
+def prepare_request(conf, endpoint=None,
+                    params=None, headers=None,
+                    data=None):
     """Prepares a request
 
     This method takes care of authentication
@@ -69,18 +73,41 @@ class Request(object):
     :type params: dict
     :param headers: Request headers. Default: None
     :type headers: dict
+    :param api: Api entry point. i.e: 'queues.v1'
+    :type api: `six.text_type`.
     """
 
     def __init__(self, endpoint='', operation='',
                  content=None, params=None,
                  headers=None, api=None):
-        self.api = api
+
+        self._api = None
+        self._api_mod = api
+
         self.endpoint = endpoint
         self.operation = operation
         self.content = content
         self.params = params or {}
         self.headers = headers or {}
 
+    @property
+    def api(self):
+        if not self._api and self._api_mod:
+            try:
+                namespace = 'marconiclient.api'
+                mgr = driver.DriverManager(namespace,
+                                           self._api_mod,
+                                           invoke_on_load=True)
+                self._api = mgr.driver
+            except RuntimeError as ex:
+                raise errors.DriverLoadFailure(self._api_mod, ex)
+        return self._api
+
     def validate(self):
+        """Validation shortcut
+
+        Refer to `transport.api.Api.validate` for
+        more information about this method.
+        """
         return self.api.validate(params=self.params,
                                  content=self.content)
