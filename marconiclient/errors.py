@@ -19,5 +19,15 @@ class MarconiError(Exception):
     """Base class for errors."""
 
 
+class DriverLoadFailure(MarconiError):
+    """Raised if a transport driver can't be loaded."""
+
+    def __init__(self, driver, ex):
+        msg = 'Failed to load transport driver "%s": %s' % (driver, ex)
+        super(DriverLoadFailure, self).__init__(msg)
+        self.driver = driver
+        self.ex = ex
+
+
 class InvalidOperation(MarconiError):
     """Raised when attempted a non existent operation."""

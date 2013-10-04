@@ -20,17 +20,35 @@ from stevedore import driver
 from marconiclient import errors
 
 
-class DriverLoadFailure(errors.MarconiError):
-    """Raised if a transport driver can't be loaded."""
+def get_transport(conf, transport, version=1):
+    """Gets a transport and returns it.
 
-    def __init__(self, driver, ex):
-        msg = 'Failed to load transport driver "%s": %s' % (driver, ex)
-        super(DriverLoadFailure, self).__init__(msg)
-        self.driver = driver
-        self.ex = ex
+    :param conf: the user configuration
+    :type conf: cfg.ConfigOpts
+    :param transport: Transport name
+    :type transport: `six.string_types`
+    :param version: Version of the target transport.
+    :type version: int
+
+    :returns: A `Transport` instance.
+    :rtype: `marconiclient.transport.Transport`
+    """
+
+    entry_point = '{0}.v{1}'.format(transport, version)
+
+    try:
+        namespace = 'marconiclient.transport'
+        mgr = driver.DriverManager(namespace,
+                                   entry_point,
+                                   invoke_on_load=True,
+                                   invoke_args=[conf])
+    except RuntimeError as ex:
+        raise errors.DriverLoadFailure(entry_point, ex)
+
+    return mgr.driver
 
 
-def get_transport(conf, url_or_request, module='queues'):
+def get_transport_for(conf, url_or_request, version=1):
     """Gets a transport for a given url.
 
     An example transport URL might be::
@@ -42,8 +60,8 @@ def get_transport(conf, url_or_request, module='queues'):
     :param url_or_request: a transport URL
     :type url_or_request: `six.string_types` or
         `marconiclient.transport.request.Request`
-    :param module: Module the target transport belongs to.
-    :type module: str
+    :param version: Version of the target transport.
+    :type version: int
 
     :returns: A `Transport` instance.
     :rtype: `marconiclient.transport.Transport`
@@ -54,14 +72,4 @@ def get_transport(conf, url_or_request, module='queues'):
         url = url_or_request.endpoint
 
     parsed = parse.urlparse(url)
-
-    try:
-        namespace = 'marconiclient.{0}.transport'.format(module)
-        mgr = driver.DriverManager(namespace,
-                                   parsed.scheme,
-                                   invoke_on_load=True,
-                                   invoke_args=[conf])
-    except RuntimeError as ex:
-        raise DriverLoadFailure(parsed.scheme, ex)
-
-    return mgr.driver
+    return get_transport(conf, parsed.scheme, version)
