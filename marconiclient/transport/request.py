@@ -17,7 +17,6 @@
 import json
 
 from marconiclient import auth
-from marconiclient.common import api
 
 
 def prepare_request(conf, data=None):
@@ -73,7 +72,9 @@ class Request(object):
     """
 
     def __init__(self, endpoint='', operation='',
-                 content=None, params=None, headers=None):
+                 content=None, params=None,
+                 headers=None, api=None):
+        self.api = api
         self.endpoint = endpoint
         self.operation = operation
         self.content = content
@@ -81,26 +82,5 @@ class Request(object):
         self.headers = headers or {}
 
     def validate(self):
-        """`None` if the request data is valid, an error message otherwise.
-        Checks the `operation` and the presence of the `params`.
-        """
-        api_info_data = api.info()
-        if self.operation not in api_info_data:
-            return "Invalid operation '%s'" % self.operation
-
-        api_info = api_info_data[self.operation]
-
-        param_names = set() if not self.params else set(self.params.keys())
-        # NOTE(al-maisan) Do we have all the mandatory params?
-        if not api_info.mandatory.issubset(param_names):
-            missing = sorted(api_info.mandatory - param_names)
-            return "Missing mandatory params: '%s'" % ', '.join(missing)
-
-        # NOTE(al-maisan) Our params must be either in the mandatory or the
-        # optional subset.
-        all_permissible_params = api_info.mandatory.union(api_info.optional)
-        if not param_names.issubset(all_permissible_params):
-            invalid = sorted(param_names - all_permissible_params)
-            return "Invalid params: '%s'" % ', '.join(invalid)
-
-        return None
+        return self.api.validate(params=self.params,
+                                 content=self.content)

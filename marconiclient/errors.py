@@ -12,8 +12,12 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-__all__ = ['MarconiError']
+__all__ = ['MarconiError', 'InvalidOperation']
 
 
 class MarconiError(Exception):
     """Base class for errors."""
+
+
+class InvalidOperation(MarconiError):
+    """Raised when attempted a non existent operation."""

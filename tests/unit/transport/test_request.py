@@ -23,31 +23,6 @@ HREF = '/v1/queue/'
 
 
 class TestRequest(base.TestBase):
-    def test_valid_operation(self):
-        req = request.Request(endpoint=HREF, operation='create_queue',
-                              params=dict(queue_name='high_load'))
-        self.assertIs(None, req.validate())
-
-    def test_invalid_operation(self):
-        req = request.Request(endpoint=HREF, operation='jump_queue',
-                              params=dict(name='high_load'))
-        self.assertEqual("Invalid operation 'jump_queue'", req.validate())
-
-    def test_missing_mandatory_param(self):
-        req = request.Request(endpoint=HREF, operation='get_message',
-                              params=dict())
-        self.assertEqual("Missing mandatory params: 'message_id, queue_name'",
-                         req.validate())
-
-    def test_missing_optional_param(self):
-        req = request.Request(endpoint=HREF, operation='delete_message',
-                              params=dict(queue_name='abc', message_id='1'))
-        self.assertIs(None, req.validate())
-
-    def test_invalid__param(self):
-        req = request.Request(endpoint=HREF, operation='delete_queue',
-                              params=dict(queue_name='xy', WAT='!?'))
-        self.assertEqual("Invalid params: 'WAT'", req.validate())
 
     def test_prepare_request(self):
         req = request.prepare_request(self.conf)
