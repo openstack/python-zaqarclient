@@ -13,11 +13,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
+
 from marconiclient.common import http
 from marconiclient.transport import base
+# NOTE(flaper87): Something is completely borked
+# with some imports. Using `from ... import errors`
+# will end up importing `marconiclient.errors` instead
+# of transports
+import marconiclient.transport.errors as errors
+from marconiclient.transport import response
 
 
 class HttpTransport(base.Transport):
+
+    http_to_marconi = {
+        400: errors.MalformedRequest,
+        404: errors.ResourceNotFound,
+    }
 
     def __init__(self, conf):
         super(HttpTransport, self).__init__(conf)
@@ -52,8 +65,23 @@ class HttpTransport(base.Transport):
         headers = request.headers.copy()
         headers['content-type'] = 'application/json'
 
-        return self.client.request(method,
+        resp = self.client.request(method,
                                    url=url,
                                    params=request.params,
                                    headers=headers,
                                    data=request.content)
+
+        if resp.status_code in self.http_to_marconi:
+            try:
+                msg = json.loads(resp.text)['description']
+            except Exception:
+                # TODO(flaper87): Log this exception
+                # but don't stop raising the corresponding
+                # exception
+                msg = ''
+            raise self.http_to_marconi[resp.status_code](msg)
+
+        # NOTE(flaper87): This reads the whole content
+        # and will consume any attempt of streaming.
+        return response.Response(request, resp.text,
+                                 headers=resp.headers)

@@ -14,6 +14,7 @@
 # limitations under the License.
 
 import mock
+import requests as prequest
 
 from marconiclient.tests import base
 from marconiclient.tests.transport import api
@@ -39,7 +40,8 @@ class TestHttpTransport(base.TestBase):
         with mock.patch.object(self.transport.client, 'request',
                                autospec=True) as request_method:
 
-            request_method.return_value = None
+            resp = prequest.Response()
+            request_method.return_value = resp
 
             # NOTE(flaper87): Bypass the API
             # loading step by setting the _api
@@ -66,7 +68,8 @@ class TestHttpTransport(base.TestBase):
         with mock.patch.object(self.transport.client, 'request',
                                autospec=True) as request_method:
 
-            request_method.return_value = None
+            resp = prequest.Response()
+            request_method.return_value = resp
             self.transport.send(req)
 
             final_url = 'http://example.org/'
