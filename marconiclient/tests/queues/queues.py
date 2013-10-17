@@ -104,6 +104,100 @@ class QueuesV1QueueTestBase(base.TestBase):
             # just checking our way down to the transport
             # doesn't crash.
 
+    def test_message_post(self):
+        messages = [{'ttl': 30, 'body': 'Post It!'}]
+
+        result = {
+            "resources": [
+                "/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01"
+            ],
+            "partial": False
+        }
+
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, json.dumps(result))
+            send_method.return_value = resp
+
+            posted = self.queue.post(messages)
+            self.assertEqual(result, posted)
+
+    def test_message_list(self):
+        returned = {
+            'links': [{
+                'rel': 'next',
+                'href': '/v1/queues/fizbit/messages?marker=6244-244224-783'
+            }],
+            'messages': [{
+                'href': '/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01',
+                'ttl': 800,
+                'age': 790,
+                'body': {'event': 'ActivateAccount',
+                         'mode': 'active'}
+            }]
+        }
+
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, json.dumps(returned))
+            send_method.return_value = resp
+
+            self.queue.messages(limit=1)
+
+            # NOTE(flaper87): Nothing to assert here,
+            # just checking our way down to the transport
+            # doesn't crash.
+
+    def test_message_get(self):
+        returned = {
+            'href': '/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01',
+            'ttl': 800,
+            'age': 790,
+            'body': {'event': 'ActivateAccount', 'mode': 'active'}
+        }
+
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, json.dumps(returned))
+            send_method.return_value = resp
+
+            msg = self.queue.message('50b68a50d6f5b8c8a7c62b01')
+            self.assertTrue(isinstance(msg, dict))
+
+            # NOTE(flaper87): Nothing to assert here,
+            # just checking our way down to the transport
+            # doesn't crash.
+
+    def test_message_get_many(self):
+        returned = [{
+            'href': '/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01',
+            'ttl': 800,
+            'age': 790,
+            'body': {'event': 'ActivateAccount', 'mode': 'active'}
+        }, {
+            'href': '/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b02',
+            'ttl': 800,
+            'age': 790,
+            'body': {'event': 'ActivateAccount', 'mode': 'active'}
+        }]
+
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, json.dumps(returned))
+            send_method.return_value = resp
+
+            msg = self.queue.messages('50b68a50d6f5b8c8a7c62b01',
+                                      '50b68a50d6f5b8c8a7c62b02')
+            self.assertTrue(isinstance(msg, list))
+
+            # NOTE(flaper87): Nothing to assert here,
+            # just checking our way down to the transport
+            # doesn't crash.
+
 
 class QueuesV1QueueFuncMixin(object):
 
@@ -154,3 +248,86 @@ class QueuesV1QueueFuncMixin(object):
         queue._metadata = 'test'
         metadata = queue.metadata(force_reload=True)
         self.assertEqual(metadata, test_metadata)
+
+    @testtools.skipUnless(_RUN_FUNCTIONAL,
+                          'Functional tests disabled')
+    def test_message_post_functional(self):
+        messages = [
+            {'ttl': 60, 'body': 'Post It!'},
+            {'ttl': 60, 'body': 'Post It!'},
+            {'ttl': 60, 'body': 'Post It!'},
+        ]
+
+        queue = self.client.queue("nonono")
+        queue._get_transport = mock.Mock(return_value=self.transport)
+        result = queue.post(messages)
+        self.assertIn('resources', result)
+        self.assertEqual(len(result['resources']), 3)
+
+    @testtools.skipUnless(_RUN_FUNCTIONAL,
+                          'Functional tests disabled')
+    def test_message_list_functional(self):
+        queue = self.client.queue("test_queue")
+        queue._get_transport = mock.Mock(return_value=self.transport)
+
+        messages = [{'ttl': 60, 'body': 'Post It 1!'}]
+        queue.post(messages)
+
+        messages = queue.messages()
+        self.assertTrue(isinstance(messages, list))
+        self.assertGreaterEqual(len(messages), 0)
+
+    @testtools.skipUnless(_RUN_FUNCTIONAL,
+                          'Functional tests disabled')
+    def test_message_list_echo_functional(self):
+        queue = self.client.queue("test_queue")
+        queue._get_transport = mock.Mock(return_value=self.transport)
+
+        messages = [
+            {'ttl': 60, 'body': 'Post It 1!'},
+            {'ttl': 60, 'body': 'Post It 2!'},
+            {'ttl': 60, 'body': 'Post It 3!'},
+        ]
+        queue.post(messages)
+        messages = queue.messages(echo=True)
+        self.assertTrue(isinstance(messages, list))
+        self.assertGreaterEqual(len(messages), 3)
+
+    @testtools.skipUnless(_RUN_FUNCTIONAL,
+                          'Functional tests disabled')
+    def test_message_get_functional(self):
+        queue = self.client.queue("test_queue")
+        queue._get_transport = mock.Mock(return_value=self.transport)
+
+        messages = [
+            {'ttl': 60, 'body': 'Post It 1!'},
+            {'ttl': 60, 'body': 'Post It 2!'},
+            {'ttl': 60, 'body': 'Post It 3!'},
+        ]
+
+        res = queue.post(messages)['resources']
+        msg_id = res[0].split('/')[-1]
+        message = queue.message(msg_id)
+        self.assertTrue(isinstance(message, dict))
+        self.assertEqual(message['href'], res[0])
+
+    @testtools.skipUnless(_RUN_FUNCTIONAL,
+                          'Functional tests disabled')
+    def test_message_get_many_functional(self):
+        queue = self.client.queue("test_queue")
+        queue._get_transport = mock.Mock(return_value=self.transport)
+
+        messages = [
+            {'ttl': 60, 'body': 'Post It 1!'},
+
+            # NOTE(falper87): Waiting for
+            # https://github.com/racker/falcon/issues/198
+            #{'ttl': 60, 'body': 'Post It 2!'},
+            #{'ttl': 60, 'body': 'Post It 3!'},
+        ]
+
+        res = queue.post(messages)['resources']
+        msgs_id = [ref.split('/')[-1] for ref in res]
+        messages = queue.messages(*msgs_id)
+        self.assertTrue(isinstance(messages, list))
+        self.assertEqual(len(messages), 1)

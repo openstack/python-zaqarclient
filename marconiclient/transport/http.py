@@ -51,7 +51,16 @@ class HttpTransport(base.Transport):
 
         for param in list(request.params.keys()):
             if '{{{0}}}'.format(param) in ref:
-                ref_params[param] = request.params.pop(param)
+                value = request.params.pop(param)
+
+                # NOTE(flaper87): Marconi API parses
+                # sequences encoded as '1,2,3,4'. Let's
+                # encode lists, tuples and sets before
+                # sending them to the server.
+                if isinstance(value, (list, tuple, set)):
+                    value = ','.join(value)
+
+                ref_params[param] = value
 
         url = '{0}/{1}'.format(request.endpoint.rstrip('/'),
                                ref.format(**ref_params))

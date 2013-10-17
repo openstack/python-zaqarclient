@@ -85,4 +85,60 @@ class V1(api.Api):
                 'queue_name': {'type': 'string'}
             }
         },
+
+        'message_list': {
+            'ref': 'queues/{queue_name}/messages',
+            'method': 'GET',
+            'required': ['queue_name'],
+            'properties': {
+                'queue_name': {'type': 'string'},
+                'marker': {'type': 'string'},
+                'limit': {'type': 'integer'},
+                'echo': {'type': 'boolean'},
+                'include_claimed': {'type': 'boolean'},
+            }
+        },
+
+        'message_post': {
+            'ref': 'queues/{queue_name}/messages',
+            'method': 'POST',
+            'required': ['queue_name', 'message_id'],
+            'properties': {
+                'queue_name': {'type': 'string'},
+                'claim_id': {'type': 'string'},
+            }
+        },
+
+        'message_get': {
+            'ref': 'queues/{queue_name}/messages/{message_id}',
+            'method': 'GET',
+            'required': ['queue_name', 'message_id'],
+            'properties': {
+                'queue_name': {'type': 'string'},
+                'message_id': {'type': 'string'},
+                'claim_id': {'type': 'string'},
+            }
+        },
+
+        'message_get_many': {
+            'ref': 'queues/{queue_name}/messages',
+            'method': 'GET',
+            'required': ['queue_name', 'ids'],
+            'properties': {
+                'queue_name': {'type': 'string'},
+                'ids': {'type': 'string'},
+                'claim_id': {'type': 'string'},
+            }
+        },
+
+        'message_delete': {
+            'ref': 'queues/{queue_name}/messages/{message_id}',
+            'method': 'DELETE',
+            'required': ['queue_name', 'message_id'],
+            'properties': {
+                'queue_name': {'type': 'string'},
+                'message_id': {'type': 'string'},
+                'claim_id': {'type': 'string'},
+            }
+        },
     }

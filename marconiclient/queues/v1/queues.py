@@ -52,6 +52,8 @@ class Queue(object):
                                       endpoint=self.client.api_url,
                                       api=api)
 
+        req.headers['Client-ID'] = self.client.client_uuid
+
         trans = self._get_transport(req)
         return req, trans
 
@@ -101,3 +103,73 @@ class Queue(object):
     def delete(self):
         req, trans = self._request_and_transport()
         core.queue_delete(trans, req, self._id)
+
+    # Messages API
+
+    def post(self, messages):
+        """Posts one or more messages to this queue
+
+        :param messages: One or more messages to post
+        :type messages: `list` or `dict`
+
+        :returns: A dict with the result of this operation.
+        :rtype: `dict`
+        """
+        if not isinstance(messages, list):
+            messages = [messages]
+
+        req, trans = self._request_and_transport()
+
+        # TODO(flaper87): Return a list of messages
+        return core.message_post(trans, req,
+                                 self._id, messages)
+
+    def message(self, message_id):
+        """Gets a message by id
+
+        :param message_id: Message's reference
+        :type message_id: `six.text_type`
+
+        :returns: A message
+        :rtype: `dict`
+        """
+        req, trans = self._request_and_transport()
+        return core.message_get(trans, req, self._id,
+                                message_id)
+
+    def messages(self, *messages, **params):
+        """Gets a list of messages from the server
+
+        This method returns a list of messages, it can be
+        used to retrieve a set of messages by id or to
+        walk through the active messages by using the
+        collection endpoint.
+
+        The `messages` and `params` params are mutually exclusive
+        and the former has the priority.
+
+        :param messages: List of messages' ids to retrieve.
+        :type messages: *args of `six.string_type`
+
+        :param params: Filters to use for getting messages
+        :type params: **kwargs dict.
+
+        :returns: List of messages
+        :rtype: `list`
+        """
+        req, trans = self._request_and_transport()
+
+        # TODO(flaper87): Return a MessageIterator.
+        # This iterator should handle limits, pagination
+        # and messages deserialization.
+
+        if messages:
+            return core.message_get_many(trans, req,
+                                         self._id, messages)
+
+        # NOTE(flaper87): It's safe to access messages
+        # directly. If something wrong happens, the core
+        # API will raise the right exceptions.
+        return core.message_list(trans, req,
+                                 self._id,
+                                 **params)['messages']
