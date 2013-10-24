@@ -34,4 +34,4 @@ class TestRequest(base.TestBase):
         data = {"data": "tons of GBs"}
         req = request.prepare_request(self.conf, data=data)
         self.assertTrue(isinstance(req, request.Request))
-        self.assertEquals(req.content, json.dumps(data))
+        self.assertEqual(req.content, json.dumps(data))
