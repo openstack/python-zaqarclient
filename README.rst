@@ -4,7 +4,7 @@ Python Marconi Client
 
 :version: 0.1.0
 :Wiki: `Marconi Wiki`_
-:Trello: `Marconi Trello`_
+:Launchpad: `Marconi Launchpad`_
 :Review: `Code Review`_
 :Design: `Client Wiki`_
 :IRC: #openstack-marconi @ freenode
@@ -38,6 +38,6 @@ Be sure to reference the `HACKING`_ file for all the details.
 .. _PyPi: https://pypi.python.org
 .. _HACKING: https://github.com/openstack/python-marconiclient/tree/master/HACKING.rst
 .. _Marconi Wiki: https://wiki.openstack.org/wiki/Marconi
-.. _Marconi Trello: https://trello.com/board/openstack-marconi/511403287d138cd6200078e0
+.. _Marconi Launchpad: https://launchpad.net/marconi
 .. _Code Review: https://review.openstack.org/#/q/status:open+project:openstack/python-marconiclient,n,z
 .. _Client Wiki: https://wiki.openstack.org/wiki/Python_Marconi_Client
