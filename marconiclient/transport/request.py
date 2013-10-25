@@ -21,9 +21,7 @@ from marconiclient import auth
 from marconiclient import errors
 
 
-def prepare_request(conf, endpoint=None,
-                    params=None, headers=None,
-                    data=None):
+def prepare_request(conf, data=None, **kwargs):
     """Prepares a request
 
     This method takes care of authentication
@@ -37,12 +35,13 @@ def prepare_request(conf, endpoint=None,
     :param data: Optional data to send along with the
         request. If data is not None, it'll be serialized.
     :type data: Any primitive type that is json-serializable.
+    :param kwargs: Anything accepted by `Request`
 
     :returns: A `Request` instance ready to be sent.
     :rtype: `Request`
     """
 
-    req = Request()
+    req = Request(**kwargs)
     auth_backend = auth.get_backend(conf)
     # TODO(flaper87): Do something smarter
     # to get the api_version.
