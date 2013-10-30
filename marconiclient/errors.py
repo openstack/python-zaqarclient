@@ -12,7 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-__all__ = ['MarconiError', 'InvalidOperation']
+__all__ = ['MarconiError', 'DriverLoadFailure', 'InvalidOperation']
 
 
 class MarconiError(Exception):

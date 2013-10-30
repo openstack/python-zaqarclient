@@ -1,4 +1,4 @@
-# Copyright (c) 2013 Rackspace, Inc.
+# Copyright (c) 2013 Red Hat, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,55 +13,71 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import collections
+from marconiclient.transport import api
 
 
-ApiInfo = collections.namedtuple('ApiInfo', 'mandatory optional')
+class V1(api.Api):
 
-_API_DATA = dict(
-    create_queue=ApiInfo(
-        mandatory=set(['queue_name']), optional=set()),
-    list_queues=ApiInfo(
-        mandatory=set(), optional=set(['marker', 'limit', 'detailed'])),
-    queue_exists=ApiInfo(mandatory=set(['queue_name']), optional=set()),
-    delete_queue=ApiInfo(mandatory=set(['queue_name']), optional=set()),
-    set_queue_metadata=ApiInfo(
-        mandatory=set(['queue_name', 'metadata']), optional=set()),
-    get_queue_metadata=ApiInfo(
-        mandatory=set(['queue_name']), optional=set()),
-    get_queue_stats=ApiInfo(mandatory=set(['queue_name']), optional=set()),
-    list_messages=ApiInfo(
-        mandatory=set(['queue_name']),
-        optional=set(['marker', 'limit', 'echo', 'include_claimed'])),
-    get_message=ApiInfo(
-        mandatory=set(['queue_name', 'message_id']),
-        optional=set(['claim_id'])),
-    get_messages_by_id=ApiInfo(
-        mandatory=set(['queue_name', 'message_ids']),
-        optional=set()),
-    post_messages=ApiInfo(
-        mandatory=set(['queue_name', 'messagedata']), optional=set()),
-    delete_message=ApiInfo(
-        mandatory=set(['queue_name', 'message_id']),
-        optional=set(['claim_id'])),
-    delete_messages_by_id=ApiInfo(
-        mandatory=set(['queue_name', 'message_ids']), optional=set()),
-    claim_messages=ApiInfo(
-        mandatory=set(['queue_name', 'ttl', 'grace_period']),
-        optional=set(['limit'])),
-    query_claim=ApiInfo(
-        mandatory=set(['queue_name', 'claim_id']), optional=set()),
-    update_claim=ApiInfo(
-        mandatory=set(['queue_name', 'claim_id', 'ttl']), optional=set()),
-    release_claim=ApiInfo(
-        mandatory=set(['queue_name', 'claim_id']), optional=set()),
-)
+    schema = {
+        'queue_list': {
+            'ref': 'queues',
+            'method': 'GET',
+            'properties': {
+                'marker': {'type': 'string'},
+                'limit': {'type': 'integer'},
+                'detailed': {'type': 'boolean'}
+            }
+        },
 
+        'queue_create': {
+            'ref': 'queues/{queue_name}',
+            'method': 'PUT',
+            'required': ['queue_name'],
+            'properties': {
+                'queue_name': {'type': 'string'}
+            },
+        },
 
-def info():
-    """A dict where the keys and values are valid operations and `ApiInfo`
-    named tuples respectively.
-    The `ApiInfo` named tuples have a `mandatory` and an `optional` property
-    that list the params for the respective operation.
-    """
-    return _API_DATA.copy()
+        'queue_exists': {
+            'ref': 'queues/{queue_name}',
+            'method': 'HEAD',
+            'properties': {
+                'queue_name': {'type': 'string'}
+            }
+        },
+
+        'queue_delete': {
+            'ref': 'queues/{queue_name}',
+            'method': 'DELETE',
+            'properties': {
+                'queue_name': {'type': 'string'}
+            }
+        },
+
+        'queue_set_metadata': {
+            'ref': 'queues/{queue_name}/metadata',
+            'method': 'PUT',
+            'properties': {
+                # NOTE(flaper87): Metadata is part
+                # of the request content. No need to
+                # add it here.
+                'queue_name': {'type': 'string'},
+            }
+        },
+
+        'queue_get_metadata': {
+            'ref': 'queues/{queue_name}/metadata',
+            'method': 'GET',
+            'properties': {
+                'queue_name': {'type': 'string'}
+            }
+        },
+
+        'queue_get_stats': {
+            'ref': 'queues/{queue_name}/stats',
+            'method': 'GET',
+            'properties': {
+                'queue_name': {'type': 'string'}
+            }
+        },
+    }

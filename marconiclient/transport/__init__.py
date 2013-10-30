@@ -13,11 +13,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from oslo.config import cfg
 import six
 from six.moves.urllib import parse
 from stevedore import driver
 
 from marconiclient import errors
+
+_TRANSPORT_OPTIONS = [
+    cfg.StrOpt('default_transport', default='http',
+               help='Transport to use as default'),
+    cfg.IntOpt('default_transport_version', default=1,
+               help='Transport to use as default'),
+]
 
 
 def get_transport(conf, transport, version=1):
@@ -46,6 +54,20 @@ def get_transport(conf, transport, version=1):
         raise errors.DriverLoadFailure(entry_point, ex)
 
     return mgr.driver
+
+
+def get_transport_for_conf(conf):
+    """Gets a transport based on the config object
+
+    It'll load a transport based on the `default-transport`
+    and `default-transport-version` params.
+
+    :param conf: the user configuration
+    :type conf: cfg.ConfigOpts
+    """
+    conf.register_opts(_TRANSPORT_OPTIONS)
+    return get_transport(conf, conf.default_transport,
+                         conf.default_transport_version)
 
 
 def get_transport_for(conf, url_or_request, version=1):
