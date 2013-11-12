@@ -24,7 +24,7 @@ Installation
 
 Until this project is on `PyPi`_, the official way to install these bindings are to::
 
-    pip install git+https://github.com/cabrera/python-marconiclient.git
+    pip install git+https://github.com/openstack/python-marconiclient.git
 
 ============
 Contributing
@@ -34,10 +34,10 @@ The primary maintainer of this project is: TBA
 
 Be sure to reference the `HACKING`_ file for all the details.
 
-.. _Marconi: https://github.com/stackforge/marconi
+.. _Marconi: https://github.com/openstack/marconi
 .. _PyPi: https://pypi.python.org
-.. _HACKING: https://github.com/stackforge/python-marconiclient/tree/master/HACKING.rst
+.. _HACKING: https://github.com/openstack/python-marconiclient/tree/master/HACKING.rst
 .. _Marconi Wiki: https://wiki.openstack.org/wiki/Marconi
 .. _Marconi Trello: https://trello.com/board/openstack-marconi/511403287d138cd6200078e0
-.. _Code Review: https://review.openstack.org/#/q/status:open+project:stackforge/python-marconiclient,n,z
+.. _Code Review: https://review.openstack.org/#/q/status:open+project:openstack/python-marconiclient,n,z
 .. _Client Wiki: https://wiki.openstack.org/wiki/Python_Marconi_Client
