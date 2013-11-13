@@ -41,6 +41,7 @@ class V1(api.Api):
         'queue_exists': {
             'ref': 'queues/{queue_name}',
             'method': 'HEAD',
+            'required': ['queue_name'],
             'properties': {
                 'queue_name': {'type': 'string'}
             }
@@ -49,6 +50,7 @@ class V1(api.Api):
         'queue_delete': {
             'ref': 'queues/{queue_name}',
             'method': 'DELETE',
+            'required': ['queue_name'],
             'properties': {
                 'queue_name': {'type': 'string'}
             }
@@ -57,6 +59,7 @@ class V1(api.Api):
         'queue_set_metadata': {
             'ref': 'queues/{queue_name}/metadata',
             'method': 'PUT',
+            'required': ['queue_name'],
             'properties': {
                 # NOTE(flaper87): Metadata is part
                 # of the request content. No need to
@@ -68,6 +71,7 @@ class V1(api.Api):
         'queue_get_metadata': {
             'ref': 'queues/{queue_name}/metadata',
             'method': 'GET',
+            'required': ['queue_name'],
             'properties': {
                 'queue_name': {'type': 'string'}
             }
@@ -76,6 +80,7 @@ class V1(api.Api):
         'queue_get_stats': {
             'ref': 'queues/{queue_name}/stats',
             'method': 'GET',
+            'required': ['queue_name'],
             'properties': {
                 'queue_name': {'type': 'string'}
             }
