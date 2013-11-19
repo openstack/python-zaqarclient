@@ -18,7 +18,7 @@ import six
 from six.moves.urllib import parse
 from stevedore import driver
 
-from marconiclient import errors
+from marconiclient import errors as _errors
 
 _TRANSPORT_OPTIONS = [
     cfg.StrOpt('default_transport', default='http',
@@ -51,7 +51,7 @@ def get_transport(conf, transport, version=1):
                                    invoke_on_load=True,
                                    invoke_args=[conf])
     except RuntimeError as ex:
-        raise errors.DriverLoadFailure(entry_point, ex)
+        raise _errors.DriverLoadFailure(entry_point, ex)
 
     return mgr.driver
 
