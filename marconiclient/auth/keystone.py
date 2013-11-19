@@ -13,55 +13,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from oslo.config import cfg
-
 from keystoneclient.v2_0 import client as ksclient
 
 from marconiclient.auth import base
-from marconiclient.common import utils
 
 
 # NOTE(flaper87): Some of the code below
 # was brought to you by the very unique
 # work of ceilometerclient.
 class KeystoneAuth(base.AuthBackend):
+    """Keystone Auth backend
 
-    _CLI_OPTIONS = [
-        cfg.StrOpt("os_username", default=utils.env('OS_USERNAME'),
-                   help='Defaults to env[OS_USERNAME]'),
-
-        cfg.StrOpt("os_password", default=utils.env('OS_PASSWORD'),
-                   help='Defaults to env[OS_PASSWORD]'),
-
-        cfg.StrOpt("os_project_id", default=utils.env('OS_PROJECT_ID'),
-                   help='Defaults to env[OS_PROJECT_ID]'),
-
-        cfg.StrOpt("os_project_name", default=utils.env('OS_PROJECT_NAME'),
-                   help='Defaults to env[OS_PROJECT_NAME]'),
-
-        cfg.StrOpt("os_auth_url", default=utils.env('OS_AUTH_URL'),
-                   help='Defaults to env[OS_AUTH_URL]'),
-
-        cfg.StrOpt("os_auth_token", default=utils.env('OS_AUTH_TOKEN'),
-                   help='Defaults to env[OS_AUTH_TOKEN]'),
-
-        cfg.StrOpt("os_region_name", default=utils.env('OS_REGION_NAME'),
-                   help='Defaults to env[OS_REGION_NAME]'),
-
-        cfg.StrOpt("os_service_type", default=utils.env('OS_SERVICE_TYPE'),
-                   help='Defaults to env[OS_SERVICE_TYPE]'),
-
-        cfg.StrOpt("os_service_type", default=utils.env('OS_SERVICE_TYPE'),
-                   help='Defaults to env[OS_SERVICE_TYPE]'),
-
-        cfg.StrOpt("os_endpoint_type", default=utils.env('OS_ENDPOINT_TYPE'),
-                   help='Defaults to env[OS_ENDPOINT_TYPE]'),
-
-    ]
-
-    def __init__(self, conf):
-        super(KeystoneAuth, self).__init__(conf)
-        conf.register_cli_opts(self._CLI_OPTIONS)
+    :params conf: A dictionary with Keystone's
+        custom parameters:
+            - os_username
+            - os_password
+            - os_project_id
+            - os_project_name
+            - os_auth_url
+            - os_auth_token
+            - os_region_name
+            - os_service_type
+            - os_service_type
+            - os_endpoint_type
+    :type conf: `dict`
+    """
 
     def _get_ksclient(self, **kwargs):
         """Get an endpoint and auth token from Keystone.
@@ -73,18 +49,11 @@ class KeystoneAuth(base.AuthBackend):
                 * insecure: allow insecure SSL (no cert verification)
                 * project_{name|id}: name or ID of project
         """
-        return ksclient.Client(username=self.conf.os_username,
-                               password=self.conf.os_password,
-                               tenant_id=self.conf.os_project_id,
-                               tenant_name=self.conf.os_project_name,
-                               auth_url=self.conf.os_auth_url,
-                               insecure=self.conf.insecure)
+        return ksclient.Client(**kwargs)
 
-    def _get_endpoint(self, client):
+    def _get_endpoint(self, client, **extra):
         """Get an endpoint using the provided keystone client."""
-        return client.service_catalog.url_for(
-            service_type=self.conf.service_type or 'queuing',
-            endpoint_type=self.conf.endpoint_type or 'publicURL')
+        return client.service_catalog.url_for(**extra)
 
     def authenticate(self, api_version, request):
         """Get an authtenticated client, based on the credentials
@@ -95,21 +64,19 @@ class KeystoneAuth(base.AuthBackend):
             the auth information.
         """
 
-        token = self.conf.os_auth_token
-        if not self.conf.os_auth_token or not request.endpoint:
+        token = self.conf.get('os_auth_token')
+        if not token or not request.endpoint:
             # NOTE(flaper87): Lets assume all the
             # required information was provided
             # either through env variables or CLI
             # params. Let keystoneclient fail otherwise.
             ks_kwargs = {
-                'username': self.conf.os_username,
-                'password': self.conf.os_password,
-                'tenant_id': self.conf.os_project_id,
-                'tenant_name': self.conf.os_project_name,
-                'auth_url': self.conf.os_auth_url,
-                'service_type': self.conf.os_service_type,
-                'endpoint_type': self.conf.os_endpoint_type,
-                'insecure': self.conf.insecure,
+                'username': self.conf.get('os_username'),
+                'password': self.conf.get('os_password'),
+                'tenant_id': self.conf.get('os_project_id'),
+                'tenant_name': self.conf.get('os_project_name'),
+                'auth_url': self.conf.get('os_auth_url'),
+                'insecure': self.conf.get('insecure'),
             }
 
             _ksclient = self._get_ksclient(**ks_kwargs)
@@ -118,7 +85,13 @@ class KeystoneAuth(base.AuthBackend):
                 token = _ksclient.auth_token
 
             if not request.endpoint:
-                request.endpoint = self._get_endpoint(_ksclient, **ks_kwargs)
+                extra = {
+                    'service_type': self.conf.get('os_service_type',
+                                                  'queuing'),
+                    'endpoint_type': self.conf.get('os_endpoint_type',
+                                                   'publicURL'),
+                }
+                request.endpoint = self._get_endpoint(_ksclient, **extra)
 
         # NOTE(flaper87): Update the request spec
         # with the final token.

@@ -42,8 +42,8 @@ class QueuesV1QueueTestBase(base.TestBase):
         super(QueuesV1QueueTestBase, self).setUp()
         self.transport = self.transport_cls(self.conf)
 
-        self.client = client.Client(self.conf, self.url,
-                                    self.version)
+        self.client = client.Client(self.url, self.version,
+                                    self.conf)
 
         # NOTE(flaper87): Nasty monkeypatch, lets use
         # the dummy transport here.

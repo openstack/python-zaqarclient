@@ -21,8 +21,8 @@ import six
 @six.add_metaclass(abc.ABCMeta)
 class Transport(object):
 
-    def __init__(self, conf):
-        self.conf = conf
+    def __init__(self, options):
+        self.options = options
 
     @abc.abstractmethod
     def send(self, request):

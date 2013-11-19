@@ -16,15 +16,13 @@
 import fixtures
 import testtools
 
-from oslo.config import cfg
-
 
 class TestBase(testtools.TestCase):
 
     def setUp(self):
         super(TestBase, self).setUp()
 
-        self.conf = cfg.ConfigOpts()
+        self.conf = {}
         self.useFixture(fixtures.FakeLogger('marconi'))
 
         # NOTE(kgriffs): Don't monkey-patch stdout since it breaks
@@ -40,9 +38,7 @@ class TestBase(testtools.TestCase):
 
         If a group argument is supplied, the overrides are applied to
         the specified configuration option group.
-
-        All overrides are automatically cleared at the end of the current
-        test by the tearDown() method.
         """
-        for k, v in kw.items():
-            self.conf.set_override(k, v, group)
+        parent = (group and self.conf.setdefault(group, {})
+                  or self.conf)
+        parent.update(kw)

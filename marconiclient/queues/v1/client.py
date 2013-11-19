@@ -15,40 +15,39 @@
 
 import uuid
 
-from oslo.config import cfg
-
 from marconiclient.queues.v1 import queues
 from marconiclient import transport
 
 
-_CLIENT_OPTIONS = [
-    cfg.StrOpt('os_queues_url',
-               help='Queues remote URL'),
-
-    cfg.StrOpt('client_uuid',
-               default=uuid.uuid4().hex,
-               help='Client UUID'),
-]
-
-
 class Client(object):
+    """Client base class
 
-    def __init__(self, conf, url=None, version=1):
-        self.conf = conf
+    :param url: Marconi's instance base url.
+    :type url: `six.text_type`
+    :param version: API Version pointing to.
+    :type version: `int`
+    :param options: Extra options:
+        - client_uuid: Custom client uuid. A new one
+        will be generated, if not passed.
+        - auth_opts: Authentication options:
+            - backend
+            - options
+    :type options: `dict`
+    """
 
-        # NOTE(flaper87): This won't actually register
-        # the CLI options until the class is instantiated
-        # which is dumb. It'll refactored when the CLI API
-        # work starts.
-        self.conf.register_cli_opts(_CLIENT_OPTIONS)
-        self.api_url = self.conf.os_queues_url or url
+    def __init__(self, url=None, version=1, conf=None):
+        self.conf = conf or {}
+
+        self.api_url = url
         self.api_version = version
-
-        self.client_uuid = self.conf.client_uuid
+        self.auth_opts = self.conf.get('auth_opts', {})
+        self.client_uuid = self.conf.get('client_uuid',
+                                         uuid.uuid4().hex)
 
     def transport(self):
-        """Gets a transport based on conf."""
-        return transport.get_transport_for_conf(self.conf)
+        """Gets a transport based the api url and version."""
+        return transport.get_transport_for(self.url,
+                                           self.api_version)
 
     def queue(self, ref, **kwargs):
         """Returns a queue instance
