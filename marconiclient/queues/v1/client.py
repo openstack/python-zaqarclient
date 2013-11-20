@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import uuid
+
 from oslo.config import cfg
 
 from marconiclient.queues.v1 import queues
@@ -22,6 +24,10 @@ from marconiclient import transport
 _CLIENT_OPTIONS = [
     cfg.StrOpt('os_queues_url',
                help='Queues remote URL'),
+
+    cfg.StrOpt('client_uuid',
+               default=uuid.uuid4().hex,
+               help='Client UUID'),
 ]
 
 
@@ -37,6 +43,8 @@ class Client(object):
         self.conf.register_cli_opts(_CLIENT_OPTIONS)
         self.api_url = self.conf.os_queues_url or url
         self.api_version = version
+
+        self.client_uuid = self.conf.client_uuid
 
     def transport(self):
         """Gets a transport based on conf."""

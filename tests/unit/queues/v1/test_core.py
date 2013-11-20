@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
 import mock
 
 from marconiclient.queues.v1 import core
@@ -87,4 +88,81 @@ class TestV1Core(base.TestBase):
             core.queue_exists(self.transport, req, update_data, 'test')
             self.assertIn('queue_name', req.params)
 
-        self.assertIn('queue_name', req.params)
+    def test_message_post(self):
+        messages = [{'ttl': 30, 'body': 'Post It!'}]
+
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+            resp = response.Response(None, '{}')
+            send_method.return_value = resp
+
+            req = request.Request()
+
+            core.message_post(self.transport, req, 'test', messages)
+            self.assertIn('queue_name', req.params)
+            self.assertEqual(json.loads(req.content),
+                             messages)
+
+    def test_message_list(self):
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+            resp = response.Response(None, '{}')
+            send_method.return_value = resp
+
+            req = request.Request()
+
+            core.message_list(self.transport, req, 'test')
+            self.assertIn('queue_name', req.params)
+
+    def test_message_list_kwargs(self):
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+            resp = response.Response(None, '{}')
+            send_method.return_value = resp
+
+            req = request.Request()
+
+            core.message_list(self.transport, req, 'test',
+                              marker='supermarket',
+                              echo=False, limit=10)
+
+            self.assertIn('queue_name', req.params)
+            self.assertIn('limit', req.params)
+            self.assertIn('echo', req.params)
+            self.assertIn('marker', req.params)
+
+    def test_message_get_many(self):
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+            resp = response.Response(None, '{}')
+            send_method.return_value = resp
+
+            req = request.Request()
+
+            ids = ['a', 'b']
+            core.message_get_many(self.transport, req,
+                                  'test', ids)
+
+            self.assertIn('queue_name', req.params)
+            self.assertIn('ids', req.params)
+            self.assertEqual(ids, req.params['ids'])
+
+    def test_message_get(self):
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+            resp = response.Response(None, '{}')
+            send_method.return_value = resp
+
+            req = request.Request()
+            core.message_get(self.transport, req,
+                             'test', 'message_id')
+
+    def test_message_delete(self):
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+            resp = response.Response(None, None)
+            send_method.return_value = resp
+
+            req = request.Request()
+            core.message_delete(self.transport, req,
+                                'test', 'message_id')
