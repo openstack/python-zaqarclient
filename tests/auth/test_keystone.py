@@ -15,7 +15,6 @@
 
 
 import mock
-from oslo.config import cfg
 
 try:
     from keystoneclient.v2_0 import client as ksclient
@@ -42,13 +41,8 @@ class TestKeystoneAuth(base.TestBase):
         if not ksclient:
             self.skipTest('Keystone client is not installed')
 
-        auth._register_opts(self.conf)
-        self.config(auth_backend='keystone')
-        self.auth = auth.get_backend(self.conf)
-
-        # FIXME(flaper87): Remove once insecure is added
-        # in the right place.
-        self.conf.register_opt(cfg.BoolOpt('insecure', default=False))
+        self.auth = auth.get_backend(backend='keystone',
+                                     options=self.conf)
 
     def test_no_token(self):
         test_endpoint = 'http://example.org:8888'

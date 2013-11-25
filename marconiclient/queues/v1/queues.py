@@ -43,12 +43,13 @@ class Queue(object):
         :type request: `transport.request.Request`
         """
 
-        trans = transport.get_transport_for(self.client.conf, request)
+        trans = transport.get_transport_for(request,
+                                            options=self.client.conf)
         return (trans or self.client.transport)
 
     def _request_and_transport(self):
         api = 'queues.v' + str(self.client.api_version)
-        req = request.prepare_request(self.client.conf,
+        req = request.prepare_request(self.client.auth_opts,
                                       endpoint=self.client.api_url,
                                       api=api)
 

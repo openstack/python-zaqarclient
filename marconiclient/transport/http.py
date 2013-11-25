@@ -32,8 +32,8 @@ class HttpTransport(base.Transport):
         404: errors.ResourceNotFound,
     }
 
-    def __init__(self, conf):
-        super(HttpTransport, self).__init__(conf)
+    def __init__(self, options):
+        super(HttpTransport, self).__init__(options)
         self.client = http.Client()
 
     def _prepare(self, request):

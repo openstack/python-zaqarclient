@@ -21,16 +21,13 @@ class TestBaseAuth(base.TestBase):
 
     def test_get_backend(self):
         try:
-            auth.get_backend(self.conf)
+            auth.get_backend(options=self.conf)
         except KeyError:
             self.fail("Test failed")
 
     def test_get_non_existing_backend(self):
-        auth._register_opts(self.conf)
-        self.config(auth_backend="not_existing")
-
         try:
-            auth.get_backend(self.conf)
+            auth.get_backend('not_existing')
             self.fail("Test failed")
         except KeyError:
             pass

@@ -14,7 +14,6 @@
 # limitations under the License.
 
 
-from oslo.config import cfg
 import six
 
 from marconiclient.auth import base
@@ -34,18 +33,18 @@ if keystone:
     _BACKENDS['keystone'] = keystone.KeystoneAuth
 
 
-def _register_opts(conf):
-    """Registers auth cli options.
+def get_backend(backend='noauth', options=None):
+    """Loads backend `auth_backend`
 
-    This function exists mostly for testing
-    purposes.
+    :params backend: The backend name to load.
+        Default: `noauth`
+    :type backend: `six.string_types`
+    :param options: Options to pass to the Auth
+        backend. Refer to the backend for more info.
+    :type options: `dict`
     """
-    backend_opt = cfg.StrOpt('auth_backend', default='noauth',
-                             help='Backend plugin to use for authentication')
-    conf.register_cli_opt(backend_opt)
+    if options is None:
+        options = {}
 
-
-def get_backend(conf):
-    _register_opts(conf)
-    backend = _BACKENDS[conf.auth_backend](conf)
+    backend = _BACKENDS[backend](options)
     return backend
