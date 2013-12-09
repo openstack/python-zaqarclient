@@ -16,38 +16,11 @@
 import json
 import mock
 
-from marconiclient.queues.v1 import client
-from marconiclient.tests import base
+from marconiclient.tests.queues import base
 from marconiclient.transport import response
 
 
-class QueuesV1QueueTestBase(base.TestBase):
-
-    # NOTE(flaper87): These class attributes
-    # are intended for functional tests only
-    # and will be replaced with something
-    # dynamically loaded to allow tests against
-    # remote instances.
-    url = None
-    version = None
-
-    def setUp(self):
-        super(QueuesV1QueueTestBase, self).setUp()
-        self.transport = self.transport_cls(self.conf)
-
-        self.client = client.Client(self.url, self.version,
-                                    self.conf)
-
-        mocked_transport = mock.Mock(return_value=self.transport)
-        self.client._get_transport = mocked_transport
-
-        # NOTE(flaper87): Nasty monkeypatch, lets use
-        # the dummy transport here.
-        #setattr(self.client, 'transport', self.transport)
-        self.queue = self.client.queue(1, auto_create=False)
-
-
-class QueuesV1QueueUnitTest(QueuesV1QueueTestBase):
+class QueuesV1QueueUnitTest(base.QueuesTestBase):
 
     def test_queue_metadata(self):
         test_metadata = {'type': 'Bank Accounts'}
@@ -195,7 +168,7 @@ class QueuesV1QueueUnitTest(QueuesV1QueueTestBase):
             # doesn't crash.
 
 
-class QueuesV1QueueFunctionalTest(QueuesV1QueueTestBase):
+class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
 
     def test_queue_create_functional(self):
         queue = self.client.queue("nonono")

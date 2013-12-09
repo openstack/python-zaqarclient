@@ -13,13 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import mock
 
-from marconiclient.tests.queues import queues
-from marconiclient.transport import http
+from marconiclient.queues import client
+from marconiclient.tests import base
 
 
-class QueuesV1QueueHttpUnitTest(queues.QueuesV1QueueUnitTest):
+class QueuesTestBase(base.TestBase):
 
-    transport_cls = http.HttpTransport
-    url = 'http://127.0.0.1:8888/v1'
-    version = 1
+    def setUp(self):
+        super(QueuesTestBase, self).setUp()
+        self.transport = self.transport_cls(self.conf)
+
+        self.client = client.Client(self.url, self.version,
+                                    self.conf)
+
+        mocked_transport = mock.Mock(return_value=self.transport)
+        self.client._get_transport = mocked_transport
+        self.queue = self.client.queue(1, auto_create=False)
