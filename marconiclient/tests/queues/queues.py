@@ -13,22 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 import json
 import mock
-import testtools
 
 from marconiclient.queues.v1 import client
 from marconiclient.tests import base
 from marconiclient.transport import response
 
-_RUN_FUNCTIONAL = os.environ.get('MARCONICLIENT_TEST_FUNCTIONAL', False)
-
 
 class QueuesV1QueueTestBase(base.TestBase):
-
-    transport_cls = None
 
     # NOTE(flaper87): These class attributes
     # are intended for functional tests only
@@ -45,13 +38,16 @@ class QueuesV1QueueTestBase(base.TestBase):
         self.client = client.Client(self.url, self.version,
                                     self.conf)
 
+        mocked_transport = mock.Mock(return_value=self.transport)
+        self.client._get_transport = mocked_transport
+
         # NOTE(flaper87): Nasty monkeypatch, lets use
         # the dummy transport here.
         #setattr(self.client, 'transport', self.transport)
         self.queue = self.client.queue(1, auto_create=False)
-        self.queue._get_transport = mock.Mock(return_value=self.transport)
 
-        self.is_functional = _RUN_FUNCTIONAL
+
+class QueuesV1QueueUnitTest(QueuesV1QueueTestBase):
 
     def test_queue_metadata(self):
         test_metadata = {'type': 'Bank Accounts'}
@@ -199,17 +195,13 @@ class QueuesV1QueueTestBase(base.TestBase):
             # doesn't crash.
 
 
-class QueuesV1QueueFuncMixin(object):
+class QueuesV1QueueFunctionalTest(QueuesV1QueueTestBase):
 
-    @testtools.skipUnless(_RUN_FUNCTIONAL,
-                          'Functional tests disabled')
     def test_queue_create_functional(self):
         queue = self.client.queue("nonono")
         queue._get_transport = mock.Mock(return_value=self.transport)
         self.assertTrue(queue.exists())
 
-    @testtools.skipUnless(_RUN_FUNCTIONAL,
-                          'Functional tests disabled')
     def test_queue_delete_functional(self):
         queue = self.client.queue("nonono")
         queue._get_transport = mock.Mock(return_value=self.transport)
@@ -217,15 +209,11 @@ class QueuesV1QueueFuncMixin(object):
         queue.delete()
         self.assertFalse(queue.exists())
 
-    @testtools.skipUnless(_RUN_FUNCTIONAL,
-                          'Functional tests disabled')
     def test_queue_exists_functional(self):
         queue = self.client.queue("404", auto_create=False)
         queue._get_transport = mock.Mock(return_value=self.transport)
         self.assertFalse(queue.exists())
 
-    @testtools.skipUnless(_RUN_FUNCTIONAL,
-                          'Functional tests disabled')
     def test_queue_metadata_functional(self):
         test_metadata = {'type': 'Bank Accounts'}
         queue = self.client.queue("meta-test")
@@ -236,8 +224,6 @@ class QueuesV1QueueFuncMixin(object):
         metadata = queue.metadata()
         self.assertEqual(metadata, test_metadata)
 
-    @testtools.skipUnless(_RUN_FUNCTIONAL,
-                          'Functional tests disabled')
     def test_queue_metadata_reload_functional(self):
         test_metadata = {'type': 'Bank Accounts'}
         queue = self.client.queue("meta-test")
@@ -249,8 +235,6 @@ class QueuesV1QueueFuncMixin(object):
         metadata = queue.metadata(force_reload=True)
         self.assertEqual(metadata, test_metadata)
 
-    @testtools.skipUnless(_RUN_FUNCTIONAL,
-                          'Functional tests disabled')
     def test_message_post_functional(self):
         messages = [
             {'ttl': 60, 'body': 'Post It!'},
@@ -264,8 +248,6 @@ class QueuesV1QueueFuncMixin(object):
         self.assertIn('resources', result)
         self.assertEqual(len(result['resources']), 3)
 
-    @testtools.skipUnless(_RUN_FUNCTIONAL,
-                          'Functional tests disabled')
     def test_message_list_functional(self):
         queue = self.client.queue("test_queue")
         queue._get_transport = mock.Mock(return_value=self.transport)
@@ -277,8 +259,6 @@ class QueuesV1QueueFuncMixin(object):
         self.assertTrue(isinstance(messages, list))
         self.assertGreaterEqual(len(messages), 0)
 
-    @testtools.skipUnless(_RUN_FUNCTIONAL,
-                          'Functional tests disabled')
     def test_message_list_echo_functional(self):
         queue = self.client.queue("test_queue")
         queue._get_transport = mock.Mock(return_value=self.transport)
@@ -293,8 +273,6 @@ class QueuesV1QueueFuncMixin(object):
         self.assertTrue(isinstance(messages, list))
         self.assertGreaterEqual(len(messages), 3)
 
-    @testtools.skipUnless(_RUN_FUNCTIONAL,
-                          'Functional tests disabled')
     def test_message_get_functional(self):
         queue = self.client.queue("test_queue")
         queue._get_transport = mock.Mock(return_value=self.transport)
@@ -311,8 +289,6 @@ class QueuesV1QueueFuncMixin(object):
         self.assertTrue(isinstance(message, dict))
         self.assertEqual(message['href'], res[0])
 
-    @testtools.skipUnless(_RUN_FUNCTIONAL,
-                          'Functional tests disabled')
     def test_message_get_many_functional(self):
         queue = self.client.queue("test_queue")
         queue._get_transport = mock.Mock(return_value=self.transport)

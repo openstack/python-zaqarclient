@@ -15,17 +15,12 @@
 
 
 from marconiclient.tests.queues import queues
-from marconiclient.tests.transport import dummy
 from marconiclient.transport import http
 
 
-class QueuesV1QueueDummyTransportTest(queues.QueuesV1QueueTestBase):
+class QueuesV1QueueHttpFunctionalTest(queues.QueuesV1QueueFunctionalTest):
 
-    transport_cls = dummy.DummyTransport
-
-
-class QueuesV1QueueHttpUnitTest(queues.QueuesV1QueueUnitTest):
-
+    is_functional = True
     transport_cls = http.HttpTransport
     url = 'http://127.0.0.1:8888/v1'
     version = 1
