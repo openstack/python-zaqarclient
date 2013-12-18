@@ -74,6 +74,34 @@ class QueuesV1QueueUnitTest(base.QueuesTestBase):
             # just checking our way down to the transport
             # doesn't crash.
 
+    def test_queue_stats(self):
+        result = {
+            "messages": {
+                "free": 146929,
+                "claimed": 2409,
+                "total": 149338,
+                "oldest": {
+                    "href": "/v1/queues/qq/messages/50b68a50d6f5b8c8a7c62b01",
+                    "age": 63,
+                    "created": "2013-08-12T20:44:55Z"
+                },
+                "newest": {
+                    "href": "/v1/queues/qq/messages/50b68a50d6f5b8c8a7c62b01",
+                    "age": 12,
+                    "created": "2013-08-12T20:45:46Z"
+                }
+            }
+        }
+
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, json.dumps(result))
+            send_method.return_value = resp
+
+            stats = self.queue.stats
+            self.assertEqual(result, stats)
+
     def test_message_post(self):
         messages = [{'ttl': 30, 'body': 'Post It!'}]
 
@@ -189,6 +217,19 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
         queue._get_transport = mock.Mock(return_value=self.transport)
         self.assertFalse(queue.exists())
 
+    def test_queue_stats_functional(self):
+        messages = [
+            {'ttl': 60, 'body': 'Post It!'},
+            {'ttl': 60, 'body': 'Post It!'},
+            {'ttl': 60, 'body': 'Post It!'},
+        ]
+
+        queue = self.client.queue("nonono")
+        queue._get_transport = mock.Mock(return_value=self.transport)
+        queue.post(messages)
+        stats = queue.stats
+        self.assertEqual(stats["messages"]["free"], 3)
+
     def test_queue_metadata_functional(self):
         test_metadata = {'type': 'Bank Accounts'}
         queue = self.client.queue("meta-test")
@@ -231,8 +272,8 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
         queue.post(messages)
 
         messages = queue.messages()
-        self.assertTrue(isinstance(messages, list))
-        self.assertGreaterEqual(len(messages), 0)
+        self.assertTrue(isinstance(messages, message._MessageIterator))
+        self.assertGreaterEqual(len(list(messages)), 0)
 
     def test_message_list_echo_functional(self):
         queue = self.client.queue("test_queue")
@@ -245,8 +286,8 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
         ]
         queue.post(messages)
         messages = queue.messages(echo=True)
-        self.assertTrue(isinstance(messages, list))
-        self.assertGreaterEqual(len(messages), 3)
+        self.assertTrue(isinstance(messages, message._MessageIterator))
+        self.assertGreaterEqual(len(list(messages)), 3)
 
     def test_message_get_functional(self):
         queue = self.client.queue("test_queue")
@@ -260,9 +301,9 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
 
         res = queue.post(messages)['resources']
         msg_id = res[0].split('/')[-1]
-        message = queue.message(msg_id)
-        self.assertTrue(isinstance(message, dict))
-        self.assertEqual(message['href'], res[0])
+        msg = queue.message(msg_id)
+        self.assertTrue(isinstance(msg, message.Message))
+        self.assertEqual(msg.href, res[0])
 
     def test_message_get_many_functional(self):
         queue = self.client.queue("test_queue")
@@ -280,5 +321,5 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
         res = queue.post(messages)['resources']
         msgs_id = [ref.split('/')[-1] for ref in res]
         messages = queue.messages(*msgs_id)
-        self.assertTrue(isinstance(messages, list))
-        self.assertEqual(len(messages), 1)
+        self.assertTrue(isinstance(messages, message._MessageIterator))
+        self.assertEqual(len(list(messages)), 1)
