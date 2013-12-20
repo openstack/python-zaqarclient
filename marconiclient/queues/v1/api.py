@@ -18,6 +18,8 @@ from marconiclient.transport import api
 
 class V1(api.Api):
 
+    label = 'v1'
+
     schema = {
         'queue_list': {
             'ref': 'queues',

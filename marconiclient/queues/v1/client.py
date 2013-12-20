@@ -88,3 +88,14 @@ class Client(object):
         :rtype: `queues.Queue`
         """
         return queues.Queue(self, ref, **kwargs)
+
+    def follow(self, ref):
+        """Follows ref.
+
+        :params ref: The reference path.
+        :type ref: `six.text_type`
+        """
+        req, trans = self._request_and_transport()
+        req.ref = ref
+
+        return trans.send(req).deserialized_content

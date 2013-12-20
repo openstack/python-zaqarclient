@@ -16,6 +16,7 @@
 import json
 import mock
 
+from marconiclient.queues.v1 import message
 from marconiclient.tests.queues import base
 from marconiclient.transport import response
 
@@ -113,7 +114,8 @@ class QueuesV1QueueUnitTest(base.QueuesTestBase):
             resp = response.Response(None, json.dumps(returned))
             send_method.return_value = resp
 
-            self.queue.messages(limit=1)
+            msgs = self.queue.messages(limit=1)
+            self.assertIsInstance(msgs, message._MessageIterator)
 
             # NOTE(flaper87): Nothing to assert here,
             # just checking our way down to the transport
@@ -133,8 +135,8 @@ class QueuesV1QueueUnitTest(base.QueuesTestBase):
             resp = response.Response(None, json.dumps(returned))
             send_method.return_value = resp
 
-            msg = self.queue.message('50b68a50d6f5b8c8a7c62b01')
-            self.assertTrue(isinstance(msg, dict))
+            msgs = self.queue.message('50b68a50d6f5b8c8a7c62b01')
+            self.assertIsInstance(msgs, message.Message)
 
             # NOTE(flaper87): Nothing to assert here,
             # just checking our way down to the transport
@@ -161,7 +163,7 @@ class QueuesV1QueueUnitTest(base.QueuesTestBase):
 
             msg = self.queue.messages('50b68a50d6f5b8c8a7c62b01',
                                       '50b68a50d6f5b8c8a7c62b02')
-            self.assertTrue(isinstance(msg, list))
+            self.assertIsInstance(msg, message._MessageIterator)
 
             # NOTE(flaper87): Nothing to assert here,
             # just checking our way down to the transport

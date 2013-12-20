@@ -31,9 +31,14 @@ def create_post_delete(queue_name, messages):
     cli = client.Client(URL)
     queue = cli.queue(queue_name)
     queue.post(messages)
+
+    for msg in queue.messages(echo=True):
+        print(msg.body)
+        msg.delete()
+
     queue.delete()
 
 if __name__ == '__main__':
-    messages = [{'body': {'id': idx}, 'ttl': 60}
+    messages = [{'body': {'id': idx}, 'ttl': 360}
                 for idx in range(20)]
     create_post_delete('my_queue', messages)

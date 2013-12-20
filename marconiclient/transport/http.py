@@ -45,9 +45,19 @@ class HttpTransport(base.Transport):
         # happen before any other operation here.
         # request.validate()
 
-        schema = request.api.get_schema(request.operation)
-        ref = schema.get('ref', '')
+        schema = {}
         ref_params = {}
+        ref = request.ref
+
+        if request.operation:
+            schema = request.api.get_schema(request.operation)
+            ref = ref or schema.get('ref', '')
+
+        # FIXME(flaper87): We expect the endpoint
+        # to have the API version label already,
+        # however in a follow-your-nose implementation
+        # it should be the other way around.
+        ref = ref.lstrip('/' + request.api.label)
 
         for param in list(request.params.keys()):
             if '{{{0}}}'.format(param) in ref:

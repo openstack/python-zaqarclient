@@ -12,61 +12,65 @@
 # implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import unittest
 
+import json
 import mock
 
 from marconiclient.queues.v1 import message
-from marconiclient.tests.mock import message as mock_message
+from marconiclient.tests.queues import base
+from marconiclient.tests.queues import messages as test_message
+from marconiclient.transport import http
+from marconiclient.transport import response
 
 
-HREF = '/v1/queue/dgq/messages/my_msg_is_chocolate'
-AGE = 100
-TTL = 120
+class TestMessageIterator(base.QueuesTestBase):
+
+    def test_no_next_iteration(self):
+        messages = {'links': [],
+                    'messages': [{
+                        'href': '/v1/queues/mine/messages/123123423',
+                        'ttl': 800,
+                        'age': 790,
+                        'body': {'event': 'ActivateAccount',
+                                'mode': 'active'}
+                    }]
+                    }
+
+        iterator = message._MessageIterator(self.queue, messages)
+        iterated = [msg for msg in iterator]
+        self.assertEqual(len(iterated), 1)
+
+    def test_next_page(self):
+        messages = {'links': [],
+                    'messages': [{
+                        'href': '/v1/queues/mine/messages/123123423',
+                        'ttl': 800,
+                        'age': 790,
+                        'body': {'event': 'ActivateAccount',
+                                'mode': 'active'}
+                    }]
+                    }
+
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, json.dumps(messages))
+            send_method.return_value = resp
+
+            # NOTE(flaper87): The first iteration will return 1 message
+            # and then call `_next_page` which will use the rel-next link
+            # to get a new set of messages.
+            link = {'rel': 'next',
+                    'href': "/v1/queues/mine/messages?marker=6244-244224-783"}
+            messages['links'].append(link)
+
+            iterator = message._MessageIterator(self.queue, messages)
+            iterated = [msg for msg in iterator]
+            self.assertEqual(len(iterated), 2)
 
 
-class TestSimpleMessage(unittest.TestCase):
-    def setUp(self):
-        msg_body = {
-            'href': HREF,
-            'ttl': TTL,
-            'age': AGE,
-            'body': {'name': 'chocolate'}
-        }
-        self.conn = mock.MagicMock()
-        self.msg = message.from_dict(msg_body, connection=self.conn)
+class QueuesV1MessageHttpUnitTest(test_message.QueuesV1MessageUnitTest):
 
-    def _attr_check(self, xhref, xttl, xage, xbody):
-        self.assertEqual(self.msg.href, xhref)
-        self.assertEqual(self.msg.ttl, xttl)
-        self.assertEqual(self.msg.age, xage)
-        self.assertEqual(self.msg.body, xbody)
-
-    def test_attributes_match_expected(self):
-        self._attr_check(xhref=HREF, xttl=TTL, xage=AGE,
-                         xbody={'name': 'chocolate'})
-
-    def test_repr_matches_expected(self):
-        self.assertEqual(repr(self.msg),
-                         '<Message ttl:%s>' % (self.msg.ttl,))
-
-    def test_delete_works(self):
-        self.msg.delete()
-
-    def test_reload_works(self):
-        msg = mock_message.message(
-            href=HREF, ttl=TTL - 1, age=AGE + 1,
-            body={'name': 'vanilla'})
-        self.conn.get.return_value = mock.MagicMock()
-        self.conn.get.return_value.json.return_value = msg
-        self.msg.reload()
-        self._attr_check(xhref=HREF, xttl=TTL - 1, xage=AGE + 1,
-                         xbody={'name': 'vanilla'})
-
-    def test_reload_after_delete_throws(self):
-        self.msg.delete()
-        self.assertRaises(AssertionError, self.msg.reload)
-
-    def test_delete_after_delete_throws(self):
-        self.msg.delete()
-        self.assertRaises(AssertionError, self.msg.delete)
+    transport_cls = http.HttpTransport
+    url = 'http://127.0.0.1:8888/v1'
+    version = 1

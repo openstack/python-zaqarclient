@@ -14,15 +14,16 @@
 # limitations under the License.
 
 from marconiclient.queues.v1 import core
+from marconiclient.queues.v1 import message
 
 
 class Queue(object):
 
-    def __init__(self, client, queue_id, auto_create=True):
+    def __init__(self, client, queue_name, auto_create=True):
         self.client = client
 
         # NOTE(flaper87) Queue Info
-        self._id = queue_id
+        self._name = queue_name
         self._metadata = None
 
         if auto_create:
@@ -31,7 +32,7 @@ class Queue(object):
     def exists(self):
         """Checks if the queue exists."""
         req, trans = self.client._request_and_transport()
-        return core.queue_exists(trans, req, self._id)
+        return core.queue_exists(trans, req, self._name)
 
     def ensure_exists(self):
         """Ensures a queue exists
@@ -41,7 +42,7 @@ class Queue(object):
         right after it was called.
         """
         req, trans = self.client._request_and_transport()
-        core.queue_create(trans, req, self._id)
+        core.queue_create(trans, req, self._name)
 
     def metadata(self, new_meta=None, force_reload=False):
         """Get metadata and return it
@@ -61,19 +62,19 @@ class Queue(object):
         req, trans = self.client._request_and_transport()
 
         if new_meta:
-            core.queue_set_metadata(trans, req, self._id, new_meta)
+            core.queue_set_metadata(trans, req, self._name, new_meta)
             self._metadata = new_meta
 
         # TODO(flaper87): Cache with timeout
         if self._metadata and not force_reload:
             return self._metadata
 
-        self._metadata = core.queue_get_metadata(trans, req, self._id)
+        self._metadata = core.queue_get_metadata(trans, req, self._name)
         return self._metadata
 
     def delete(self):
         req, trans = self.client._request_and_transport()
-        core.queue_delete(trans, req, self._id)
+        core.queue_delete(trans, req, self._name)
 
     # Messages API
 
@@ -93,7 +94,7 @@ class Queue(object):
 
         # TODO(flaper87): Return a list of messages
         return core.message_post(trans, req,
-                                 self._id, messages)
+                                 self._name, messages)
 
     def message(self, message_id):
         """Gets a message by id
@@ -105,8 +106,9 @@ class Queue(object):
         :rtype: `dict`
         """
         req, trans = self.client._request_and_transport()
-        return core.message_get(trans, req, self._id,
-                                message_id)
+        msg = core.message_get(trans, req, self._name,
+                               message_id)
+        return message.Message(self, **msg)
 
     def messages(self, *messages, **params):
         """Gets a list of messages from the server
@@ -135,12 +137,14 @@ class Queue(object):
         # and messages deserialization.
 
         if messages:
-            return core.message_get_many(trans, req,
-                                         self._id, messages)
+            msgs = core.message_get_many(trans, req,
+                                         self._name, messages)
+        else:
+            # NOTE(flaper87): It's safe to access messages
+            # directly. If something wrong happens, the core
+            # API will raise the right exceptions.
+            msgs = core.message_list(trans, req,
+                                     self._name,
+                                     **params)
 
-        # NOTE(flaper87): It's safe to access messages
-        # directly. If something wrong happens, the core
-        # API will raise the right exceptions.
-        return core.message_list(trans, req,
-                                 self._id,
-                                 **params)['messages']
+        return message._MessageIterator(self, msgs)

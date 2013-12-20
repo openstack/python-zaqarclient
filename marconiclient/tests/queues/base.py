@@ -17,9 +17,14 @@ import mock
 
 from marconiclient.queues import client
 from marconiclient.tests import base
+from marconiclient.tests.transport import dummy
 
 
 class QueuesTestBase(base.TestBase):
+
+    transport_cls = dummy.DummyTransport
+    url = 'http://127.0.0.1:8888/v1'
+    version = 1
 
     def setUp(self):
         super(QueuesTestBase, self).setUp()

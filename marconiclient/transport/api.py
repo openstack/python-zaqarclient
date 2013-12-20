@@ -22,6 +22,7 @@ from marconiclient import errors
 class Api(object):
 
     schema = {}
+    label = None
     validators = {}
 
     def get_schema(self, operation):

@@ -77,7 +77,7 @@ class Request(object):
     """
 
     def __init__(self, endpoint='', operation='',
-                 content=None, params=None,
+                 ref='', content=None, params=None,
                  headers=None, api=None):
 
         self._api = None
@@ -85,6 +85,7 @@ class Request(object):
 
         self.endpoint = endpoint
         self.operation = operation
+        self.ref = ref
         self.content = content
         self.params = params or {}
         self.headers = headers or {}

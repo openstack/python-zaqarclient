@@ -17,6 +17,8 @@ from marconiclient.transport import api
 
 
 class FakeApi(api.Api):
+    label = 'v1'
+
     schema = {
         'test_operation': {
             'ref': 'test/{name}',
