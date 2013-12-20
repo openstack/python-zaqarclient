@@ -51,7 +51,8 @@ def _common_queue_ops(operation, transport, request, name, callback=None):
     """
     request.operation = operation
     request.params['queue_name'] = name
-    return transport.send(request)
+    resp = transport.send(request)
+    return resp.deserialized_content
 
 
 def queue_create(transport, request, name, callback=None):
@@ -72,9 +73,8 @@ def queue_exists(transport, request, name, callback=None):
 
 def queue_get_metadata(transport, request, name, callback=None):
     """Gets queue metadata."""
-    resp = _common_queue_ops('queue_get_metadata', transport,
+    return _common_queue_ops('queue_get_metadata', transport,
                              request, name, callback=callback)
-    return json.loads(resp.content)
 
 
 def queue_set_metadata(transport, request, name, metadata, callback=None):
@@ -132,7 +132,7 @@ def message_list(transport, request, queue_name, callback=None, **kwargs):
         # `links` and `messages`
         return {'links': [], 'messages': []}
 
-    return json.loads(resp.content)
+    return resp.deserialized_content
 
 
 def message_post(transport, request, queue_name, messages, callback=None):
@@ -157,7 +157,7 @@ def message_post(transport, request, queue_name, messages, callback=None):
     request.content = json.dumps(messages)
 
     resp = transport.send(request)
-    return json.loads(resp.content)
+    return resp.deserialized_content
 
 
 def message_get(transport, request, queue_name, message_id, callback=None):
@@ -182,7 +182,7 @@ def message_get(transport, request, queue_name, message_id, callback=None):
     request.params['message_id'] = message_id
 
     resp = transport.send(request)
-    return json.loads(resp.content)
+    return resp.deserialized_content
 
 
 def message_get_many(transport, request, queue_name, messages, callback=None):
@@ -207,7 +207,7 @@ def message_get_many(transport, request, queue_name, messages, callback=None):
     request.params['ids'] = messages
 
     resp = transport.send(request)
-    return json.loads(resp.content)
+    return resp.deserialized_content
 
 
 def message_delete(transport, request, queue_name, message_id, callback=None):
@@ -231,4 +231,4 @@ def message_delete(transport, request, queue_name, message_id, callback=None):
     request.params['queue_name'] = queue_name
     request.params['message_id'] = message_id
 
-    return transport.send(request)
+    transport.send(request)

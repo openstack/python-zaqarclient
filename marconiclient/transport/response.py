@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
+
 
 class Response(object):
     """Common response class for Marconiclient.
@@ -29,9 +31,17 @@ class Response(object):
     :type: dict
     """
 
-    __slots__ = ('request', 'content', 'headers')
+    __slots__ = ('request', 'content', 'headers', '_deserialized')
 
     def __init__(self, request, content, headers=None):
         self.request = request
         self.content = content
         self.headers = headers or {}
+
+        self._deserialized = None
+
+    @property
+    def deserialized_content(self):
+        if not self._deserialized and self.content:
+            self._deserialized = json.loads(self.content)
+        return self._deserialized

@@ -33,7 +33,7 @@ class TestV1Core(base.TestBase):
     def test_queue_create(self):
         with mock.patch.object(self.transport, 'send',
                                autospec=True) as send_method:
-            send_method.return_value = None
+            send_method.return_value = response.Response(None, None)
 
             req = request.Request()
             core.queue_create(self.transport, req, 'test')
@@ -42,7 +42,7 @@ class TestV1Core(base.TestBase):
     def test_queue_delete(self):
         with mock.patch.object(self.transport, 'send',
                                autospec=True) as send_method:
-            send_method.return_value = None
+            send_method.return_value = response.Response(None, None)
 
             req = request.Request()
             core.queue_delete(self.transport, req, 'test')
@@ -51,7 +51,7 @@ class TestV1Core(base.TestBase):
     def test_queue_exists(self):
         with mock.patch.object(self.transport, 'send',
                                autospec=True) as send_method:
-            send_method.return_value = None
+            send_method.return_value = response.Response(None, None)
 
             req = request.Request()
             ret = core.queue_exists(self.transport, req, 'test')
@@ -82,7 +82,7 @@ class TestV1Core(base.TestBase):
         update_data = {'some': 'data'}
         with mock.patch.object(self.transport, 'send',
                                autospec=True) as send_method:
-            send_method.return_value = None
+            send_method.return_value = response.Response(None, None)
 
             req = request.Request()
             core.queue_exists(self.transport, req, update_data, 'test')
