@@ -16,6 +16,7 @@
 import uuid
 
 from marconiclient.queues.v1 import queues
+from marconiclient.queues.v1 import shard
 from marconiclient import transport
 from marconiclient.transport import request
 
@@ -99,3 +100,15 @@ class Client(object):
         req.ref = ref
 
         return trans.send(req).deserialized_content
+
+    # ADMIN API
+    def shard(self, ref, **kwargs):
+        """Returns a shard instance
+
+        :param ref: Shard's reference name.
+        :type ref: `six.text_type`
+
+        :returns: A shard instance
+        :rtype: `shard.Shard`
+        """
+        return shard.Shard(self, ref, **kwargs)

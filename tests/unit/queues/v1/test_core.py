@@ -166,3 +166,24 @@ class TestV1Core(base.TestBase):
             req = request.Request()
             core.message_delete(self.transport, req,
                                 'test', 'message_id')
+
+    # ADMIN API
+    def test_shard_create(self):
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+            resp = response.Response(None, None)
+            send_method.return_value = resp
+
+            req = request.Request()
+            core.shard_create(self.transport, req,
+                              'test_shard', {'uri': 'sqlite://',
+                                             'weight': 0})
+
+    def test_shard_delete(self):
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+            resp = response.Response(None, None)
+            send_method.return_value = resp
+
+            req = request.Request()
+            core.shard_delete(self.transport, req, 'test_shard')
