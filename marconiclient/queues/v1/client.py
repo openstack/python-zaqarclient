@@ -17,6 +17,7 @@ import uuid
 
 from marconiclient.queues.v1 import queues
 from marconiclient import transport
+from marconiclient.transport import request
 
 
 class Client(object):
@@ -43,6 +44,34 @@ class Client(object):
         self.auth_opts = self.conf.get('auth_opts', {})
         self.client_uuid = self.conf.get('client_uuid',
                                          uuid.uuid4().hex)
+
+    def _get_transport(self, request):
+        """Gets a transport and caches its instance
+
+        This method gets a transport instance based on
+        the request's endpoint and caches that for later
+        use. The transport instance is invalidated whenever
+        a session expires.
+
+        :param request: The request to use to load the
+            transport instance.
+        :type request: `transport.request.Request`
+        """
+
+        trans = transport.get_transport_for(request,
+                                            options=self.conf)
+        return (trans or self.transport)
+
+    def _request_and_transport(self):
+        api = 'queues.v' + str(self.api_version)
+        req = request.prepare_request(self.auth_opts,
+                                      endpoint=self.api_url,
+                                      api=api)
+
+        req.headers['Client-ID'] = self.client_uuid
+
+        trans = self._get_transport(req)
+        return req, trans
 
     def transport(self):
         """Gets a transport based the api url and version."""

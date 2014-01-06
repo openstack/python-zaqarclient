@@ -14,8 +14,6 @@
 # limitations under the License.
 
 from marconiclient.queues.v1 import core
-from marconiclient import transport
-from marconiclient.transport import request
 
 
 class Queue(object):
@@ -30,37 +28,9 @@ class Queue(object):
         if auto_create:
             self.ensure_exists()
 
-    def _get_transport(self, request):
-        """Gets a transport and caches its instance
-
-        This method gets a transport instance based on
-        the request's endpoint and caches that for later
-        use. The transport instance is invalidated whenever
-        a session expires.
-
-        :param request: The request to use to load the
-            transport instance.
-        :type request: `transport.request.Request`
-        """
-
-        trans = transport.get_transport_for(request,
-                                            options=self.client.conf)
-        return (trans or self.client.transport)
-
-    def _request_and_transport(self):
-        api = 'queues.v' + str(self.client.api_version)
-        req = request.prepare_request(self.client.auth_opts,
-                                      endpoint=self.client.api_url,
-                                      api=api)
-
-        req.headers['Client-ID'] = self.client.client_uuid
-
-        trans = self._get_transport(req)
-        return req, trans
-
     def exists(self):
         """Checks if the queue exists."""
-        req, trans = self._request_and_transport()
+        req, trans = self.client._request_and_transport()
         return core.queue_exists(trans, req, self._id)
 
     def ensure_exists(self):
@@ -70,7 +40,7 @@ class Queue(object):
         the queue could've been deleted
         right after it was called.
         """
-        req, trans = self._request_and_transport()
+        req, trans = self.client._request_and_transport()
         core.queue_create(trans, req, self._id)
 
     def metadata(self, new_meta=None, force_reload=False):
@@ -88,7 +58,7 @@ class Queue(object):
 
         :returns: The queue metadata.
         """
-        req, trans = self._request_and_transport()
+        req, trans = self.client._request_and_transport()
 
         if new_meta:
             core.queue_set_metadata(trans, req, self._id, new_meta)
@@ -102,7 +72,7 @@ class Queue(object):
         return self._metadata
 
     def delete(self):
-        req, trans = self._request_and_transport()
+        req, trans = self.client._request_and_transport()
         core.queue_delete(trans, req, self._id)
 
     # Messages API
@@ -119,7 +89,7 @@ class Queue(object):
         if not isinstance(messages, list):
             messages = [messages]
 
-        req, trans = self._request_and_transport()
+        req, trans = self.client._request_and_transport()
 
         # TODO(flaper87): Return a list of messages
         return core.message_post(trans, req,
@@ -134,7 +104,7 @@ class Queue(object):
         :returns: A message
         :rtype: `dict`
         """
-        req, trans = self._request_and_transport()
+        req, trans = self.client._request_and_transport()
         return core.message_get(trans, req, self._id,
                                 message_id)
 
@@ -158,7 +128,7 @@ class Queue(object):
         :returns: List of messages
         :rtype: `list`
         """
-        req, trans = self._request_and_transport()
+        req, trans = self.client._request_and_transport()
 
         # TODO(flaper87): Return a MessageIterator.
         # This iterator should handle limits, pagination

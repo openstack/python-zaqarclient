@@ -13,11 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 import fixtures
 import testtools
 
+_RUN_FUNCTIONAL = os.environ.get('MARCONICLIENT_TEST_FUNCTIONAL', False)
+
 
 class TestBase(testtools.TestCase):
+
+    transport_cls = None
+    is_functional = False
 
     def setUp(self):
         super(TestBase, self).setUp()
@@ -29,6 +36,9 @@ class TestBase(testtools.TestCase):
         # debugging with pdb.
         stderr = self.useFixture(fixtures.StringStream('stderr')).stream
         self.useFixture(fixtures.MonkeyPatch('sys.stderr', stderr))
+
+        if not _RUN_FUNCTIONAL and self.is_functional:
+            self.skipTest('Functional tests disabled')
 
     def config(self, group=None, **kw):
         """Override some configuration values.
