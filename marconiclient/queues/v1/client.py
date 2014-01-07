@@ -75,7 +75,7 @@ class Client(object):
 
     def transport(self):
         """Gets a transport based the api url and version."""
-        return transport.get_transport_for(self.url,
+        return transport.get_transport_for(self.api_url,
                                            self.api_version)
 
     def queue(self, ref, **kwargs):
