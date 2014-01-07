@@ -267,3 +267,21 @@ def shard_delete(transport, request, shard_name):
     request.operation = 'shard_delete'
     request.params['shard_name'] = shard_name
     transport.send(request)
+
+
+def health(transport, request, callback=None):
+    """Check the health of web head for load balancing
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param callback: Optional callable to use as callback.
+        If specified, this request will be sent asynchronously.
+        (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
+    :type callback: Callable object.
+    """
+
+    request.operation = 'health'
+    resp = transport.send(request)
+    return resp.deserialized_content

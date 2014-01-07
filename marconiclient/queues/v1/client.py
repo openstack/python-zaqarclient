@@ -15,6 +15,7 @@
 
 import uuid
 
+from marconiclient.queues.v1 import core
 from marconiclient.queues.v1 import queues
 from marconiclient.queues.v1 import shard
 from marconiclient import transport
@@ -112,3 +113,8 @@ class Client(object):
         :rtype: `shard.Shard`
         """
         return shard.Shard(self, ref, **kwargs)
+
+    def health(self):
+        """Gets the health status of Marconi server."""
+        req, trans = self._request_and_transport()
+        return core.health(trans, req)

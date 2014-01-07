@@ -13,8 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import mock
+
 from marconiclient.queues import client
+from marconiclient.queues.v1 import core
 from marconiclient.tests import base
+from marconiclient.transport import response
 
 VERSION = 1
 
@@ -25,3 +29,11 @@ class TestClient(base.TestBase):
         cli = client.Client('http://example.com',
                             VERSION, {})
         self.assertIsNotNone(cli.transport())
+
+    def test_health(self):
+        cli = client.Client('http://example.com',
+                            VERSION, {})
+        with mock.patch.object(core, 'health', autospec=True) as core_health:
+            resp = response.Response(None, None)
+            core_health.return_value = resp
+            self.assertIsNotNone(cli.health())

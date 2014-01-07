@@ -187,3 +187,12 @@ class TestV1Core(base.TestBase):
 
             req = request.Request()
             core.shard_delete(self.transport, req, 'test_shard')
+
+    def test_health(self):
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+            resp = response.Response(None, None)
+            send_method.return_value = resp
+
+            req = request.Request()
+            core.health(self.transport, req)

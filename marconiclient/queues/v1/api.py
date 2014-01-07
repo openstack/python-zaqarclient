@@ -161,4 +161,10 @@ class V1(api.Api):
                 'shard_name': {'type': 'string'},
             }
         },
+
+        'health': {
+            'admin': True,
+            'ref': 'health',
+            'method': 'GET',
+        },
     }
