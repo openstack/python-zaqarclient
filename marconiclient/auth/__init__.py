@@ -14,23 +14,13 @@
 # limitations under the License.
 
 
-import six
-
 from marconiclient.auth import base
-
-if not six.PY3:
-    from marconiclient.auth import keystone
-else:
-    keystone = None
-    # NOTE(flaper87): Replace with logging
-    print('Keystone auth does not support Py3K')
+from marconiclient.auth import keystone
 
 _BACKENDS = {
     'noauth': base.NoAuth,
+    'keystone': keystone.KeystoneAuth
 }
-
-if keystone:
-    _BACKENDS['keystone'] = keystone.KeystoneAuth
 
 
 def get_backend(backend='noauth', options=None):
