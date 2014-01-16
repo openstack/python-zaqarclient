@@ -232,3 +232,38 @@ def message_delete(transport, request, queue_name, message_id, callback=None):
     request.params['message_id'] = message_id
 
     transport.send(request)
+
+
+def shard_create(transport, request, shard_name, shard_data):
+    """Creates a shard called `shard_name`
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param shard_name: Shard reference name.
+    :type shard_name: `six.text_type`
+    :param shard_data: Shard's properties, i.e: weight, uri, options.
+    :type shard_data: `dict`
+    """
+
+    request.operation = 'shard_create'
+    request.params['shard_name'] = shard_name
+    request.content = json.dumps(shard_data)
+    transport.send(request)
+
+
+def shard_delete(transport, request, shard_name):
+    """Deletes the shard `shard_name`
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param shard_name: Shard reference name.
+    :type shard_name: `six.text_type`
+    """
+
+    request.operation = 'shard_delete'
+    request.params['shard_name'] = shard_name
+    transport.send(request)

@@ -143,4 +143,22 @@ class V1(api.Api):
                 'claim_id': {'type': 'string'},
             }
         },
+
+        'shard_create': {
+            'ref': 'shards/{shard_name}',
+            'method': 'PUT',
+            'required': ['shard_name'],
+            'properties': {
+                'shard_name': {'type': 'string'},
+            }
+        },
+
+        'shard_delete': {
+            'ref': 'shards/{shard_name}',
+            'method': 'DELETE',
+            'required': ['shard_name'],
+            'properties': {
+                'shard_name': {'type': 'string'},
+            }
+        },
     }
