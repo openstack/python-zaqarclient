@@ -1,8 +1,8 @@
 pbr>=0.5.21,<1.0
 requests>=1.1
-six>=1.3.0
-stevedore>=0.10
+six>=1.4.1
+stevedore>=0.12
 jsonschema>=1.3.0,!=1.4.0
 oslo.config>=1.2.0
 
-python-keystoneclient
+python-keystoneclient>=0.4.1
