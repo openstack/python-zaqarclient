@@ -2,10 +2,10 @@
 hacking>=0.8.0,<0.9
 # Unit testing
 discover
-fixtures>=0.3.12
-mock>=0.8.0
+fixtures>=0.3.14
+mock>=1.0
 python-subunit
-testrepository>=0.0.13
+testrepository>=0.0.17
 testtools>=0.9.32
 # Test runner
 nose
