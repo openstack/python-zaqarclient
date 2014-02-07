@@ -72,6 +72,11 @@ class Queue(object):
         self._metadata = core.queue_get_metadata(trans, req, self._name)
         return self._metadata
 
+    @property
+    def stats(self):
+        req, trans = self.client._request_and_transport()
+        return core.queue_get_stats(trans, req, self._name)
+
     def delete(self):
         req, trans = self.client._request_and_transport()
         core.queue_delete(trans, req, self._name)

@@ -19,7 +19,7 @@ import mock
 from marconiclient.queues.v1 import core
 from marconiclient.tests import base
 from marconiclient.tests.transport import dummy
-import marconiclient.transport.errors as errors
+from marconiclient.transport import errors
 from marconiclient.transport import request
 from marconiclient.transport import response
 
@@ -87,6 +87,16 @@ class TestV1Core(base.TestBase):
             req = request.Request()
             core.queue_exists(self.transport, req, update_data, 'test')
             self.assertIn('queue_name', req.params)
+
+    def test_queue_get_stats(self):
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+            resp = response.Response(None, '{}')
+            send_method.return_value = resp
+
+            req = request.Request()
+            result = core.queue_get_stats(self.transport, req, 'test')
+            self.assertEqual(result, {})
 
     def test_message_post(self):
         messages = [{'ttl': 30, 'body': 'Post It!'}]

@@ -87,6 +87,11 @@ def queue_set_metadata(transport, request, name, metadata, callback=None):
     transport.send(request)
 
 
+def queue_get_stats(transport, request, name):
+    return _common_queue_ops('queue_get_stats', transport,
+                             request, name)
+
+
 def queue_delete(transport, request, name, callback=None):
     """Deletes queue."""
     return _common_queue_ops('queue_delete', transport,
