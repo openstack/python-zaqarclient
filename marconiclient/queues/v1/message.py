@@ -104,8 +104,8 @@ class Message(object):
         self._id = href.split('/')[-1]
 
     def __repr__(self):
-        return '<Message id:%(id)s ttl:%(ttl)s>'.format(id=self._id,
-                                                        ttl=self.ttl)
+        return '<Message id:{id} ttl:{ttl}>'.format(id=self._id,
+                                                    ttl=self.ttl)
 
     def delete(self):
         req, trans = self.queue.client._request_and_transport()
