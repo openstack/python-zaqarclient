@@ -98,6 +98,34 @@ def queue_delete(transport, request, name, callback=None):
                              request, name, callback=callback)
 
 
+def queue_list(transport, request, callback=None, **kwargs):
+    """Gets a list of queues
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param callback: Optional callable to use as callback.
+        If specified, this request will be sent asynchronously.
+        (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
+    :type callback: Callable object.
+    :param kwargs: Optional arguments for this operation.
+        - marker: Where to start getting queues from.
+        - limit: Maximum number of queues to get.
+    """
+
+    request.operation = 'queue_list'
+
+    request.params.update(kwargs)
+
+    resp = transport.send(request)
+
+    if not resp.content:
+        return {'links': [], 'queues': []}
+
+    return resp.deserialized_content
+
+
 def message_list(transport, request, queue_name, callback=None, **kwargs):
     """Gets a list of messages in queue `queue_name`
 

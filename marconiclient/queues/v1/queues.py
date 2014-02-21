@@ -17,6 +17,61 @@ from marconiclient.queues.v1 import core
 from marconiclient.queues.v1 import message
 
 
+class _QueueIterator(object):
+    """Queue iterator
+
+    This iterator is not meant to be used outside
+    the scope of this package. The iterator gets
+    a dictionary as returned by the queue listing
+    endpoint and iterates over the queues in the
+    `queues` key.
+
+    If there are no queues left to return, the iterator
+    will try to load more by following the `next` rel link type.
+
+    The iterator raises a StopIteration exception if the server
+    doesn't return more messages after a `next-page` call.
+
+    :param client: The client instance used by the queue
+    :type client: `v1.Client`
+    :param queues: Response returned by the queues listing call
+    :type queues: Dict
+    """
+
+    def __init__(self, client, queues):
+        self._client = client
+
+        self._links = queues['links']
+        self._queues = queues['queues']
+
+    def __iter__(self):
+        return self
+
+    def _next_page(self):
+        for link in self._links:
+            if link['rel'] == 'next':
+
+                queues = self._client.follow(link['href'])
+
+                if queues:
+                    self._links = queues['links']
+                    self._queues = queues['queues']
+                    return
+
+        raise StopIteration
+
+    def __next__(self):
+        try:
+            q = self._queues.pop(0)
+        except IndexError:
+            self._next_page()
+            return self.next()
+
+        return Queue(self._client, q["name"], False)
+
+    next = __next__
+
+
 class Queue(object):
 
     def __init__(self, client, queue_name, auto_create=True):
