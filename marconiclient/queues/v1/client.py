@@ -91,6 +91,18 @@ class Client(object):
         """
         return queues.Queue(self, ref, **kwargs)
 
+    def queues(self, **params):
+        """Gets a list of queues from the server
+
+        :returns: A list of queues
+        :rtype: `list`
+        """
+        req, trans = self._request_and_transport()
+
+        queue_list = core.queue_list(trans, req, **params)
+
+        return queues._QueueIterator(self, queue_list)
+
     def follow(self, ref):
         """Follows ref.
 
