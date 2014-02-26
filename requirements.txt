@@ -1,6 +1,6 @@
 pbr>=0.6,<1.0
 requests>=1.1
-six>=1.4.1
+six>=1.5.2
 stevedore>=0.14
 jsonschema>=2.0.0,<3.0.0
 
