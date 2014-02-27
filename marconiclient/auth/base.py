@@ -32,7 +32,7 @@ class AuthBackend(object):
         request and prepare it to send the auth information
         back to Marconi's instance.
 
-        :params api_version: Marconi's API verison.
+        :params api_version: Marconi's API version.
         :params request: Request Spec instance
             that can be manipulated by the backend
             if the authentication succeeds.
