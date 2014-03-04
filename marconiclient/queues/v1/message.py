@@ -101,11 +101,22 @@ class Message(object):
         # NOTE(flaper87): Is this really
         # necessary? Should this be returned
         # by Marconi?
+        # The url has two forms depending on if it has been claimed.
+        # /v1/queues/worker-jobs/messages/5c6939a8?claim_id=63c9a592
+        # or
+        # /v1/queues/worker-jobs/messages/5c6939a8
         self._id = href.split('/')[-1]
+        if '?' in self._id:
+            self._id = self._id.split('?')[0]
 
     def __repr__(self):
         return '<Message id:{id} ttl:{ttl}>'.format(id=self._id,
                                                     ttl=self.ttl)
+
+    @property
+    def claim_id(self):
+        if '=' in self.href:
+            return self.href.split('=')[-1]
 
     def delete(self):
         req, trans = self.queue.client._request_and_transport()

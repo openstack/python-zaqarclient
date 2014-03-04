@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from marconiclient.queues.v1 import claim as claim_api
 from marconiclient.queues.v1 import core
 from marconiclient.queues.v1 import message
 
@@ -208,3 +209,7 @@ class Queue(object):
                                      **params)
 
         return message._MessageIterator(self, msgs)
+
+    def claim(self, id=None, ttl=None, grace=None,
+              limit=None):
+        return claim_api.Claim(self, id=id, ttl=ttl, grace=grace, limit=limit)

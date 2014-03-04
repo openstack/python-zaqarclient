@@ -162,6 +162,48 @@ class V1(api.Api):
             }
         },
 
+        'claim_create': {
+            'ref': 'queues/{queue_name}/claims',
+            'method': 'POST',
+            'required': ['queue_name'],
+            'properties': {
+                'queue_name': {'type': 'string'},
+                'limit': {'type': 'integer'},
+                'grace': {'type': 'integer'}
+            }
+        },
+
+        'claim_get': {
+            'ref': 'queues/{queue_name}/claims/{claim_id}',
+            'method': 'GET',
+            'required': ['queue_name', 'claim_id'],
+            'properties': {
+                'queue_name': {'type': 'string'},
+                'claim_id': {'type': 'string'}
+            }
+        },
+
+        'claim_update': {
+            'ref': 'queues/{queue_name}/claims/{claim_id}',
+            'method': 'PATCH',
+            'required': ['queue_name', 'claim_id'],
+            'properties': {
+                'queue_name': {'type': 'string'},
+                'claim_id': {'type': 'string'}
+            }
+        },
+
+        'claim_delete': {
+            'ref': 'queues/{queue_name}/claims/{claim_id}',
+            'method': 'DELETE',
+            'required': ['queue_name', 'claim_id'],
+            'properties': {
+                'queue_name': {'type': 'string'},
+                'claim_id': {'type': 'string'}
+            }
+        },
+
+
         'health': {
             'admin': True,
             'ref': 'health',

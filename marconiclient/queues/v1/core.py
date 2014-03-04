@@ -267,6 +267,73 @@ def message_delete(transport, request, queue_name, message_id, callback=None):
     transport.send(request)
 
 
+def claim_create(transport, request, queue_name, **kwargs):
+    """Creates a Claim `claim_id` on the queue `queue_name`
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    """
+
+    request.operation = 'claim_create'
+    request.params['queue_name'] = queue_name
+    request.content = json.dumps(kwargs)
+
+    resp = transport.send(request)
+    return resp.deserialized_content
+
+
+def claim_get(transport, request, queue_name, claim_id):
+    """Gets a Claim `claim_id`
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    """
+
+    request.operation = 'claim_get'
+    request.params['queue_name'] = queue_name
+    request.params['claim_id'] = claim_id
+
+    resp = transport.send(request)
+    return resp.deserialized_content
+
+
+def claim_update(transport, request, queue_name, claim_id, **kwargs):
+    """Updates a Claim `claim_id`
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    """
+
+    request.operation = 'claim_update'
+    request.params['queue_name'] = queue_name
+    request.params['claim_id'] = claim_id
+    request.content = json.dumps(kwargs)
+
+    resp = transport.send(request)
+    return resp.deserialized_content
+
+
+def claim_delete(transport, request, queue_name, claim_id):
+    """Deletes a Claim `claim_id`
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    """
+    request.operation = 'claim_delete'
+    request.params['queue_name'] = queue_name
+    request.params['claim_id'] = claim_id
+
+    transport.send(request)
+
+
 def shard_create(transport, request, shard_name, shard_data):
     """Creates a shard called `shard_name`
 
