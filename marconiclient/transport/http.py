@@ -72,8 +72,9 @@ class HttpTransport(base.Transport):
 
                 ref_params[param] = value
 
-        url = '{0}/{1}'.format(request.endpoint.rstrip('/'),
-                               ref.format(**ref_params))
+        url = '{0}/{1}/{2}'.format(request.endpoint.rstrip('/'),
+                                   request.api.label,
+                                   ref.format(**ref_params))
         return url, schema.get('method', 'GET'), request
 
     def send(self, request):

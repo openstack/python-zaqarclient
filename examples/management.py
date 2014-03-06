@@ -14,7 +14,7 @@
 
 from marconiclient.queues import client
 
-URL = 'http://localhost:8888/v1'
+URL = 'http://localhost:8888'
 
 
 def healthy():

@@ -49,7 +49,7 @@ class TestHttpTransport(base.TestBase):
             req._api = self.api
             self.transport.send(req)
 
-            final_url = 'http://example.org/test/Test'
+            final_url = 'http://example.org/v1/test/Test'
             final_params = {'address': 'Outer space'}
             final_headers = {'content-type': 'application/json'}
 

@@ -16,7 +16,7 @@
 # an upper package. It's version agnostic.
 from marconiclient.queues.v1 import client
 
-URL = 'http://localhost:8888/v1'
+URL = 'http://localhost:8888'
 
 
 def create_post_delete(queue_name, messages):

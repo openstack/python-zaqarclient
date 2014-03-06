@@ -17,7 +17,7 @@ import time
 
 from marconiclient.queues.v1 import client
 
-URL = 'http://localhost:8888/v1'
+URL = 'http://localhost:8888'
 
 cli = client.Client(URL)
 queue = cli.queue('worker-jobs')
