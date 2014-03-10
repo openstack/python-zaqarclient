@@ -16,6 +16,7 @@
 import json
 import mock
 
+from marconiclient.queues.v1 import iterator as iterate
 from marconiclient.queues.v1 import message
 from marconiclient.tests.queues import base
 from marconiclient.tests.queues import messages as test_message
@@ -36,7 +37,10 @@ class TestMessageIterator(base.QueuesTestBase):
                     }]
                     }
 
-        iterator = message._MessageIterator(self.queue, messages)
+        iterator = iterate._Iterator(self.queue.client,
+                                     messages,
+                                     'messages',
+                                     message.create_object(self.queue))
         iterated = [msg for msg in iterator]
         self.assertEqual(len(iterated), 1)
 
@@ -64,7 +68,10 @@ class TestMessageIterator(base.QueuesTestBase):
                     'href': "/v1/queues/mine/messages?marker=6244-244224-783"}
             messages['links'].append(link)
 
-            iterator = message._MessageIterator(self.queue, messages)
+            iterator = iterate._Iterator(self.queue.client,
+                                         messages,
+                                         'messages',
+                                         message.create_object(self.queue))
             iterated = [msg for msg in iterator]
             self.assertEqual(len(iterated), 2)
 

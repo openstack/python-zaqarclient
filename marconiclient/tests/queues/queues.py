@@ -16,6 +16,7 @@
 import json
 import mock
 
+from marconiclient.queues.v1 import iterator
 from marconiclient.queues.v1 import message
 from marconiclient.tests.queues import base
 from marconiclient.transport import response
@@ -143,7 +144,7 @@ class QueuesV1QueueUnitTest(base.QueuesTestBase):
             send_method.return_value = resp
 
             msgs = self.queue.messages(limit=1)
-            self.assertIsInstance(msgs, message._MessageIterator)
+            self.assertIsInstance(msgs, iterator._Iterator)
 
             # NOTE(flaper87): Nothing to assert here,
             # just checking our way down to the transport
@@ -191,7 +192,7 @@ class QueuesV1QueueUnitTest(base.QueuesTestBase):
 
             msg = self.queue.messages('50b68a50d6f5b8c8a7c62b01',
                                       '50b68a50d6f5b8c8a7c62b02')
-            self.assertIsInstance(msg, message._MessageIterator)
+            self.assertIsInstance(msg, iterator._Iterator)
 
             # NOTE(flaper87): Nothing to assert here,
             # just checking our way down to the transport
@@ -272,7 +273,7 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
         queue.post(messages)
 
         messages = queue.messages()
-        self.assertTrue(isinstance(messages, message._MessageIterator))
+        self.assertTrue(isinstance(messages, iterator._Iterator))
         self.assertGreaterEqual(len(list(messages)), 0)
 
     def test_message_list_echo_functional(self):
@@ -286,7 +287,7 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
         ]
         queue.post(messages)
         messages = queue.messages(echo=True)
-        self.assertTrue(isinstance(messages, message._MessageIterator))
+        self.assertTrue(isinstance(messages, iterator._Iterator))
         self.assertGreaterEqual(len(list(messages)), 3)
 
     def test_message_get_functional(self):
@@ -321,5 +322,5 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
         res = queue.post(messages)['resources']
         msgs_id = [ref.split('/')[-1] for ref in res]
         messages = queue.messages(*msgs_id)
-        self.assertTrue(isinstance(messages, message._MessageIterator))
+        self.assertTrue(isinstance(messages, iterator._Iterator))
         self.assertEqual(len(list(messages)), 1)

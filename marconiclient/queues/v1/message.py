@@ -17,76 +17,6 @@
 from marconiclient.queues.v1 import core
 
 
-# NOTE(flaper87): Consider moving the
-# iterator into a common package.
-class _MessageIterator(object):
-    """Message iterator
-
-    This iterator is not meant to be used outside
-    the scope of this package. The iterator gets
-    a dictionary as returned by the message listing
-    endpoint and iterates over the messages in the
-    `messages` key.
-
-    If there are no messages left to return, the iterator
-    will try to load more by following the `next` rel link
-    type.
-
-    The iterator raises a StopIteration exception if the server
-    doesn't return more messages after a `next-page` call.
-
-    :param client: The client instance used by the queue
-    :type client: `v1.Client`
-    :param messages: Response returned by the messages listing call
-    :type messages: Dict
-    """
-
-    def __init__(self, queue, messages):
-        self._queue = queue
-
-        # NOTE(flaper87): Simple hack to
-        # re-use the iterator for get_many_messages
-        # and message listing.
-        self._links = []
-        self._messages = messages
-
-        if isinstance(messages, dict):
-            self._links = messages['links']
-            self._messages = messages['messages']
-
-    def __iter__(self):
-        return self
-
-    def _next_page(self):
-        for link in self._links:
-            if link['rel'] == 'next':
-                # NOTE(flaper87): We already have the
-                # ref for the next set of messages, lets
-                # just follow it.
-                messages = self._queue.client.follow(link['href'])
-
-                # NOTE(flaper87): Since we're using
-                # `.follow`, the empty result will
-                # be None. Consider making the API
-                # return an empty dict for consistency.
-                if messages:
-                    self._links = messages['links']
-                    self._messages = messages['messages']
-                    return
-        raise StopIteration
-
-    def __next__(self):
-        try:
-            msg = self._messages.pop(0)
-        except IndexError:
-            self._next_page()
-            return self.next()
-        return Message(self._queue, **msg)
-
-    # NOTE(flaper87): Py2K support
-    next = __next__
-
-
 class Message(object):
     """A handler for Marconi server Message resources.
     Attributes are only downloaded once - at creation time.
@@ -121,3 +51,7 @@ class Message(object):
     def delete(self):
         req, trans = self.queue.client._request_and_transport()
         core.message_delete(trans, req, self.queue._name, self._id)
+
+
+def create_object(parent):
+    return lambda args: Message(parent, **args)

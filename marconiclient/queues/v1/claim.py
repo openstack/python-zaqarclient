@@ -14,6 +14,7 @@
 # limitations under the License.
 
 from marconiclient.queues.v1 import core
+from marconiclient.queues.v1 import iterator as iterate
 from marconiclient.queues.v1 import message
 
 
@@ -44,8 +45,12 @@ class Claim(object):
         self._ttl = claim_res['ttl']
         self._grace = claim_res.get('grace')
         msgs = claim_res.get('messages', [])
-        self._message_iter = message._MessageIterator(self._queue,
-                                                      msgs)
+        self._message_iter = iterate._Iterator(self._queue.client,
+                                               msgs,
+                                               'messages',
+                                               message.create_object(
+                                                   self._queue
+                                               ))
 
     def _create(self):
         req, trans = self._queue.client._request_and_transport()
@@ -57,7 +62,12 @@ class Claim(object):
         # extract the id from the first message
         if msgs is not None:
             self.id = msgs[0]['href'].split('=')[-1]
-        self._message_iter = message._MessageIterator(self._queue, msgs or [])
+        self._message_iter = iterate._Iterator(self._queue.client,
+                                               msgs or [],
+                                               'messages',
+                                               message.create_object(
+                                                   self._queue
+                                               ))
 
     def __iter__(self):
         if self._message_iter is None:
