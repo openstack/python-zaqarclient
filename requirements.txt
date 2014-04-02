@@ -4,4 +4,4 @@ six>=1.5.2
 stevedore>=0.14
 jsonschema>=2.0.0,<3.0.0
 
-python-keystoneclient>=0.6.0
+python-keystoneclient>=0.7.0
