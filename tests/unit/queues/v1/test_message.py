@@ -44,7 +44,7 @@ class TestMessageIterator(base.QueuesTestBase):
         iterated = [msg for msg in iterator]
         self.assertEqual(len(iterated), 1)
 
-    def test_next_page(self):
+    def test_stream(self):
         messages = {'links': [],
                     'messages': [{
                         'href': '/v1/queues/mine/messages/123123423',
@@ -72,8 +72,36 @@ class TestMessageIterator(base.QueuesTestBase):
                                          messages,
                                          'messages',
                                          message.create_object(self.queue))
-            iterated = [msg for msg in iterator]
+            iterated = [msg for msg in iterator.stream()]
             self.assertEqual(len(iterated), 2)
+
+    def test_iterator_respect_paging(self):
+        messages = {'links': [],
+                    'messages': [{
+                        'href': '/v1/queues/mine/messages/123123423',
+                        'ttl': 800,
+                        'age': 790,
+                        'body': {'event': 'ActivateAccount',
+                                'mode': 'active'}
+                    }]
+                    }
+
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, json.dumps(messages))
+            send_method.return_value = resp
+
+            link = {'rel': 'next',
+                    'href': "/v1/queues/mine/messages?marker=6244-244224-783"}
+            messages['links'].append(link)
+
+            iterator = iterate._Iterator(self.queue.client,
+                                         messages,
+                                         'messages',
+                                         message.create_object(self.queue))
+            iterated = [msg for msg in iterator]
+            self.assertEqual(len(iterated), 1)
 
 
 class QueuesV1MessageHttpUnitTest(test_message.QueuesV1MessageUnitTest):
