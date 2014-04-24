@@ -43,6 +43,7 @@ class _Iterator(object):
         self._create_function = create_function
 
         self._links = []
+        self._stream = False
         self._listing_response = listing_response
 
         # NOTE(flaper87): Simple hack to
@@ -58,6 +59,22 @@ class _Iterator(object):
     def get_iterables(self, iterables):
         self._links = iterables['links']
         self._listing_response = iterables[self._iter_key]
+
+    def stream(self, enabled=True):
+        """Make this `_Iterator` a stream iterator.
+
+        Since `_Iterator`'s default is to *not* stream,
+        this method's default value is to *stream* data
+        from the server. That is, unless explicitly specified
+        this method will enable make this iterator a stream
+        iterator.
+
+        :param enabled: Whether streaming should be
+                        enabled or not.
+        :type enabled: bool
+        """
+        self._stream = enabled
+        return self
 
     def _next_page(self):
         for link in self._links:
@@ -80,8 +97,12 @@ class _Iterator(object):
         try:
             args = self._listing_response.pop(0)
         except IndexError:
+            if not self._stream:
+                raise StopIteration
+
             self._next_page()
             return self.next()
+
         return self._create_function(args)
 
     # NOTE(flaper87): Py2K support
