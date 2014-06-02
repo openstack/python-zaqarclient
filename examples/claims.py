@@ -35,18 +35,15 @@ def send_jobs():
 
 
 def process_jobs():
-    while True:
-        claim1 = queue.claim(ttl=500, grace=900, limit=2)
-        for msg in claim1:
-            claim_id = msg.claim_id
-            print('{claim_id} =? {id}'.format(claim_id=claim_id, id=claim1.id))
-            print('processing job %s' % (msg))
-            msg.delete()
-            claim2 = queue.claim(id=claim_id)
-            print(claim2)
-        print('nothing to do but have a sleep :)')
-        time.sleep(1)
+    claim1 = queue.claim(ttl=500, grace=900, limit=2)
+    for msg in claim1:
+        claim_id = msg.claim_id
+        print('{claim_id} =? {id}'.format(claim_id=claim_id, id=claim1.id))
+        print('processing job %s' % (msg))
+        msg.delete()
+        time.sleep(0.5)
 
 if __name__ == '__main__':
-    send_jobs()
-    process_jobs()
+    while True:
+        send_jobs()
+        process_jobs()

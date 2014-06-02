@@ -40,3 +40,22 @@ class QueuesV1MessageUnitTest(base.QueuesTestBase):
 
             send_method.return_value = None
             self.assertIsNone(msg.delete())
+
+    def test_message_delete_with_claim(self):
+        returned = {
+            'href': '/v1/queues/fizbit/messages/50b68a50d6?claim_id=5388b5dd0',
+            'ttl': 800,
+            'age': 790,
+            'body': {'event': 'ActivateAccount', 'mode': 'active'}
+        }
+
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, json.dumps(returned))
+            send_method.return_value = resp
+
+            msg = self.queue.message('50b68a50d6')
+
+            send_method.return_value = None
+            self.assertIsNone(msg.delete())
