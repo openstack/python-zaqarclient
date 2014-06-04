@@ -29,7 +29,11 @@ class HttpTransport(base.Transport):
 
     http_to_marconi = {
         400: errors.MalformedRequest,
+        401: errors.UnauthorizedError,
+        403: errors.ForbiddenError,
         404: errors.ResourceNotFound,
+        500: errors.InternalServerError,
+        503: errors.ServiceUnavailableError
     }
 
     def __init__(self, options):

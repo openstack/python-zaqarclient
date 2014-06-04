@@ -22,7 +22,9 @@ raised as `ResourceNotFound`
 
 from marconiclient import errors
 
-__all__ = ['TransportError', 'ResourceNotFound', 'MalformedRequest']
+__all__ = ['TransportError', 'ResourceNotFound', 'MalformedRequest',
+           'UnauthorizedError', 'ForbiddenError', 'ServiceUnavailableError',
+           'InternalServerError']
 
 
 class TransportError(errors.MarconiError):
@@ -40,4 +42,35 @@ class MalformedRequest(TransportError):
     """Indicates that a request is malformed
 
     This error maps to HTTP's 400
+    """
+
+
+class UnauthorizedError(TransportError):
+    """Indicates that a request was not authenticated
+
+    This error maps to HTTP's 401
+    """
+
+
+class ForbiddenError(TransportError):
+    """Indicates that a request is forbidden
+    to access the particular resource
+
+    This error maps to HTTP's 403
+    """
+
+
+class InternalServerError(TransportError):
+    """Indicates that the server encountered
+    an unexpected situation
+
+    This error maps to HTTP's 500
+    """
+
+
+class ServiceUnavailableError(TransportError):
+    """Indicates that the server was unable
+    to service the request
+
+    This error maps to HTTP's 503
     """

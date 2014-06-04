@@ -23,6 +23,7 @@ from marconiclient.transport import request
 
 
 class TestHttpTransport(base.TestBase):
+
     """Tests for the HTTP transport."""
 
     def setUp(self):
@@ -79,3 +80,22 @@ class TestHttpTransport(base.TestBase):
                                               params=params,
                                               headers=final_headers,
                                               data=None)
+
+    def test_error_handling(self):
+        params = {'name': 'Opportunity',
+                  'address': 'NASA'}
+        req = request.Request('http://example.org/',
+                              operation='test_operation',
+                              params=params)
+
+        with mock.patch.object(self.transport.client, 'request',
+                               autospec=True) as request_method:
+
+            exception_iterator = self.transport.http_to_marconi.items()
+
+            for response_code, exception in exception_iterator:
+
+                resp = prequest.Response()
+                resp.status_code = response_code
+                request_method.return_value = resp
+                self.assertRaises(exception, lambda: self.transport.send(req))
