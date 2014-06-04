@@ -50,7 +50,8 @@ class Message(object):
 
     def delete(self):
         req, trans = self.queue.client._request_and_transport()
-        core.message_delete(trans, req, self.queue._name, self._id)
+        core.message_delete(trans, req, self.queue._name,
+                            self._id, self.claim_id)
 
 
 def create_object(parent):

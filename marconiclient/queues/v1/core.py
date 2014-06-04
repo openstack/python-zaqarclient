@@ -243,7 +243,8 @@ def message_get_many(transport, request, queue_name, messages, callback=None):
     return resp.deserialized_content
 
 
-def message_delete(transport, request, queue_name, message_id, callback=None):
+def message_delete(transport, request, queue_name, message_id,
+                   claim_id=None, callback=None):
     """Deletes messages from `queue_name`
 
     :param transport: Transport instance to use
@@ -263,6 +264,8 @@ def message_delete(transport, request, queue_name, message_id, callback=None):
     request.operation = 'message_delete'
     request.params['queue_name'] = queue_name
     request.params['message_id'] = message_id
+    if claim_id:
+        request.params['claim_id'] = claim_id
 
     transport.send(request)
 
