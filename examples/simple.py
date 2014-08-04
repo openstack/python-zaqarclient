@@ -14,9 +14,10 @@
 
 # NOTE(flaper87): Client should be moved to
 # an upper package. It's version agnostic.
-from marconiclient.queues.v1 import client
+from zaqarclient.queues.v1 import client
 
 URL = 'http://localhost:8888'
+URL = 'http://zaqar-fpercoco.rhcloud.com'
 
 
 def create_post_delete(queue_name, messages):

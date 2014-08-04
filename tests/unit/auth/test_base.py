@@ -13,8 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from marconiclient import auth
-from marconiclient.tests import base
+from zaqarclient import auth
+from zaqarclient.tests import base
 
 
 class TestBaseAuth(base.TestBase):

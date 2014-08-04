@@ -16,8 +16,8 @@
 
 import json
 
-from marconiclient.tests import base
-from marconiclient.transport import request
+from zaqarclient.tests import base
+from zaqarclient.transport import request
 
 
 HREF = '/v1/queue/'

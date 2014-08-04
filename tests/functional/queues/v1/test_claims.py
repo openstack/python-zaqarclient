@@ -14,8 +14,8 @@
 # limitations under the License.
 
 
-from marconiclient.tests.queues import claims
-from marconiclient.transport import http
+from zaqarclient.tests.queues import claims
+from zaqarclient.transport import http
 
 
 class QueuesV1ClaimHttpFunctionalTest(claims.QueuesV1ClaimFunctionalTest):

@@ -21,9 +21,9 @@ try:
 except ImportError:
     ksclient = None
 
-from marconiclient import auth
-from marconiclient.tests import base
-from marconiclient.transport import request
+from zaqarclient import auth
+from zaqarclient.tests import base
+from zaqarclient.transport import request
 
 
 class _FakeKeystoneClient(object):

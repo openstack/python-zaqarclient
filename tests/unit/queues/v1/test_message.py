@@ -16,12 +16,12 @@
 import json
 import mock
 
-from marconiclient.queues.v1 import iterator as iterate
-from marconiclient.queues.v1 import message
-from marconiclient.tests.queues import base
-from marconiclient.tests.queues import messages as test_message
-from marconiclient.transport import http
-from marconiclient.transport import response
+from zaqarclient.queues.v1 import iterator as iterate
+from zaqarclient.queues.v1 import message
+from zaqarclient.tests.queues import base
+from zaqarclient.tests.queues import messages as test_message
+from zaqarclient.transport import http
+from zaqarclient.transport import response
 
 
 class TestMessageIterator(base.QueuesTestBase):

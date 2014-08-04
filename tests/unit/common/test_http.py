@@ -17,8 +17,8 @@ import json
 
 import mock
 
-from marconiclient.common import http
-from marconiclient.tests import base
+from zaqarclient.common import http
+from zaqarclient.tests import base
 
 
 class TestCommonHttp(base.TestBase):

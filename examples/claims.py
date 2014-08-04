@@ -15,7 +15,7 @@
 
 import time
 
-from marconiclient.queues.v1 import client
+from zaqarclient.queues.v1 import client
 
 URL = 'http://localhost:8888'
 

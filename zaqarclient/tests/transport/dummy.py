@@ -1,4 +1,4 @@
-# Copyright (c) Rackspace Hosting.
+# Copyright (c) 2013 Red Hat, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,12 +14,10 @@
 # limitations under the License.
 
 
-from zaqarclient.tests.queues import claims
-from zaqarclient.transport import http
+from zaqarclient.transport import base
 
 
-class QueuesV1ClaimsHttpUnitTest(claims.QueueV1ClaimUnitTest):
+class DummyTransport(base.Transport):
 
-    transport_cls = http.HttpTransport
-    url = 'http://127.0.0.1:8888/v1'
-    version = 1
+    def send(self, request):
+        pass

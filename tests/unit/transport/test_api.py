@@ -13,9 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from marconiclient import errors
-from marconiclient.tests import base
-from marconiclient.tests.transport import api as tapi
+from zaqarclient import errors
+from zaqarclient.tests import base
+from zaqarclient.tests.transport import api as tapi
 
 
 class TestApi(base.TestBase):

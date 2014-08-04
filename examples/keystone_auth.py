@@ -13,14 +13,14 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from marconiclient.queues.v1 import client
+from zaqarclient.queues.v1 import client
 
 URL = 'http://localhost:8888'
 
 
 def create_post_delete(queue_name, messages):
     """Creates a queue, posts messages to it and finally deletes it with
-    keystone auth strategy enabled on Marconi server side.
+    keystone auth strategy enabled on Zaqar server side.
 
     :params queue_name: The name of the queue
     :type queue_name: `six.text_type`
@@ -29,8 +29,8 @@ def create_post_delete(queue_name, messages):
     """
     conf = {'auth_opts':
             {'backend': 'keystone',
-             'options': {'os_username': 'marconi',
-                         'os_password': 'marconi',
+             'options': {'os_username': 'zaqar',
+                         'os_password': 'zaqar',
                          'os_project_id': 'ccad479c402f43a2994f6e372ab3f8fe',
                          'os_project_name': '',
                          'os_auth_url': 'http://127.0.0.1:5000/v2.0/',

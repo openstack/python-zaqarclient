@@ -14,8 +14,8 @@
 # limitations under the License.
 
 
-from marconiclient.tests.queues import queues
-from marconiclient.transport import http
+from zaqarclient.tests.queues import queues
+from zaqarclient.transport import http
 
 
 class QueuesV1QueueHttpFunctionalTest(queues.QueuesV1QueueFunctionalTest):

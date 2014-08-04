@@ -1,4 +1,4 @@
-# Copyright (c) Rackspace Hosting.
+# Copyright (c) 2013 Rackspace, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,14 +12,15 @@
 # implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""Easy creation of mock Zaqar message replies."""
 
 
-from zaqarclient.tests.queues import claims
-from zaqarclient.transport import http
-
-
-class QueuesV1ClaimsHttpUnitTest(claims.QueueV1ClaimUnitTest):
-
-    transport_cls = http.HttpTransport
-    url = 'http://127.0.0.1:8888/v1'
-    version = 1
+def message(href='/v1/queues/dgq/messages/w78sdwsqdsib',
+            ttl=0, age=0, body=None):
+    body = body or {}
+    return {
+        'href': href,
+        'ttl': ttl,
+        'age': age,
+        'body': body
+    }

@@ -14,8 +14,8 @@
 # limitations under the License.
 
 
-from marconiclient.tests.queues import shard
-from marconiclient.transport import http
+from zaqarclient.tests.queues import shard
+from zaqarclient.transport import http
 
 
 class QueuesV1ShardHttpUnitTest(shard.QueuesV1ShardUnitTest):
