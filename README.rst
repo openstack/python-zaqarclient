@@ -30,6 +30,40 @@ For the adventurous, you may also install the latest code directly from GitHub::
 
     pip install git+https://github.com/openstack/python-marconiclient.git
 
+=================
+What's in the box
+=================
+
+By installing python-marconiclient you get programmatic access to the Marconi v1.0 API library. Plus, it installs a plugin to python-openstackclient that allows you to perform simple queue operations.
+
+==========
+How to use
+==========
+
+-------------
+Python client
+-------------
+
+Details about design, features, usage and workflow can be found in the `Python Client Wiki`_.
+
+.. _Python Client Wiki: https://wiki.openstack.org/wiki/Marconi/PythonClient
+
+----------------------
+Command line interface
+----------------------
+
+Marconi bases its client implementation in the `OpenStack Client`_. It can be installed and configured by following the instructions in `Getting Started`_ and `Configuration`_ in the OpenStack Client readme respectively.
+
+The CLI currently allows creation, removal and listing of queues. Some examples are:
+
+    $  openstack queue list --limit 3
+    $  openstack queue create myqueue
+    $  openstack queue delete myqueue
+
+.. _`OpenStack Client`: https://github.com/openstack/python-openstackclient
+.. _`Getting Started`: https://github.com/openstack/python-openstackclient#getting-started
+.. _`Configuration`: https://github.com/openstack/python-openstackclient#configuration
+
 ============
 Contributing
 ============
