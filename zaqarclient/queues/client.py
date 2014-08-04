@@ -14,21 +14,13 @@
 # limitations under the License.
 
 from zaqarclient import errors
-from zaqarclient.queues import client
-from zaqarclient.tests import base
+from zaqarclient.queues.v1 import client as cv1
+
+_CLIENTS = {1: cv1.Client}
 
 
-class TestClient(base.TestBase):
-
-    def test_get_instance(self):
-        version = list(client._CLIENTS.keys())[0]
-        cli = client.Client('http://example.com',
-                            version, {})
-        self.assertTrue(isinstance(cli,
-                                   client._CLIENTS[version]))
-
-    def test_version_failure(self):
-        self.assertRaises(errors.ZaqarError,
-                          client.Client,
-                          'http://example.org',
-                          -1, {})
+def Client(url=None, version=None, conf=None):
+    try:
+        return _CLIENTS[version](url, version, conf)
+    except KeyError:
+        raise errors.ZaqarError('Unknown client version')

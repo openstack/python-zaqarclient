@@ -15,10 +15,10 @@
 
 import mock
 
-from marconiclient.queues import client
-from marconiclient.queues.v1 import core
-from marconiclient.tests import base
-from marconiclient.transport import response
+from zaqarclient.queues import client
+from zaqarclient.queues.v1 import core
+from zaqarclient.tests import base
+from zaqarclient.transport import response
 
 VERSION = 1
 

@@ -1,4 +1,4 @@
-# Copyright (c) Rackspace Hosting.
+# Copyright (c) 2013 Red Hat, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,13 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import abc
 
-from zaqarclient.tests.queues import claims
-from zaqarclient.transport import http
+import six
 
 
-class QueuesV1ClaimsHttpUnitTest(claims.QueueV1ClaimUnitTest):
+@six.add_metaclass(abc.ABCMeta)
+class Transport(object):
 
-    transport_cls = http.HttpTransport
-    url = 'http://127.0.0.1:8888/v1'
-    version = 1
+    def __init__(self, options):
+        self.options = options
+
+    @abc.abstractmethod
+    def send(self, request):
+        """Returns the response.
+
+        :returns: The final response
+        :rtype: `zaqarclient.transport.response.Response`
+        """

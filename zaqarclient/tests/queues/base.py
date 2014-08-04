@@ -13,22 +13,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from zaqarclient import errors
+import mock
+
 from zaqarclient.queues import client
 from zaqarclient.tests import base
+from zaqarclient.tests.transport import dummy
 
 
-class TestClient(base.TestBase):
+class QueuesTestBase(base.TestBase):
 
-    def test_get_instance(self):
-        version = list(client._CLIENTS.keys())[0]
-        cli = client.Client('http://example.com',
-                            version, {})
-        self.assertTrue(isinstance(cli,
-                                   client._CLIENTS[version]))
+    transport_cls = dummy.DummyTransport
+    url = 'http://127.0.0.1:8888/v1'
+    version = 1
 
-    def test_version_failure(self):
-        self.assertRaises(errors.ZaqarError,
-                          client.Client,
-                          'http://example.org',
-                          -1, {})
+    def setUp(self):
+        super(QueuesTestBase, self).setUp()
+        self.transport = self.transport_cls(self.conf)
+
+        self.client = client.Client(self.url, self.version,
+                                    self.conf)
+
+        mocked_transport = mock.Mock(return_value=self.transport)
+        self.client._get_transport = mocked_transport
+        self.queue = self.client.queue(1, auto_create=False)

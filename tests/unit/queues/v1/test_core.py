@@ -16,12 +16,12 @@
 import json
 import mock
 
-from marconiclient.queues.v1 import core
-from marconiclient.tests import base
-from marconiclient.tests.transport import dummy
-from marconiclient.transport import errors
-from marconiclient.transport import request
-from marconiclient.transport import response
+from zaqarclient.queues.v1 import core
+from zaqarclient.tests import base
+from zaqarclient.tests.transport import dummy
+from zaqarclient.transport import errors
+from zaqarclient.transport import request
+from zaqarclient.transport import response
 
 
 class TestV1Core(base.TestBase):

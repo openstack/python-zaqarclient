@@ -1,4 +1,4 @@
-# Copyright 2014 IBM Corp.
+# Copyright 2013 Red Hat, Inc.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
 #    not use this file except in compliance with the License. You may obtain
@@ -12,14 +12,22 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from zaqarclient.queues import client
-
-URL = 'http://localhost:8888'
+__all__ = ['ZaqarError', 'DriverLoadFailure', 'InvalidOperation']
 
 
-def healthy():
-    cli = client.Client(url=URL, version=1)
-    return True if cli.health() else False
+class ZaqarError(Exception):
+    """Base class for errors."""
 
-if __name__ == '__main__':
-    healthy()
+
+class DriverLoadFailure(ZaqarError):
+    """Raised if a transport driver can't be loaded."""
+
+    def __init__(self, driver, ex):
+        msg = 'Failed to load transport driver "%s": %s' % (driver, ex)
+        super(DriverLoadFailure, self).__init__(msg)
+        self.driver = driver
+        self.ex = ex
+
+
+class InvalidOperation(ZaqarError):
+    """Raised when attempted a non existent operation."""

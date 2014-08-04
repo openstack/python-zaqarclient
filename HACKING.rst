@@ -1,5 +1,5 @@
-Marconi Style Commandments
-==========================
+Zaqar Style Commandments
+========================
 
 - Step 1: Read http://www.python.org/dev/peps/pep-0008/
 - Step 2: Read http://www.python.org/dev/peps/pep-0008/ again
@@ -93,7 +93,7 @@ Template::
   \n
   {{third-party lib imports in human alphabetical order}}
   \n
-  {{marconi imports in human alphabetical order}}
+  {{zaqar imports in human alphabetical order}}
   \n
   \n
   {{begin your code}}
@@ -109,9 +109,9 @@ Example::
 
   import eventlet
 
-  import marconi.common
-  from marconi import test
-  import marconi.transport
+  import zaqar.common
+  from zaqar import test
+  import zaqar.transport
 
 
 More Import Examples
@@ -119,11 +119,11 @@ More Import Examples
 
 **INCORRECT** ::
 
-  import marconi.transport.wsgi as wsgi
+  import zaqar.transport.wsgi as wsgi
 
 **CORRECT** ::
 
-  from marconi.transport import wsgi
+  from zaqar.transport import wsgi
 
 Docstrings
 ----------

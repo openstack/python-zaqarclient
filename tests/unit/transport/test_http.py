@@ -16,10 +16,10 @@
 import mock
 import requests as prequest
 
-from marconiclient.tests import base
-from marconiclient.tests.transport import api
-from marconiclient.transport import http
-from marconiclient.transport import request
+from zaqarclient.tests import base
+from zaqarclient.tests.transport import api
+from zaqarclient.transport import http
+from zaqarclient.transport import request
 
 
 class TestHttpTransport(base.TestBase):
@@ -91,7 +91,7 @@ class TestHttpTransport(base.TestBase):
         with mock.patch.object(self.transport.client, 'request',
                                autospec=True) as request_method:
 
-            exception_iterator = self.transport.http_to_marconi.items()
+            exception_iterator = self.transport.http_to_zaqar.items()
 
             for response_code, exception in exception_iterator:
 
