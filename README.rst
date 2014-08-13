@@ -34,7 +34,9 @@ For the adventurous, you may also install the latest code directly from GitHub::
 What's in the box
 =================
 
-By installing python-zaqarclient you get programmatic access to the Zaqar v1.0 API library. Plus, it installs a plugin to python-openstackclient that allows you to perform simple queue operations.
+By installing python-zaqarclient you get programmatic access to the Zaqar v1.0
+API library. Plus, it installs a plugin to python-openstackclient that allows
+you to perform simple queue operations.
 
 ==========
 How to use
@@ -44,7 +46,8 @@ How to use
 Python client
 -------------
 
-Details about design, features, usage and workflow can be found in the `Python Client Wiki`_.
+Details about design, features, usage and workflow can be found in the
+`Python Client Wiki`_.
 
 .. _Python Client Wiki: https://wiki.openstack.org/wiki/Zaqar/PythonClient
 
@@ -52,9 +55,12 @@ Details about design, features, usage and workflow can be found in the `Python C
 Command line interface
 ----------------------
 
-Zaqar bases its client implementation in the `OpenStack Client`_. It can be installed and configured by following the instructions in `Getting Started`_ and `Configuration`_ in the OpenStack Client readme respectively.
+Zaqar bases its client implementation in the `OpenStack Client`_. It can be
+installed and configured by following the instructions in `Getting Started`_
+and `Configuration`_ in the OpenStack Client readme respectively.
 
-The CLI currently allows creation, removal and listing of queues. Some examples are:
+The CLI currently allows creation, removal and listing of queues. Some examples
+are::
 
     $  openstack queue list --limit 3
     $  openstack queue create myqueue
@@ -68,7 +74,9 @@ The CLI currently allows creation, removal and listing of queues. Some examples 
 Contributing
 ============
 
-Be sure to reference the `HACKING`_ file for details on coding style. You may also wish to read through Zaqar's `Contributor Guide`_ before contributing your first patch.
+Be sure to reference the `HACKING`_ file for details on coding style. You may
+also wish to read through Zaqar's `Contributor Guide`_ before contributing your
+first patch.
 
 .. _Zaqar: https://github.com/openstack/zaqar
 .. _HACKING: https://github.com/openstack/python-zaqarclient/tree/master/HACKING.rst
