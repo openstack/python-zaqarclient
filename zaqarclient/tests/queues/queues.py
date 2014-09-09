@@ -312,15 +312,12 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
 
         messages = [
             {'ttl': 60, 'body': 'Post It 1!'},
-
-            # NOTE(falper87): Waiting for
-            # https://github.com/racker/falcon/issues/198
-            #{'ttl': 60, 'body': 'Post It 2!'},
-            #{'ttl': 60, 'body': 'Post It 3!'},
+            {'ttl': 60, 'body': 'Post It 2!'},
+            {'ttl': 60, 'body': 'Post It 3!'},
         ]
 
         res = queue.post(messages)['resources']
         msgs_id = [ref.split('/')[-1] for ref in res]
         messages = queue.messages(*msgs_id)
         self.assertTrue(isinstance(messages, iterator._Iterator))
-        self.assertEqual(len(list(messages)), 1)
+        self.assertEqual(len(list(messages)), 3)
