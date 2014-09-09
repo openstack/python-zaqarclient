@@ -221,3 +221,20 @@ class TestV1Core(base.TestBase):
 
             req = request.Request()
             core.health(self.transport, req)
+
+
+class TestV1_1Core(TestV1Core):
+
+    def test_message_pop(self):
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+            resp = response.Response(None, '{}')
+            send_method.return_value = resp
+
+            req = request.Request()
+            core.message_pop(self.transport, req,
+                             'test', count=5)
+
+            self.assertIn('queue_name', req.params)
+            self.assertIn('pop', req.params)
+            self.assertEqual(req.params['pop'], 5)

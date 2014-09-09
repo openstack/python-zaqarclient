@@ -224,3 +224,16 @@ class V1(api.Api):
 
 class V1_1(V1):
     label = 'v1.1'
+
+
+V1_1.schema.update({
+    'message_pop': {
+        'ref': 'queues/{queue_name}/messages/',
+        'method': 'DELETE',
+        'required': ['queue_name', 'pop'],
+        'properties': {
+            'queue_name': {'type': 'string'},
+            'pop': {'type': 'integer'},
+        }
+    },
+})

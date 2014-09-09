@@ -351,3 +351,52 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
         messages = queue.delete_messages(*msgs_id)
         self.assertTrue(isinstance(messages, iterator._Iterator))
         self.assertEqual(len(list(messages)), 1)
+
+
+class QueuesV1_1QueueUnitTest(QueuesV1QueueUnitTest):
+
+    def test_message_pop(self):
+        returned = [{
+            'href': '/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01',
+            'ttl': 800,
+            'age': 790,
+            'body': {'event': 'ActivateAccount', 'mode': 'active'}
+        }, {
+            'href': '/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b02',
+            'ttl': 800,
+            'age': 790,
+            'body': {'event': 'ActivateAccount', 'mode': 'active'}
+        }]
+
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, json.dumps(returned))
+            send_method.return_value = resp
+
+            msg = self.queue.pop(count=2)
+            self.assertIsInstance(msg, iterator._Iterator)
+
+            # NOTE(flaper87): Nothing to assert here,
+            # just checking our way down to the transport
+            # doesn't crash.
+
+
+class QueuesV1_1QueueFunctionalTest(QueuesV1QueueFunctionalTest):
+
+    def test_message_pop(self):
+        queue = self.client.queue("test_queue")
+        queue._get_transport = mock.Mock(return_value=self.transport)
+
+        messages = [
+            {'ttl': 60, 'body': 'Post It 1!'},
+            {'ttl': 60, 'body': 'Post It 2!'},
+            {'ttl': 60, 'body': 'Post It 2!'},
+        ]
+
+        messages = queue.pop(count=2)
+        self.assertTrue(isinstance(messages, iterator._Iterator))
+        self.assertEqual(len(list(messages)), 2)
+
+        remaining = queue.messages()
+        self.assertEqual(len(list(remaining)), 1)

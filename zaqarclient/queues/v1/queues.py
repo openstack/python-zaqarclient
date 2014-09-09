@@ -173,6 +173,23 @@ class Queue(object):
         return core.message_delete_many(trans, req, self._name,
                                         set(messages))
 
+    def pop(self, count=1):
+        """Pop `count` messages from the server
+
+        :param count: Number of messages to pop.
+        :type count: int
+
+        :returns: List of messages
+        :rtype: `list`
+        """
+
+        req, trans = self.client._request_and_transport()
+        msgs = core.message_pop(trans, req, self._name, count=count)
+        return iterator._Iterator(self.client,
+                                  msgs,
+                                  'messages',
+                                  message.create_object(self))
+
     def claim(self, id=None, ttl=None, grace=None,
               limit=None):
         return claim_api.Claim(self, id=id, ttl=ttl, grace=grace, limit=limit)
