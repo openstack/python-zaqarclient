@@ -15,24 +15,29 @@
 
 import mock
 
+import ddt
+
 from zaqarclient.queues import client
 from zaqarclient.queues.v1 import core
 from zaqarclient.tests import base
 from zaqarclient.transport import response
 
-VERSION = 1
+VERSIONS = [1, 1.1]
 
 
+@ddt.ddt
 class TestClient(base.TestBase):
 
-    def test_transport(self):
+    @ddt.data(*VERSIONS)
+    def test_transport(self, version):
         cli = client.Client('http://example.com',
-                            VERSION, {})
+                            version, {})
         self.assertIsNotNone(cli.transport())
 
-    def test_health(self):
+    @ddt.data(*VERSIONS)
+    def test_health(self, version):
         cli = client.Client('http://example.com',
-                            VERSION, {})
+                            version, {})
         with mock.patch.object(core, 'health', autospec=True) as core_health:
             resp = response.Response(None, None)
             core_health.return_value = resp

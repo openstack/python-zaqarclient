@@ -210,3 +210,7 @@ class V1(api.Api):
             'method': 'GET',
         },
     }
+
+
+class V1_1(V1):
+    label = 'v1.1'
