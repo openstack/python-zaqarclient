@@ -177,6 +177,21 @@ class TestV1Core(base.TestBase):
             core.message_delete(self.transport, req,
                                 'test', 'message_id')
 
+    def test_message_delete_many(self):
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+            resp = response.Response(None, None)
+            send_method.return_value = resp
+
+            ids = ['a', 'b']
+            req = request.Request()
+            core.message_delete_many(self.transport, req,
+                                     'test', ids=ids)
+
+            self.assertIn('queue_name', req.params)
+            self.assertIn('ids', req.params)
+            self.assertEqual(ids, req.params['ids'])
+
     # ADMIN API
     def test_shard_create(self):
         with mock.patch.object(self.transport, 'send',

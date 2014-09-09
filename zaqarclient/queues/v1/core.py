@@ -270,6 +270,30 @@ def message_delete(transport, request, queue_name, message_id,
     transport.send(request)
 
 
+def message_delete_many(transport, request, queue_name,
+                        ids, callback=None):
+    """Deletes `ids` messages from `queue_name`
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param queue_name: Queue reference name.
+    :type queue_name: `six.text_type`
+    :param ids: Ids of the messages to delete
+    :type ids: List of `six.text_type`
+    :param callback: Optional callable to use as callback.
+        If specified, this request will be sent asynchronously.
+        (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
+    :type callback: Callable object.
+    """
+
+    request.operation = 'message_delete_many'
+    request.params['queue_name'] = queue_name
+    request.params['ids'] = ids
+    transport.send(request)
+
+
 def claim_create(transport, request, queue_name, **kwargs):
     """Creates a Claim `claim_id` on the queue `queue_name`
 

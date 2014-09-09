@@ -162,6 +162,17 @@ class Queue(object):
                                   'messages',
                                   message.create_object(self))
 
+    def delete_messages(self, *messages):
+        """Deletes a set of messages from the server
+
+        :param messages: List of messages' ids to delete.
+        :type messages: *args of `six.string_type`
+        """
+
+        req, trans = self.client._request_and_transport()
+        return core.message_delete_many(trans, req, self._name,
+                                        set(messages))
+
     def claim(self, id=None, ttl=None, grace=None,
               limit=None):
         return claim_api.Claim(self, id=id, ttl=ttl, grace=grace, limit=limit)

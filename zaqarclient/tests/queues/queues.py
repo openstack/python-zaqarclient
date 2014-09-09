@@ -198,6 +198,21 @@ class QueuesV1QueueUnitTest(base.QueuesTestBase):
             # just checking our way down to the transport
             # doesn't crash.
 
+    def test_message_delete_many(self):
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, None)
+            send_method.return_value = resp
+
+            rst = self.queue.delete_messages('50b68a50d6f5b8c8a7c62b01',
+                                             '50b68a50d6f5b8c8a7c62b02')
+            self.assertEqual(rst, None)
+
+            # NOTE(flaper87): Nothing to assert here,
+            # just checking our way down to the transport
+            # doesn't crash.
+
 
 class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
 
@@ -321,3 +336,18 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
         messages = queue.messages(*msgs_id)
         self.assertTrue(isinstance(messages, iterator._Iterator))
         self.assertEqual(len(list(messages)), 3)
+
+    def test_message_delete_many_functional(self):
+        queue = self.client.queue("test_queue")
+        queue._get_transport = mock.Mock(return_value=self.transport)
+
+        messages = [
+            {'ttl': 60, 'body': 'Post It 1!'},
+            {'ttl': 60, 'body': 'Post It 2!'},
+        ]
+
+        res = queue.post(messages)['resources']
+        msgs_id = [ref.split('/')[-1] for ref in res]
+        messages = queue.delete_messages(*msgs_id)
+        self.assertTrue(isinstance(messages, iterator._Iterator))
+        self.assertEqual(len(list(messages)), 1)

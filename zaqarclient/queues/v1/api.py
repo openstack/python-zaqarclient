@@ -144,6 +144,16 @@ class V1(api.Api):
             }
         },
 
+        'message_delete_many': {
+            'ref': 'queues/{queue_name}/messages/',
+            'method': 'DELETE',
+            'required': ['queue_name', 'ids'],
+            'properties': {
+                'queue_name': {'type': 'string'},
+                'ids': {'type': 'string'},
+            }
+        },
+
         'shard_create': {
             'ref': 'shards/{shard_name}',
             'method': 'PUT',
