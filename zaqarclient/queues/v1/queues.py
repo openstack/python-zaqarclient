@@ -52,7 +52,8 @@ class Queue(object):
         :param new_meta: A dictionary containing
             an updated metadata object. If present
             the queue metadata will be updated in
-            remote server.
+            remote server. If the new_meta is empty,
+            the metadata object will be cleared.
         :type new_meta: `dict`
         :param force_reload: Whether to ignored the
             cached metadata and reload it from the
@@ -63,7 +64,9 @@ class Queue(object):
         """
         req, trans = self.client._request_and_transport()
 
-        if new_meta:
+        # NOTE(jeffrey4l): Ensure that metadata is cleared when the new_meta
+        # is a empty dict.
+        if new_meta is not None:
             core.queue_set_metadata(trans, req, self._name, new_meta)
             self._metadata = new_meta
 
