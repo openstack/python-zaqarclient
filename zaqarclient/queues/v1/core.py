@@ -28,6 +28,7 @@ Functions present in this module assume that:
 """
 
 import json
+import warnings
 
 import zaqarclient.transport.errors as errors
 
@@ -385,38 +386,50 @@ def claim_delete(transport, request, queue_name, claim_id):
     transport.send(request)
 
 
-def shard_create(transport, request, shard_name, shard_data):
-    """Creates a shard called `shard_name`
+def shard_create(transport, request, pool_name, pool_data):
+    warnings.warn(_('`shard_create`\'s been renamed to `pool_create` '),
+                  DeprecationWarning, stacklevel=2)
+    return pool_create(transport, request, pool_name, pool_data)
+
+
+def shard_delete(transport, request, pool_name):
+    warnings.warn(_('`shard_delete`\'s been renamed to `pool_delete` '),
+                  DeprecationWarning, stacklevel=2)
+    return pool_delete(transport, request, pool_name)
+
+
+def pool_create(transport, request, pool_name, pool_data):
+    """Creates a pool called `pool_name`
 
     :param transport: Transport instance to use
     :type transport: `transport.base.Transport`
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
-    :param shard_name: Shard reference name.
-    :type shard_name: `six.text_type`
-    :param shard_data: Shard's properties, i.e: weight, uri, options.
-    :type shard_data: `dict`
+    :param pool_name: Pool reference name.
+    :type pool_name: `six.text_type`
+    :param pool_data: Pool's properties, i.e: weight, uri, options.
+    :type pool_data: `dict`
     """
 
-    request.operation = 'shard_create'
-    request.params['shard_name'] = shard_name
-    request.content = json.dumps(shard_data)
+    request.operation = 'pool_create'
+    request.params['pool_name'] = pool_name
+    request.content = json.dumps(pool_data)
     transport.send(request)
 
 
-def shard_delete(transport, request, shard_name):
-    """Deletes the shard `shard_name`
+def pool_delete(transport, request, pool_name):
+    """Deletes the pool `pool_name`
 
     :param transport: Transport instance to use
     :type transport: `transport.base.Transport`
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
-    :param shard_name: Shard reference name.
-    :type shard_name: `six.text_type`
+    :param pool_name: Pool reference name.
+    :type pool_name: `six.text_type`
     """
 
-    request.operation = 'shard_delete'
-    request.params['shard_name'] = shard_name
+    request.operation = 'pool_delete'
+    request.params['pool_name'] = pool_name
     transport.send(request)
 
 

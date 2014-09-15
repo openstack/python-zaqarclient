@@ -13,39 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from zaqarclient.queues.v1 import core
+import warnings
+
+from zaqarclient.queues.v1 import pool
 
 
-class Shard(object):
+class Shard(pool.Pool):
 
-    def __init__(self, client, name,
-                 weight=None, uri=None,
-                 auto_create=True, **options):
-        self.client = client
-
-        self.uri = uri
-        self.name = name
-        self.weight = weight
-        self.options = options
-
-        if auto_create:
-            self.ensure_exists()
-
-    def ensure_exists(self):
-        """Ensures shard exists
-
-        This method is not race safe,
-        the shard could've been deleted
-        right after it was called.
-        """
-        req, trans = self.client._request_and_transport()
-
-        data = {'uri': self.uri,
-                'weight': self.weight,
-                'options': self.options}
-
-        core.shard_create(trans, req, self.name, data)
-
-    def delete(self):
-        req, trans = self.client._request_and_transport()
-        core.shard_delete(trans, req, self.name)
+    def __init__(self, *args, **kwargs):
+        warnings.warn(_('Shard\'s been renamed to `Pool` '
+                        'please use `zaqarclient.queues.v1.pool.Pool` '
+                        ' instead'), DeprecationWarning, stacklevel=2)
+        super(Shard, self).__init__(*args, **kwargs)

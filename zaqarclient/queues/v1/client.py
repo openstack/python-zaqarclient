@@ -14,11 +14,12 @@
 # limitations under the License.
 
 import uuid
+import warnings
 
 from zaqarclient.queues.v1 import core
 from zaqarclient.queues.v1 import iterator
+from zaqarclient.queues.v1 import pool
 from zaqarclient.queues.v1 import queues
-from zaqarclient.queues.v1 import shard
 from zaqarclient import transport
 from zaqarclient.transport import request
 
@@ -120,15 +121,20 @@ class Client(object):
 
     # ADMIN API
     def shard(self, ref, **kwargs):
-        """Returns a shard instance
+        warnings.warn(_('`shard_create`\'s been renamed to `pool_create` '),
+                      DeprecationWarning, stacklevel=2)
+        return self.pool(ref, **kwargs)
 
-        :param ref: Shard's reference name.
+    def pool(self, ref, **kwargs):
+        """Returns a pool instance
+
+        :param ref: Pool's reference name.
         :type ref: `six.text_type`
 
-        :returns: A shard instance
-        :rtype: `shard.Shard`
+        :returns: A pool instance
+        :rtype: `pool.Pool`
         """
-        return shard.Shard(self, ref, **kwargs)
+        return pool.Pool(self, ref, **kwargs)
 
     def health(self):
         """Gets the health status of Zaqar server."""

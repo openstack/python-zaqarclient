@@ -14,11 +14,11 @@
 # limitations under the License.
 
 
-from zaqarclient.tests.queues import shard
+from zaqarclient.tests.queues import pool
 from zaqarclient.transport import http
 
 
-class QueuesV1ShardHttpFunctionalTest(shard.QueuesV1ShardFunctionalTest):
+class QueuesV1PoolHttpFunctionalTest(pool.QueuesV1PoolFunctionalTest):
 
     is_functional = True
     transport_cls = http.HttpTransport

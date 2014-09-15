@@ -154,21 +154,21 @@ class V1(api.Api):
             }
         },
 
-        'shard_create': {
-            'ref': 'shards/{shard_name}',
+        'pool_create': {
+            'ref': 'pools/{pool_name}',
             'method': 'PUT',
-            'required': ['shard_name'],
+            'required': ['pool_name'],
             'properties': {
-                'shard_name': {'type': 'string'},
+                'pool_name': {'type': 'string'},
             }
         },
 
-        'shard_delete': {
-            'ref': 'shards/{shard_name}',
+        'pool_delete': {
+            'ref': 'pools/{pool_name}',
             'method': 'DELETE',
-            'required': ['shard_name'],
+            'required': ['pool_name'],
             'properties': {
-                'shard_name': {'type': 'string'},
+                'pool_name': {'type': 'string'},
             }
         },
 

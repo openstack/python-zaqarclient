@@ -14,11 +14,11 @@
 # limitations under the License.
 
 
-from zaqarclient.tests.queues import shard
+from zaqarclient.tests.queues import pool
 from zaqarclient.transport import http
 
 
-class QueuesV1ShardHttpUnitTest(shard.QueuesV1ShardUnitTest):
+class QueuesV1PoolHttpUnitTest(pool.QueuesV1PoolUnitTest):
 
     transport_cls = http.HttpTransport
     url = 'http://127.0.0.1:8888/v1'

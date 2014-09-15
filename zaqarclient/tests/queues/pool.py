@@ -19,28 +19,11 @@ from zaqarclient.tests.queues import base
 from zaqarclient.transport import response
 
 
-class QueuesV1ShardUnitTest(base.QueuesTestBase):
+class QueuesV1PoolUnitTest(base.QueuesTestBase):
 
-    def test_shard_create(self):
-        shard_data = {'weight': 10,
-                      'uri': 'sqlite://'}
-
-        with mock.patch.object(self.transport, 'send',
-                               autospec=True) as send_method:
-
-            resp = response.Response(None, None)
-            send_method.return_value = resp
-
-            # NOTE(flaper87): This will call
-            # ensure exists in the client instance
-            # since auto_create's default is True
-            shard = self.client.shard('test', **shard_data)
-            self.assertEqual(shard.name, 'test')
-            self.assertEqual(shard.weight, 10)
-
-    def test_shard_delete(self):
-        shard_data = {'weight': 10,
-                      'uri': 'sqlite://'}
+    def test_pool_create(self):
+        pool_data = {'weight': 10,
+                     'uri': 'sqlite://'}
 
         with mock.patch.object(self.transport, 'send',
                                autospec=True) as send_method:
@@ -51,27 +34,44 @@ class QueuesV1ShardUnitTest(base.QueuesTestBase):
             # NOTE(flaper87): This will call
             # ensure exists in the client instance
             # since auto_create's default is True
-            shard = self.client.shard('test', **shard_data)
-            shard.delete()
+            pool = self.client.pool('test', **pool_data)
+            self.assertEqual(pool.name, 'test')
+            self.assertEqual(pool.weight, 10)
+
+    def test_pool_delete(self):
+        pool_data = {'weight': 10,
+                     'uri': 'sqlite://'}
+
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, None)
+            send_method.return_value = resp
+
+            # NOTE(flaper87): This will call
+            # ensure exists in the client instance
+            # since auto_create's default is True
+            pool = self.client.pool('test', **pool_data)
+            pool.delete()
 
             # NOTE(flaper87): Nothing to assert here,
             # just checking our way down to the transport
             # doesn't crash.
 
 
-class QueuesV1ShardFunctionalTest(base.QueuesTestBase):
+class QueuesV1PoolFunctionalTest(base.QueuesTestBase):
 
-    def test_shard_create(self):
-        shard_data = {'weight': 10,
-                      'uri': 'sqlite://'}
+    def test_pool_create(self):
+        pool_data = {'weight': 10,
+                     'uri': 'sqlite://'}
 
-        shard = self.client.shard('test', **shard_data)
-        self.assertEqual(shard.name, 'test')
-        self.assertEqual(shard.weight, 10)
+        pool = self.client.pool('test', **pool_data)
+        self.assertEqual(pool.name, 'test')
+        self.assertEqual(pool.weight, 10)
 
-    def test_shard_delete(self):
-        shard_data = {'weight': 10,
-                      'uri': 'sqlite://'}
+    def test_pool_delete(self):
+        pool_data = {'weight': 10,
+                     'uri': 'sqlite://'}
 
-        shard = self.client.shard('test', **shard_data)
-        shard.delete()
+        pool = self.client.pool('test', **pool_data)
+        pool.delete()
