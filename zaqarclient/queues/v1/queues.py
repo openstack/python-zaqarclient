@@ -31,6 +31,10 @@ class Queue(object):
         if auto_create:
             self.ensure_exists()
 
+    @property
+    def name(self):
+        return self._name
+
     def exists(self):
         """Checks if the queue exists."""
         req, trans = self.client._request_and_transport()
