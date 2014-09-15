@@ -56,10 +56,30 @@ def _common_queue_ops(operation, transport, request, name, callback=None):
     return resp.deserialized_content
 
 
-def queue_create(transport, request, name, callback=None):
-    """Creates a queue."""
-    return _common_queue_ops('queue_create', transport,
-                             request, name, callback=callback)
+def queue_create(transport, request, name,
+                 metadata=None, callback=None):
+    """Creates a queue
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param name: Queue reference name.
+    :type name: `six.text_type`
+    :param metadata: Queue's metadata object. (>=v1.1)
+    :type metadata: `dict`
+    :param callback: Optional callable to use as callback.
+        If specified, this request will be sent asynchronously.
+        (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
+    :type callback: Callable object.
+    """
+
+    request.operation = 'queue_create'
+    request.params['queue_name'] = name
+    request.content = metadata and json.dumps(metadata)
+
+    resp = transport.send(request)
+    return resp.deserialized_content
 
 
 def queue_exists(transport, request, name, callback=None):

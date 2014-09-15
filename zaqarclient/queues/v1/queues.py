@@ -67,7 +67,10 @@ class Queue(object):
         # NOTE(jeffrey4l): Ensure that metadata is cleared when the new_meta
         # is a empty dict.
         if new_meta is not None:
-            core.queue_set_metadata(trans, req, self._name, new_meta)
+            if req.api.is_supported('queue_set_metadata'):
+                core.queue_set_metadata(trans, req, self._name, new_meta)
+            else:
+                core.queue_create(trans, req, self._name, metadata=new_meta)
             self._metadata = new_meta
 
         # TODO(flaper87): Cache with timeout

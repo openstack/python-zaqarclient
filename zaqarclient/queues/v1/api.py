@@ -242,6 +242,7 @@ class V1(api.Api):
 
 class V1_1(V1):
     label = 'v1.1'
+    schema = V1.schema.copy()
 
 
 V1_1.schema.update({
@@ -255,3 +256,6 @@ V1_1.schema.update({
         }
     },
 })
+
+del V1_1.schema['queue_get_metadata']
+del V1_1.schema['queue_set_metadata']

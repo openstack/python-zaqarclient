@@ -33,8 +33,24 @@ class QueuesV1QueueUnitTest(base.QueuesTestBase):
             resp = response.Response(None, json.dumps(test_metadata))
             send_method.return_value = resp
 
-            metadata = self.queue.metadata()
+            metadata = self.queue.metadata(test_metadata)
             self.assertEqual(metadata, test_metadata)
+
+    def test_queue_metadata_update(self):
+        test_metadata = {'type': 'Bank Accounts'}
+        new_meta = {'flavor': 'test'}
+
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, json.dumps(test_metadata))
+            send_method.return_value = resp
+
+            metadata = self.queue.metadata(test_metadata)
+            self.assertEqual(metadata, test_metadata)
+
+            metadata = self.queue.metadata(new_meta)
+            self.assertEqual(metadata, new_meta)
 
     def test_queue_create(self):
         with mock.patch.object(self.transport, 'send',

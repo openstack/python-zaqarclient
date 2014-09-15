@@ -25,6 +25,16 @@ class Api(object):
     label = None
     validators = {}
 
+    def is_supported(self, operation):
+        """Returns `True` if `operation` is supported
+
+        :param operation: The operation to check on.
+        :type operation: `six.text_type`
+
+        :rtype: bool
+        """
+        return operation in self.schema
+
     def get_schema(self, operation):
         """Returns the schema for an operation
 
