@@ -23,5 +23,5 @@ class QueuesV1_1FlavorHttpFunctionalTest(
 
     is_functional = True
     transport_cls = http.HttpTransport
-    url = 'http://127.0.0.1:8888/v1.1'
+    url = 'http://127.0.0.1:8888'
     version = 1.1
