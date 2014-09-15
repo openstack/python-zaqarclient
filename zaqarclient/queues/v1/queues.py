@@ -44,7 +44,8 @@ class Queue(object):
         right after it was called.
         """
         req, trans = self.client._request_and_transport()
-        core.queue_create(trans, req, self._name)
+        if req.api.is_supported('queue_set_metadata'):
+            core.queue_create(trans, req, self._name)
 
     def metadata(self, new_meta=None, force_reload=False):
         """Get metadata and return it
