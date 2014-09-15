@@ -20,9 +20,6 @@ from zaqarclient.tests import base
 from zaqarclient.transport import request
 
 
-HREF = '/v1/queue/'
-
-
 class TestRequest(base.TestBase):
 
     def test_request_project_id(self):

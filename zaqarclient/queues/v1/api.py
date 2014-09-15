@@ -145,7 +145,7 @@ class V1(api.Api):
         },
 
         'message_delete_many': {
-            'ref': 'queues/{queue_name}/messages/',
+            'ref': 'queues/{queue_name}/messages',
             'method': 'DELETE',
             'required': ['queue_name', 'ids'],
             'properties': {
@@ -247,7 +247,7 @@ class V1_1(V1):
 
 V1_1.schema.update({
     'message_pop': {
-        'ref': 'queues/{queue_name}/messages/',
+        'ref': 'queues/{queue_name}/messages',
         'method': 'DELETE',
         'required': ['queue_name', 'pop'],
         'properties': {
