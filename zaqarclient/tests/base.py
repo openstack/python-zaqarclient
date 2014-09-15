@@ -29,7 +29,13 @@ class TestBase(testtools.TestCase):
     def setUp(self):
         super(TestBase, self).setUp()
 
-        self.conf = {}
+        self.conf = {
+            'auth_opts': {
+                'options': {
+                    'os_project_id': 'my-project'
+                }
+            }
+        }
         self.useFixture(fixtures.FakeLogger('zaqar'))
 
         # NOTE(kgriffs): Don't monkey-patch stdout since it breaks

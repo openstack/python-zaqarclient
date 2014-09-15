@@ -47,6 +47,9 @@ def prepare_request(auth_opts=None, data=None, **kwargs):
     # to get the api_version.
     req = auth_backend.authenticate(1, req)
 
+    req.headers['X-Project-Id'] = auth_opts.get('options',
+                                                {}).get('os_project_id')
+
     if data is not None:
         req.content = json.dumps(data)
     return req
