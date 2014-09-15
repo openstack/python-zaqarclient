@@ -31,3 +31,7 @@ class DriverLoadFailure(ZaqarError):
 
 class InvalidOperation(ZaqarError):
     """Raised when attempted a non existent operation."""
+
+
+class UnsupportedVersion(ZaqarError):
+    """Raised if there is no endpoint which supports the requested version."""

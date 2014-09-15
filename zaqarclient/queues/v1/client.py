@@ -16,7 +16,9 @@
 import uuid
 import warnings
 
+from zaqarclient.common import decorators
 from zaqarclient.queues.v1 import core
+from zaqarclient.queues.v1 import flavor
 from zaqarclient.queues.v1 import iterator
 from zaqarclient.queues.v1 import pool
 from zaqarclient.queues.v1 import queues
@@ -135,6 +137,18 @@ class Client(object):
         :rtype: `pool.Pool`
         """
         return pool.Pool(self, ref, **kwargs)
+
+    @decorators.version(min_version=1.1)
+    def flavor(self, ref, **kwargs):
+        """Returns a flavor instance
+
+        :param ref: Flavor's reference name.
+        :type ref: `six.text_type`
+
+        :returns: A flavor instance
+        :rtype: `flavor.Flavor`
+        """
+        return flavor.Flavor(self, ref, **kwargs)
 
     def health(self):
         """Gets the health status of Zaqar server."""

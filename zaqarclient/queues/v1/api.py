@@ -172,6 +172,24 @@ class V1(api.Api):
             }
         },
 
+        'flavor_create': {
+            'ref': 'flavors/{flavor_name}',
+            'method': 'PUT',
+            'required': ['flavor_name'],
+            'properties': {
+                'flavor_name': {'type': 'string'},
+            }
+        },
+
+        'flavor_delete': {
+            'ref': 'flavors/{flavor_name}',
+            'method': 'DELETE',
+            'required': ['flavor_name'],
+            'properties': {
+                'flavor_name': {'type': 'string'},
+            }
+        },
+
         'claim_create': {
             'ref': 'queues/{queue_name}/claims',
             'method': 'POST',
