@@ -12,8 +12,8 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import json
 import logging
-import six
 
 from cliff import command
 from cliff import lister
@@ -22,16 +22,16 @@ from cliff import show
 from openstackclient.common import utils
 
 
-class CreateQueues(show.ShowOne):
-    """List available queues."""
+class CreateQueue(show.ShowOne):
+    """Create a queue."""
 
-    log = logging.getLogger(__name__ + ".CreateQueues")
+    log = logging.getLogger(__name__ + ".CreateQueue")
 
     def get_parser(self, prog_name):
-        parser = super(CreateQueues, self).get_parser(prog_name)
+        parser = super(CreateQueue, self).get_parser(prog_name)
         parser.add_argument(
-            "name",
-            metavar="<name>",
+            "queue_name",
+            metavar="<queue_name>",
             help="Name of the queue")
         return parser
 
@@ -40,29 +40,34 @@ class CreateQueues(show.ShowOne):
 
         client = self.app.client_manager.queuing
 
-        name = parsed_args.name
-        client.queue(name)
+        queue_name = parsed_args.queue_name
+        data = client.queue(queue_name)
 
-        return zip(*sorted(six.iteritems({"name": name})))
+        columns = ('Name',)
+        properties = ("_Name",)
+        return columns, utils.get_item_properties(data, properties)
 
 
-class DeleteQueues(command.Command):
-    """List available queues."""
+class DeleteQueue(command.Command):
+    """Delete a queue."""
 
-    log = logging.getLogger(__name__ + ".DeleteQueues")
+    log = logging.getLogger(__name__ + ".DeleteQueue")
 
     def get_parser(self, prog_name):
-        parser = super(DeleteQueues, self).get_parser(prog_name)
+        parser = super(DeleteQueue, self).get_parser(prog_name)
         parser.add_argument(
-            "name",
-            metavar="<name>",
+            "queue_name",
+            metavar="<queue_name>",
             help="Name of the queue")
         return parser
 
     def take_action(self, parsed_args):
         self.log.debug("take_action(%s)" % parsed_args)
         client = self.app.client_manager.queuing
-        client.queue(parsed_args.name).delete()
+
+        queue_name = parsed_args.queue_name
+
+        client.queue(queue_name).delete()
 
 
 class ListQueues(lister.Lister):
@@ -95,6 +100,130 @@ class ListQueues(lister.Lister):
             kwargs["limit"] = parsed_args.limit
 
         data = client.queues(**kwargs)
-        columns = ["_Name"]
+        columns = ("Name", )
+        properties = ("_Name",)
+        return (columns,
+                (utils.get_item_properties(s, properties) for s in data))
 
-        return (columns, (utils.get_item_properties(s, columns) for s in data))
+
+class CheckQueueExistence(show.ShowOne):
+    """Check queue existence."""
+
+    log = logging.getLogger(__name__ + ".CheckQueueExistence")
+
+    def get_parser(self, prog_name):
+        parser = super(CheckQueueExistence, self).get_parser(prog_name)
+        parser.add_argument(
+            "queue_name",
+            metavar="<queue_name>",
+            help="Name of the queue")
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug("take_action(%s)" % parsed_args)
+
+        client = self.app.client_manager.queuing
+
+        queue_name = parsed_args.queue_name
+        queue = client.queue(queue_name, auto_create=False)
+
+        columns = ('Exists',)
+        data = dict(exists=queue.exists())
+        return columns, utils.get_dict_properties(data, columns)
+
+
+class SetQueueMetadata(command.Command):
+    """Set queue metadata."""
+
+    log = logging.getLogger(__name__ + ".SetQueueMetadata")
+
+    def get_parser(self, prog_name):
+        parser = super(SetQueueMetadata, self).get_parser(prog_name)
+        parser.add_argument(
+            "queue_name",
+            metavar="<queue_name>",
+            help="Name of the queue")
+        parser.add_argument(
+            "queue_metadata",
+            metavar="<queue_metadata>",
+            help="Queue metadata")
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug("take_action(%s)" % parsed_args)
+
+        client = self.app.client_manager.queuing
+
+        queue_name = parsed_args.queue_name
+        queue_metadata = parsed_args.queue_metadata
+        queue_exists = client.queue(queue_name, auto_create=False).exists()
+
+        if not queue_exists:
+            raise RuntimeError("Queue(%s) does not exist." % queue_name)
+
+        try:
+            valid_metadata = json.loads(queue_metadata)
+        except ValueError:
+            raise RuntimeError("Queue metadata(%s) is not a valid json." %
+                               queue_metadata)
+
+        client.queue(queue_name, auto_create=False).\
+            metadata(new_meta=valid_metadata)
+
+
+class GetQueueMetadata(show.ShowOne):
+    """Get queue metadata."""
+
+    log = logging.getLogger(__name__ + ".GetQueueMetadata")
+
+    def get_parser(self, prog_name):
+        parser = super(GetQueueMetadata, self).get_parser(prog_name)
+        parser.add_argument(
+            "queue_name",
+            metavar="<queue_name>",
+            help="Name of the queue")
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug("take_action(%s)" % parsed_args)
+
+        client = self.app.client_manager.queuing
+
+        queue_name = parsed_args.queue_name
+        queue = client.queue(queue_name, auto_create=False)
+
+        if not queue.exists():
+            raise RuntimeError("Queue(%s) does not exist." % queue_name)
+
+        columns = ("Metadata",)
+        data = dict(metadata=queue.metadata())
+        return columns, utils.get_dict_properties(data, columns)
+
+
+class GetQueueStats(show.ShowOne):
+    """Get queue stats."""
+
+    log = logging.getLogger(__name__ + ".GetQueueStats")
+
+    def get_parser(self, prog_name):
+        parser = super(GetQueueStats, self).get_parser(prog_name)
+        parser.add_argument(
+            "queue_name",
+            metavar="<queue_name>",
+            help="Name of the queue")
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug("take_action(%s)" % parsed_args)
+
+        client = self.app.client_manager.queuing
+
+        queue_name = parsed_args.queue_name
+        queue = client.queue(queue_name, auto_create=False)
+
+        if not queue.exists():
+            raise RuntimeError('Queue(%s) does not exist.' % queue_name)
+
+        columns = ("Stats",)
+        data = dict(stats=queue.stats)
+        return columns, utils.get_dict_properties(data, columns)
