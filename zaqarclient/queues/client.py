@@ -16,7 +16,8 @@
 from zaqarclient import errors
 from zaqarclient.queues.v1 import client as cv1
 
-_CLIENTS = {1: cv1.Client}
+_CLIENTS = {1: cv1.Client,
+            1.1: cv1.Client}
 
 
 def Client(url=None, version=None, conf=None):
