@@ -87,7 +87,7 @@ class KeystoneAuth(base.AuthBackend):
             if not request.endpoint:
                 extra = {
                     'service_type': self.conf.get('os_service_type',
-                                                  'queuing'),
+                                                  'messaging'),
                     'endpoint_type': self.conf.get('os_endpoint_type',
                                                    'publicURL'),
                 }

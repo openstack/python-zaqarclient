@@ -63,7 +63,7 @@ class DeleteQueue(command.Command):
 
     def take_action(self, parsed_args):
         self.log.debug("take_action(%s)" % parsed_args)
-        client = self.app.client_manager.queuing
+        client = self.app.client_manager.messaging
 
         queue_name = parsed_args.queue_name
 
@@ -91,7 +91,7 @@ class ListQueues(lister.Lister):
     def take_action(self, parsed_args):
         self.log.debug("take_action(%s)" % parsed_args)
 
-        client = self.app.client_manager.queuing
+        client = self.app.client_manager.messaging
 
         kwargs = {}
         if parsed_args.marker is not None:
@@ -122,7 +122,7 @@ class CheckQueueExistence(show.ShowOne):
     def take_action(self, parsed_args):
         self.log.debug("take_action(%s)" % parsed_args)
 
-        client = self.app.client_manager.queuing
+        client = self.app.client_manager.messaging
 
         queue_name = parsed_args.queue_name
         queue = client.queue(queue_name, auto_create=False)
@@ -152,7 +152,7 @@ class SetQueueMetadata(command.Command):
     def take_action(self, parsed_args):
         self.log.debug("take_action(%s)" % parsed_args)
 
-        client = self.app.client_manager.queuing
+        client = self.app.client_manager.messaging
 
         queue_name = parsed_args.queue_name
         queue_metadata = parsed_args.queue_metadata
@@ -187,7 +187,7 @@ class GetQueueMetadata(show.ShowOne):
     def take_action(self, parsed_args):
         self.log.debug("take_action(%s)" % parsed_args)
 
-        client = self.app.client_manager.queuing
+        client = self.app.client_manager.messaging
 
         queue_name = parsed_args.queue_name
         queue = client.queue(queue_name, auto_create=False)
@@ -216,7 +216,7 @@ class GetQueueStats(show.ShowOne):
     def take_action(self, parsed_args):
         self.log.debug("take_action(%s)" % parsed_args)
 
-        client = self.app.client_manager.queuing
+        client = self.app.client_manager.messaging
 
         queue_name = parsed_args.queue_name
         queue = client.queue(queue_name, auto_create=False)
