@@ -44,8 +44,7 @@ class CreateQueue(show.ShowOne):
         data = client.queue(queue_name)
 
         columns = ('Name',)
-        properties = ("_Name",)
-        return columns, utils.get_item_properties(data, properties)
+        return columns, utils.get_item_properties(data, columns)
 
 
 class DeleteQueue(command.Command):
@@ -101,9 +100,8 @@ class ListQueues(lister.Lister):
 
         data = client.queues(**kwargs)
         columns = ("Name", )
-        properties = ("_Name",)
         return (columns,
-                (utils.get_item_properties(s, properties) for s in data))
+                (utils.get_item_properties(s, columns) for s in data))
 
 
 class CheckQueueExistence(show.ShowOne):
