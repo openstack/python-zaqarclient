@@ -35,6 +35,15 @@ end users and to communicate with guest agents that run in the
 .. _`OpenStack Wiki`: http://wiki.openstack.org
 .. _`docs.openstack.org`: http://docs.openstack.org
 
+
+Contents
+========
+
+.. toctree::
+   :maxdepth: 1
+
+   client
+
 Indices and tables
 ------------------
 
