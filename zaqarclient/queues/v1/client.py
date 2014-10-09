@@ -61,7 +61,7 @@ class Client(object):
 
         :param request: The request to use to load the
             transport instance.
-        :type request: `transport.request.Request`
+        :type request: :class:`zaqarclient.transport.request.Request`
         """
 
         trans = transport.get_transport_for(request,
@@ -80,7 +80,10 @@ class Client(object):
         return req, trans
 
     def transport(self):
-        """Gets a transport based the api url and version."""
+        """Gets a transport based the api url and version.
+
+        :rtype: :class:`zaqarclient.transport.base.Transport`
+        """
         return transport.get_transport_for(self.api_url,
                                            self.api_version)
 
@@ -112,6 +115,10 @@ class Client(object):
 
     def follow(self, ref):
         """Follows ref.
+
+        This method instanciates a new request instance and requests
+        `ref`. It is intended to be used to follow a reference href
+        gotten from `links` sections in responses like queues' lists.
 
         :params ref: The reference path.
         :type ref: `six.text_type`
