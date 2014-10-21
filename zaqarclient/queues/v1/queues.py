@@ -108,6 +108,9 @@ class Queue(object):
         if not isinstance(messages, list):
             messages = [messages]
 
+        if self.client.api_version >= 1.1:
+            messages = {'messages': messages}
+
         req, trans = self.client._request_and_transport()
 
         # TODO(flaper87): Return a list of messages
