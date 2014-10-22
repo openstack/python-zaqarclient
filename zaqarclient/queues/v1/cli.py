@@ -38,7 +38,7 @@ class CreateQueue(show.ShowOne):
     def take_action(self, parsed_args):
         self.log.debug("take_action(%s)" % parsed_args)
 
-        client = self.app.client_manager.queuing
+        client = self.app.client_manager.messaging
 
         queue_name = parsed_args.queue_name
         data = client.queue(queue_name)
