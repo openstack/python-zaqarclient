@@ -12,7 +12,62 @@
 # implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""
+A `Client` is a high-level abstraction on top of Zaqar features. It
+exposes the server features with an object-oriented interface, which
+encourages dot notation and automatic, but lazy, resources
+allocation. A `Client` allows you to control everything, from public
+interfaces to admin endpoints.
 
+To create a `Client` instance, you supply an url pointing to the
+server and a version number::
+
+    from zaqarclient.queues import client
+
+    cli = client.Client(\'http://zaqar.example.com:8888/\', version=1.1)
+
+which will load the appropriate client based on the specified
+version. Optionally, you can also supply a config dictionary::
+
+    from zaqarclient.queues import client
+
+    cli = client.Client(\'http://zaqar.example.com:8888/\',
+                        version=1.1, conf={})
+
+The arguments passed to this function will be passed to the client
+instances as well.
+
+It's recommended to use `Client` instances instead of accessing the
+lower level API as it has been designed to ease the interaction with
+the server and it gives enough control for the most common cases.
+
+A simple example for accessing an existing queue through a client
+instance - based on the API v1.1 - would look like::
+
+    from zaqarclient.queues import client
+
+    cli = client.Client(\'http://zaqar.example.com:8888/\', version=1.1)
+    queue = cli.queue(\'my_queue\')
+
+Through the queue instance will be then possible to access all the
+features associated with the queue itself like posting messages,
+getting message and deleting messages.
+
+As mentioned previously in this documentation, a client instance
+allows you to also access admin endpoints, for example::
+
+    from zaqarclient.queues import client
+
+    cli = client.Client(\'http://zaqar.example.com:8888/\', version=1.1)
+    flavor = cli.flavor(\'tasty\',
+                        pool=\'my-pool-group\',
+                        auto_create=True)
+    flavor.delete()
+
+`Client` uses the lower-level API to access the server, which means
+anything you can do with this client instance can be done by accessing
+the underlying API, although not recommended.
+"""
 from zaqarclient import errors
 from zaqarclient.queues.v1 import client as cv1
 
