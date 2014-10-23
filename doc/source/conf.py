@@ -32,6 +32,7 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.coverage',
               'sphinx.ext.pngmath',
               'sphinx.ext.ifconfig',
+              'sphinx.ext.intersphinx',
               'sphinx.ext.graphviz',
               'oslosphinx',
               ]
