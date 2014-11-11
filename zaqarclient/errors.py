@@ -12,6 +12,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from zaqarclient._i18n import _  # noqa
+
 __all__ = ['ZaqarError', 'DriverLoadFailure', 'InvalidOperation']
 
 
@@ -23,7 +25,8 @@ class DriverLoadFailure(ZaqarError):
     """Raised if a transport driver can't be loaded."""
 
     def __init__(self, driver, ex):
-        msg = 'Failed to load transport driver "%s": %s' % (driver, ex)
+        msg = (_('Failed to load transport driver "%(driver)s": %(error)s') %
+               {'driver': driver, 'error': ex})
         super(DriverLoadFailure, self).__init__(msg)
         self.driver = driver
         self.ex = ex
