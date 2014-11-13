@@ -23,6 +23,7 @@ from zaqarclient.queues.v1 import iterator
 from zaqarclient.queues.v1 import pool
 from zaqarclient.queues.v1 import queues
 from zaqarclient import transport
+from zaqarclient.transport import errors
 from zaqarclient.transport import request
 
 
@@ -160,4 +161,8 @@ class Client(object):
     def health(self):
         """Gets the health status of Zaqar server."""
         req, trans = self._request_and_transport()
-        return core.health(trans, req)
+        try:
+            core.health(trans, req)
+            return True
+        except errors.ServiceUnavailableError:
+            return False
