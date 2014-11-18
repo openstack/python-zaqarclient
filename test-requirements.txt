@@ -10,7 +10,7 @@ fixtures>=0.3.14
 mock>=1.0
 python-subunit>=0.0.18
 testrepository>=0.0.18
-testtools>=0.9.34
+testtools>=0.9.36,!=1.2.0,!=1.4.0
 
 # Test runner
 nose
