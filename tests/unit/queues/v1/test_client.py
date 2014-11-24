@@ -20,7 +20,7 @@ import ddt
 from zaqarclient.queues import client
 from zaqarclient.queues.v1 import core
 from zaqarclient.tests import base
-from zaqarclient.transport import response
+from zaqarclient.transport import errors
 
 VERSIONS = [1, 1.1]
 
@@ -35,10 +35,21 @@ class TestClient(base.TestBase):
         self.assertIsNotNone(cli.transport())
 
     @ddt.data(*VERSIONS)
-    def test_health(self, version):
+    def test_health_ok(self, version):
         cli = client.Client('http://example.com',
                             version, {})
         with mock.patch.object(core, 'health', autospec=True) as core_health:
-            resp = response.Response(None, None)
-            core_health.return_value = resp
-            self.assertIsNotNone(cli.health())
+            core_health.return_value = None
+            self.assertTrue(cli.health())
+
+    @ddt.data(*VERSIONS)
+    def test_health_bad(self, version):
+        cli = client.Client('http://example.com',
+                            version, {})
+
+        def raise_error(*args, **kwargs):
+            raise errors.ServiceUnavailableError()
+
+        with mock.patch.object(core, 'health', autospec=True) as core_health:
+            core_health.side_effect = raise_error
+            self.assertFalse(cli.health())
