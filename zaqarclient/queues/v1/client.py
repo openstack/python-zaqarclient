@@ -14,7 +14,6 @@
 # limitations under the License.
 
 import uuid
-import warnings
 
 from zaqarclient.common import decorators
 from zaqarclient.queues.v1 import core
@@ -130,11 +129,6 @@ class Client(object):
         return trans.send(req).deserialized_content
 
     # ADMIN API
-    def shard(self, ref, **kwargs):
-        warnings.warn(_('`shard_create`\'s been renamed to `pool_create` '),
-                      DeprecationWarning, stacklevel=2)
-        return self.pool(ref, **kwargs)
-
     def pool(self, ref, **kwargs):
         """Returns a pool instance
 
