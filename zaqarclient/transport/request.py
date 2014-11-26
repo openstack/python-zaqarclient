@@ -46,7 +46,6 @@ def prepare_request(auth_opts=None, data=None, **kwargs):
     # TODO(flaper87): Do something smarter
     # to get the api_version.
     req = auth_backend.authenticate(1, req)
-
     req.headers['X-Project-Id'] = auth_opts.get('options',
                                                 {}).get('os_project_id')
 

@@ -13,9 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
 import mock
 
 from zaqarclient.tests.queues import base
+from zaqarclient.transport import errors
 from zaqarclient.transport import response
 
 
@@ -29,7 +31,7 @@ class QueuesV1PoolUnitTest(base.QueuesTestBase):
                                autospec=True) as send_method:
 
             resp = response.Response(None, None)
-            send_method.return_value = resp
+            send_method.side_effect = iter([errors.ResourceNotFound, resp])
 
             # NOTE(flaper87): This will call
             # ensure exists in the client instance
@@ -38,16 +40,35 @@ class QueuesV1PoolUnitTest(base.QueuesTestBase):
             self.assertEqual(pool.name, 'test')
             self.assertEqual(pool.weight, 10)
 
+    def test_pool_get(self):
+        pool_data = {'weight': 10,
+                     'uri': 'sqlite://',
+                     'options': {}}
+
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, json.dumps(pool_data))
+            send_method.return_value = resp
+
+            # NOTE(flaper87): This will call
+            # ensure exists in the client instance
+            # since auto_create's default is True
+            pool = self.client.pool('test')
+            self.assertEqual(pool.name, 'test')
+            self.assertEqual(pool.weight, 10)
+
     def test_pool_delete(self):
         pool_data = {'weight': 10,
-                     'uri': 'sqlite://'}
+                     'uri': 'sqlite://',
+                     'options': {}}
 
         with mock.patch.object(self.transport, 'send',
                                autospec=True) as send_method:
 
             resp = response.Response(None, None)
-            send_method.return_value = resp
-
+            resp_data = response.Response(None, json.dumps(pool_data))
+            send_method.side_effect = iter([resp_data, resp])
             # NOTE(flaper87): This will call
             # ensure exists in the client instance
             # since auto_create's default is True
@@ -60,6 +81,16 @@ class QueuesV1PoolUnitTest(base.QueuesTestBase):
 
 
 class QueuesV1PoolFunctionalTest(base.QueuesTestBase):
+
+    def test_pool_get(self):
+        pool_data = {'weight': 10,
+                     'uri': 'sqlite://'}
+
+        self.client.pool('test', **pool_data)
+        pool = self.client.pool('test')
+        self.assertEqual(pool.name, 'test')
+        self.assertEqual(pool.weight, 10)
+        self.assertEqual(pool.uri, 'sqlite://')
 
     def test_pool_create(self):
         pool_data = {'weight': 10,

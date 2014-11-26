@@ -418,6 +418,25 @@ def shard_delete(transport, request, pool_name):
     return pool_delete(transport, request, pool_name)
 
 
+def pool_get(transport, request, pool_name, callback=None):
+    """Gets pool data
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param pool_name: Pool reference name.
+    :type pool_name: `six.text_type`
+
+    """
+
+    request.operation = 'pool_get'
+    request.params['pool_name'] = pool_name
+
+    resp = transport.send(request)
+    return resp.deserialized_content
+
+
 def pool_create(transport, request, pool_name, pool_data):
     """Creates a pool called `pool_name`
 

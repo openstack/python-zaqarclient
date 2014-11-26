@@ -221,6 +221,16 @@ class TestV1Core(base.TestBase):
                              'test_pool', {'uri': 'sqlite://',
                                            'weight': 0})
 
+    def test_pool_get(self):
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+            resp = response.Response(None, None)
+            send_method.return_value = resp
+
+            req = request.Request()
+            core.pool_get(self.transport, req,
+                          'test_pool')
+
     def test_pool_delete(self):
         with mock.patch.object(self.transport, 'send',
                                autospec=True) as send_method:

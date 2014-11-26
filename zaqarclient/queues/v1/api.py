@@ -163,6 +163,15 @@ class V1(api.Api):
             }
         },
 
+        'pool_get': {
+            'ref': 'pools/{pool_name}',
+            'method': 'GET',
+            'required': ['pool_name'],
+            'properties': {
+                'pool_name': {'type': 'string'},
+            }
+        },
+
         'pool_delete': {
             'ref': 'pools/{pool_name}',
             'method': 'DELETE',
