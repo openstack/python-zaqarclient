@@ -21,12 +21,14 @@ class Pool(object):
 
     def __init__(self, client, name,
                  weight=None, uri=None,
+                 group=None,
                  auto_create=True, **options):
         self.client = client
 
         self.uri = uri
         self.name = name
         self.weight = weight
+        self.group = group
         self.options = options
 
         if auto_create:
@@ -45,12 +47,16 @@ class Pool(object):
             pool = core.pool_get(trans, req, self.name)
             self.uri = pool["uri"]
             self.weight = pool["weight"]
+            self.group = pool.get("group", None)
             self.options = pool.get("options", {})
 
         except errors.ResourceNotFound:
             data = {'uri': self.uri,
                     'weight': self.weight,
                     'options': self.options}
+
+            if self.client.api_version >= 1.1:
+                data['group'] = self.group
 
             core.pool_create(trans, req, self.name, data)
 
