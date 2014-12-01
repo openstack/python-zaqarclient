@@ -14,12 +14,14 @@
 # limitations under the License.
 
 from zaqarclient.queues.v1 import core
+from zaqarclient.transport import errors
 
 
 class Flavor(object):
 
     def __init__(self, client, name,
-                 pool, auto_create=True, **capabilities):
+                 pool=None, auto_create=True,
+                 **capabilities):
         self.client = client
 
         self.name = name
@@ -38,10 +40,16 @@ class Flavor(object):
         """
         req, trans = self.client._request_and_transport()
 
-        data = {'pool': self.pool,
-                'capabilities': self.capabilities}
+        try:
+            flavor = core.flavor_get(trans, req, self.name)
+            self.pool = flavor["pool"]
+            self.capabilities = flavor.get("capabilities", {})
 
-        core.flavor_create(trans, req, self.name, data)
+        except errors.ResourceNotFound:
+            data = {'pool': self.pool,
+                    'capabilities': self.capabilities}
+
+            core.flavor_create(trans, req, self.name, data)
 
     def delete(self):
         req, trans = self.client._request_and_transport()

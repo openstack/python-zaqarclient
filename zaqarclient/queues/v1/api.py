@@ -190,6 +190,16 @@ class V1(api.Api):
             }
         },
 
+        'flavor_get': {
+            'ref': 'flavors/{flavor_name}',
+            'method': 'GET',
+            'required': ['flavor_name'],
+            'properties': {
+                'flavor_name': {'type': 'string'},
+            }
+        },
+
+
         'flavor_delete': {
             'ref': 'flavors/{flavor_name}',
             'method': 'DELETE',

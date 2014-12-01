@@ -13,9 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
 import mock
 
 from zaqarclient.tests.queues import base
+from zaqarclient.transport import errors
 from zaqarclient.transport import response
 
 
@@ -31,13 +33,29 @@ class QueuesV1_1FlavorUnitTest(base.QueuesTestBase):
                                autospec=True) as send_method:
 
             resp = response.Response(None, None)
-            send_method.return_value = resp
+            send_method.side_effect = iter([errors.ResourceNotFound, resp])
 
             # NOTE(flaper87): This will call
             # ensure exists in the client instance
             # since auto_create's default is True
             flavor = self.client.flavor('tasty', **flavor_data)
             self.assertEqual(flavor.name, 'tasty')
+            self.assertEqual(flavor.pool, 'stomach')
+
+    def test_flavor_get(self):
+        flavor_data = {'pool': 'stomach'}
+
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, json.dumps(flavor_data))
+            send_method.return_value = resp
+
+            # NOTE(flaper87): This will call
+            # ensure exists in the client instance
+            # since auto_create's default is True
+            flavor = self.client.flavor('test')
+            self.assertEqual(flavor.name, 'test')
             self.assertEqual(flavor.pool, 'stomach')
 
     def test_flavor_delete(self):
@@ -47,8 +65,8 @@ class QueuesV1_1FlavorUnitTest(base.QueuesTestBase):
                                autospec=True) as send_method:
 
             resp = response.Response(None, None)
-            send_method.return_value = resp
-
+            resp_data = response.Response(None, json.dumps(flavor_data))
+            send_method.side_effect = iter([resp_data, resp])
             # NOTE(flaper87): This will call
             # ensure exists in the client instance
             # since auto_create's default is True
@@ -67,19 +85,33 @@ class QueuesV1_1FlavorFunctionalTest(base.QueuesTestBase):
 
     def test_flavor_create(self):
         pool_data = {'uri': 'sqlite://',
-                     'weight': 10}
+                     'weight': 10,
+                     'group': 'us'}
         self.client.pool('stomach', **pool_data)
 
-        flavor_data = {'pool': 'stomach'}
+        flavor_data = {'pool': 'us'}
         flavor = self.client.flavor('tasty', **flavor_data)
         self.assertEqual(flavor.name, 'tasty')
-        self.assertEqual(flavor.pool, 'stomach')
+        self.assertEqual(flavor.pool, 'us')
+
+    def test_flavor_get(self):
+        pool_data = {'weight': 10,
+                     'group': 'us',
+                     'uri': 'sqlite://'}
+        self.client.pool('stomach', **pool_data)
+
+        flavor_data = {'pool': 'us'}
+        self.client.flavor('tasty', **flavor_data)
+        flavor = self.client.flavor('tasty')
+        self.assertEqual(flavor.name, 'tasty')
+        self.assertEqual(flavor.pool, 'us')
 
     def test_flavor_delete(self):
         pool_data = {'uri': 'sqlite://',
-                     'weight': 10}
+                     'weight': 10,
+                     'group': 'us'}
         self.client.pool('stomach', **pool_data)
 
-        flavor_data = {'pool': 'stomach'}
+        flavor_data = {'pool': 'us'}
         flavor = self.client.flavor('tasty', **flavor_data)
         flavor.delete()
