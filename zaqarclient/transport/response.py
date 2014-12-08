@@ -42,6 +42,10 @@ class Response(object):
 
     @property
     def deserialized_content(self):
-        if not self._deserialized and self.content:
-            self._deserialized = json.loads(self.content)
-        return self._deserialized
+        try:
+            if not self._deserialized and self.content:
+                self._deserialized = json.loads(self.content)
+            return self._deserialized
+        except ValueError as ex:
+            print("Response is not a JSON object.", ex)
+        return None
