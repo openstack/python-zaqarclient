@@ -17,7 +17,6 @@
 from zaqarclient.queues.v1 import client
 
 URL = 'http://localhost:8888'
-URL = 'http://zaqar-fpercoco.rhcloud.com'
 
 
 def create_post_delete(queue_name, messages):
