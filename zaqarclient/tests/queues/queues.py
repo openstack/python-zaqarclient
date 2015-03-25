@@ -66,6 +66,9 @@ class QueuesV1QueueUnitTest(base.QueuesTestBase):
             # just checking our way down to the transport
             # doesn't crash.
 
+    def test_queue_valid_name(self):
+        self.assertRaises(ValueError, self.client.queue, "")
+
     def test_queue_delete(self):
         with mock.patch.object(self.transport, 'send',
                                autospec=True) as send_method:
