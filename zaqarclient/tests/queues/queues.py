@@ -16,6 +16,7 @@
 import json
 import mock
 
+from zaqarclient import errors
 from zaqarclient.queues.v1 import iterator
 from zaqarclient.queues.v1 import message
 from zaqarclient.tests.queues import base
@@ -234,11 +235,13 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
 
     def test_queue_create_functional(self):
         queue = self.client.queue("nonono")
+        self.addCleanup(queue.delete)
         queue._get_transport = mock.Mock(return_value=self.transport)
         self.assertTrue(queue.exists())
 
     def test_queue_delete_functional(self):
         queue = self.client.queue("nonono")
+        self.addCleanup(queue.delete)
         queue._get_transport = mock.Mock(return_value=self.transport)
         self.assertTrue(queue.exists())
         queue.delete()
@@ -257,6 +260,7 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
         ]
 
         queue = self.client.queue("nonono")
+        self.addCleanup(queue.delete)
         queue._get_transport = mock.Mock(return_value=self.transport)
         queue.post(messages)
         stats = queue.stats
@@ -298,6 +302,7 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
 
     def test_message_list_functional(self):
         queue = self.client.queue("test_queue")
+        self.addCleanup(queue.delete)
         queue._get_transport = mock.Mock(return_value=self.transport)
 
         messages = [{'ttl': 60, 'body': 'Post It 1!'}]
@@ -309,6 +314,7 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
 
     def test_message_list_echo_functional(self):
         queue = self.client.queue("test_queue")
+        self.addCleanup(queue.delete)
         queue._get_transport = mock.Mock(return_value=self.transport)
 
         messages = [
@@ -323,6 +329,7 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
 
     def test_message_get_functional(self):
         queue = self.client.queue("test_queue")
+        self.addCleanup(queue.delete)
         queue._get_transport = mock.Mock(return_value=self.transport)
 
         messages = [
@@ -339,6 +346,7 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
 
     def test_message_get_many_functional(self):
         queue = self.client.queue("test_queue")
+        self.addCleanup(queue.delete)
         queue._get_transport = mock.Mock(return_value=self.transport)
 
         messages = [
@@ -357,6 +365,7 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
 
     def test_message_delete_many_functional(self):
         queue = self.client.queue("test_queue")
+        self.addCleanup(queue.delete)
         queue._get_transport = mock.Mock(return_value=self.transport)
 
         messages = [
@@ -405,8 +414,29 @@ class QueuesV1_1QueueUnitTest(QueuesV1QueueUnitTest):
 
 class QueuesV1_1QueueFunctionalTest(QueuesV1QueueFunctionalTest):
 
+    def test_queue_create_functional(self):
+        pass
+
+    def test_queue_exists_functional(self):
+        queue = self.client.queue("404")
+        self.assertRaises(errors.InvalidOperation, queue.exists)
+
+    def test_queue_delete_functional(self):
+        queue = self.client.queue("nonono")
+        queue._get_transport = mock.Mock(return_value=self.transport)
+        messages = [
+            {'ttl': 60, 'body': 'Post It 1!'},
+            {'ttl': 60, 'body': 'Post It 2!'},
+            {'ttl': 60, 'body': 'Post It 3!'},
+        ]
+
+        queue.post(messages)
+        queue.delete()
+        self.assertEqual(len(list(queue.messages(echo=True))), 0)
+
     def test_message_pop(self):
         queue = self.client.queue("test_queue")
+        self.addCleanup(queue.delete)
         queue._get_transport = mock.Mock(return_value=self.transport)
 
         messages = [
@@ -415,9 +445,10 @@ class QueuesV1_1QueueFunctionalTest(QueuesV1QueueFunctionalTest):
             {'ttl': 60, 'body': 'Post It 2!'},
         ]
 
+        queue.post(messages)
         messages = queue.pop(count=2)
         self.assertTrue(isinstance(messages, iterator._Iterator))
         self.assertEqual(len(list(messages)), 2)
 
-        remaining = queue.messages()
+        remaining = queue.messages(echo=True)
         self.assertEqual(len(list(remaining)), 1)

@@ -50,7 +50,7 @@ class _Iterator(object):
         # re-use the iterator for get_many_messages
         # and message listing.
         if isinstance(listing_response, dict):
-            self._links = listing_response['links']
+            self._links = listing_response.get('links', [])
             self._listing_response = listing_response[self._iter_key]
 
     def __iter__(self):

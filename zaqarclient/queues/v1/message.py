@@ -21,7 +21,8 @@ class Message(object):
     """A handler for Zaqar server Message resources.
     Attributes are only downloaded once - at creation time.
     """
-    def __init__(self, queue, href, ttl, age, body):
+    def __init__(self, queue, ttl, age, body, href=None, id=None,
+                 claim_id=None):
         self.queue = queue
         self.href = href
         self.ttl = ttl
@@ -35,9 +36,12 @@ class Message(object):
         # /v1/queues/worker-jobs/messages/5c6939a8?claim_id=63c9a592
         # or
         # /v1/queues/worker-jobs/messages/5c6939a8
-        self._id = href.split('/')[-1]
-        if '?' in self._id:
-            self._id = self._id.split('?')[0]
+        if id is None:
+            self._id = href.split('/')[-1]
+            if '?' in self._id:
+                self._id = self._id.split('?')[0]
+        else:
+            self._id = id
 
     def __repr__(self):
         return '<Message id:{id} ttl:{ttl}>'.format(id=self._id,
