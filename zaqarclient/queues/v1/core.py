@@ -92,6 +92,12 @@ def queue_exists(transport, request, name, callback=None):
         return False
 
 
+def queue_get(transport, request, name, callback=None):
+    """Retrieve a queue."""
+    return _common_queue_ops('queue_get', transport,
+                             request, name, callback=callback)
+
+
 def queue_get_metadata(transport, request, name, callback=None):
     """Gets queue metadata."""
     return _common_queue_ops('queue_get_metadata', transport,
@@ -336,7 +342,9 @@ def message_pop(transport, request, queue_name,
     request.operation = 'message_delete_many'
     request.params['queue_name'] = queue_name
     request.params['pop'] = count
-    transport.send(request)
+
+    resp = transport.send(request)
+    return resp.deserialized_content
 
 
 def claim_create(transport, request, queue_name, **kwargs):

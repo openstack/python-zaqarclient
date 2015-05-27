@@ -265,6 +265,15 @@ class V1_1(V1):
 
 
 V1_1.schema.update({
+    'queue_get': {
+        'ref': 'queues/{queue_name}',
+        'method': 'GET',
+        'required': ['queue_name'],
+        'properties': {
+            'queue_name': {'type': 'string'}
+        }
+    },
+
     'message_pop': {
         'ref': 'queues/{queue_name}/messages',
         'method': 'DELETE',
