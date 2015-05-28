@@ -44,6 +44,22 @@ Contents
 
    client
 
+Release Notes
+=============
+
+0.1.1
+-----
+
+* Fix handling of 1.1 API
+* Gets 'flavor' data if the resource exists
+* Gets 'pool' data if the resource exists
+* Handling exception on 504 Error
+* Added i18n support
+* Makes health return True or False
+* Add reference docs for latest recommended client
+* Add docs for `Client` instances
+* Add a read-only property for Queues
+
 Indices and tables
 ------------------
 
