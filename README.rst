@@ -85,3 +85,8 @@ first patch.
 .. _Zaqar Launchpad: https://launchpad.net/zaqar
 .. _Code Review: https://review.openstack.org/#/q/status:open+project:openstack/python-zaqarclient,n,z
 .. _Client Wiki: https://wiki.openstack.org/wiki/Python_Zaqar_Client
+
+
+* License: Apache License, Version 2.0
+* Source: http://git.openstack.org/cgit/openstack/python-zaqarclient
+* Bugs: http://bugs.launchpad.net/python-zaqarclient
