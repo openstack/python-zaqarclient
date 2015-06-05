@@ -28,8 +28,6 @@ Functions present in this module assume that:
 """
 
 import json
-import warnings
-
 import zaqarclient.transport.errors as errors
 
 
@@ -414,18 +412,6 @@ def claim_delete(transport, request, queue_name, claim_id):
     transport.send(request)
 
 
-def shard_create(transport, request, pool_name, pool_data):
-    warnings.warn(_('`shard_create`\'s been renamed to `pool_create` '),
-                  DeprecationWarning, stacklevel=2)
-    return pool_create(transport, request, pool_name, pool_data)
-
-
-def shard_delete(transport, request, pool_name):
-    warnings.warn(_('`shard_delete`\'s been renamed to `pool_delete` '),
-                  DeprecationWarning, stacklevel=2)
-    return pool_delete(transport, request, pool_name)
-
-
 def pool_get(transport, request, pool_name, callback=None):
     """Gets pool data
 
@@ -447,6 +433,7 @@ def pool_get(transport, request, pool_name, callback=None):
 
 def pool_create(transport, request, pool_name, pool_data):
     """Creates a pool called `pool_name`
+
 
     :param transport: Transport instance to use
     :type transport: `transport.base.Transport`
