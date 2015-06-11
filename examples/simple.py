@@ -28,7 +28,7 @@ def create_post_delete(queue_name, messages):
     :params messages: Messages to post.
     :type messages: list
     """
-    cli = client.Client(URL)
+    cli = client.Client(URL, version=1.1)
     queue = cli.queue(queue_name)
     queue.post(messages)
 

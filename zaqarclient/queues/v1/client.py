@@ -140,6 +140,24 @@ class Client(object):
         """
         return pool.Pool(self, ref, **kwargs)
 
+    def pools(self, **params):
+        """Gets a list of pools from the server
+
+        :param params: Filters to use for getting pools
+        :type params: **kwargs dict.
+
+        :returns: A list of pools
+        :rtype: `list`
+        """
+        req, trans = self._request_and_transport()
+
+        pool_list = core.pool_list(trans, req, **params)
+
+        return iterator._Iterator(self,
+                                  pool_list,
+                                  'pools',
+                                  pool.create_object(self))
+
     @decorators.version(min_version=1.1)
     def flavor(self, ref, **kwargs):
         """Returns a flavor instance
@@ -151,6 +169,25 @@ class Client(object):
         :rtype: `flavor.Flavor`
         """
         return flavor.Flavor(self, ref, **kwargs)
+
+    @decorators.version(min_version=1.1)
+    def flavors(self, **params):
+        """Gets a list of flavors from the server
+
+        :param params: Filters to use for getting flavors
+        :type params: **kwargs dict.
+
+        :returns: A list of flavors
+        :rtype: `list`
+        """
+        req, trans = self._request_and_transport()
+
+        flavor_list = core.flavor_list(trans, req, **params)
+
+        return iterator._Iterator(self,
+                                  flavor_list,
+                                  'flavors',
+                                  flavor.create_object(self))
 
     def health(self):
         """Gets the health status of Zaqar server."""

@@ -172,6 +172,26 @@ class V1(api.Api):
             }
         },
 
+        'pool_update': {
+            'ref': 'pools/{pool_name}',
+            'method': 'PATCH',
+            'required': ['pool_name'],
+            'properties': {
+                'pool_name': {'type': 'string'}
+            }
+        },
+
+        'pool_list': {
+            'ref': 'pools',
+            'method': 'GET',
+            'properties': {
+                'pool_name': {'type': 'string'},
+                'marker': {'type': 'string'},
+                'limit': {'type': 'integer'},
+                'detailed': {'type': 'boolean'}
+            }
+        },
+
         'pool_delete': {
             'ref': 'pools/{pool_name}',
             'method': 'DELETE',
@@ -283,7 +303,29 @@ V1_1.schema.update({
             'pop': {'type': 'integer'},
         }
     },
+
+
+    'flavor_update': {
+        'ref': 'flavors/{flavor_name}',
+        'method': 'PATCH',
+        'required': ['flavor_name'],
+        'properties': {
+            'flavor_name': {'type': 'string'}
+        }
+    },
+
+    'flavor_list': {
+        'ref': 'flavors',
+        'method': 'GET',
+        'properties': {
+            'flavor_name': {'type': 'string'},
+            'marker': {'type': 'string'},
+            'limit': {'type': 'integer'},
+            'detailed': {'type': 'boolean'}
+        }
+    },
 })
+
 
 del V1_1.schema['queue_get_metadata']
 del V1_1.schema['queue_set_metadata']

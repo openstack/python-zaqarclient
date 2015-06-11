@@ -51,6 +51,17 @@ class Flavor(object):
 
             core.flavor_create(trans, req, self.name, data)
 
+    def update(self, flavor_data):
+        req, trans = self.client._request_and_transport()
+        core.flavor_update(trans, req, self.name, flavor_data)
+
+        for key, value in flavor_data.items():
+            setattr(self, key, value)
+
     def delete(self):
         req, trans = self.client._request_and_transport()
         core.flavor_delete(trans, req, self.name)
+
+
+def create_object(parent):
+    return lambda args: Flavor(parent, args["name"], auto_create=False)
