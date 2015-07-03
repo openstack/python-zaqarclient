@@ -225,3 +225,49 @@ class GetQueueStats(show.ShowOne):
         columns = ("Stats",)
         data = dict(stats=queue.stats)
         return columns, utils.get_dict_properties(data, columns)
+
+
+class CreatePool(show.ShowOne):
+    """Create a pool."""
+
+    log = logging.getLogger(__name__ + ".CreatePool")
+
+    def get_parser(self, prog_name):
+        parser = super(CreatePool, self).get_parser(prog_name)
+        parser.add_argument(
+            "pool_name",
+            metavar="<pool_name>",
+            help="Name of the pool")
+        parser.add_argument(
+            "pool_uri",
+            metavar="<pool_uri>",
+            help="Storage engine URI")
+        parser.add_argument(
+            "pool_weight",
+            metavar="<pool_weight>",
+            help="weight of the pool")
+        parser.add_argument(
+            "pool_group",
+            metavar="<pool_group>",
+            help="Group of the pool")
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug("take_action(%s)" % parsed_args)
+
+        client = self.app.client_manager.messaging
+
+        args = {
+            parsed_args.name,
+            parsed_args.uri,
+            parsed_args.weight,
+            parsed_args.group,
+        }
+        pool_name = parsed_args.pool_name
+        data = client.pool(args, auto_create=False)
+
+        if not data.exists():
+            raise RuntimeError('Pool(%s) does not exist.' % pool_name)
+
+        columns = ('Name',)
+        return columns, utils.get_item_properties(data, columns)
