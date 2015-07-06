@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from zaqarclient._i18n import _  # noqa
 from zaqarclient import errors
 from zaqarclient.queues.v1 import claim as claim_api
 from zaqarclient.queues.v1 import core
@@ -24,6 +25,9 @@ class Queue(object):
 
     def __init__(self, client, name, auto_create=True):
         self.client = client
+
+        if name == "":
+            raise ValueError(_('Queue name does not have a value'))
 
         # NOTE(flaper87) Queue Info
         self._name = name
