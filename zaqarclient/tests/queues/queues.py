@@ -461,3 +461,7 @@ class QueuesV1_1QueueFunctionalTest(QueuesV1QueueFunctionalTest):
 
         remaining = queue.messages(echo=True)
         self.assertEqual(1, len(list(remaining)))
+
+
+class QueuesV2QueueFunctionalTest(QueuesV1_1QueueFunctionalTest):
+    pass

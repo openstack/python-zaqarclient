@@ -70,9 +70,11 @@ the underlying API, although not recommended.
 """
 from zaqarclient import errors
 from zaqarclient.queues.v1 import client as cv1
+from zaqarclient.queues.v2 import client as cv2
 
 _CLIENTS = {1: cv1.Client,
-            1.1: cv1.Client}
+            1.1: cv1.Client,
+            2: cv2.Client}
 
 
 def Client(url=None, version=None, conf=None):
