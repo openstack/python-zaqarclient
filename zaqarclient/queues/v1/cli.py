@@ -271,3 +271,26 @@ class CreatePool(show.ShowOne):
 
         columns = ('Name',)
         return columns, utils.get_item_properties(data, columns)
+
+
+class DeleteFlavor(command.Command):
+    """Delete a flavor."""
+
+    log = logging.getLogger(__name__ + ".DeleteFlavor")
+
+    def get_parser(self, prog_name):
+        parser = super(DeleteFlavor, self).get_parser(prog_name)
+        parser.add_argument(
+            "flavor_name",
+            metavar="<flavor_name>",
+            help="Name of the flavor")
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug("take_action(%s)" % parsed_args)
+
+        client = self.app.client_manager.messaging
+
+        flavor_name = parsed_args.flavor_name
+
+        client.flavor(flavor_name).delete()
