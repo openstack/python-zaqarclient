@@ -53,24 +53,21 @@ class UnauthorizedError(TransportError):
 
 
 class ForbiddenError(TransportError):
-    """Indicates that a request is forbidden
-    to access the particular resource
+    """Indicates that a request is forbidden to access the particular resource
 
     This error maps to HTTP's 403
     """
 
 
 class InternalServerError(TransportError):
-    """Indicates that the server encountered
-    an unexpected situation
+    """Indicates that the server encountered an unexpected situation
 
     This error maps to HTTP's 500
     """
 
 
 class ServiceUnavailableError(TransportError):
-    """Indicates that the server was unable
-    to service the request
+    """Indicates that the server was unable to service the request
 
     This error maps to HTTP's 503
     """

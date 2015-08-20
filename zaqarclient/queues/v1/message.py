@@ -19,6 +19,7 @@ from zaqarclient.queues.v1 import core
 
 class Message(object):
     """A handler for Zaqar server Message resources.
+
     Attributes are only downloaded once - at creation time.
     """
     def __init__(self, queue, ttl, age, body, href=None, id=None,

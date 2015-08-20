@@ -55,8 +55,7 @@ class KeystoneAuth(base.AuthBackend):
         return client.service_catalog.url_for(**extra)
 
     def authenticate(self, api_version, request):
-        """Get an authtenticated client, based on the credentials
-        in the keyword args.
+        """Get an authtenticated client using credentials in the keyword args.
 
         :param api_version: the API version to use ('1' or '2')
         :param request: The request spec instance to modify with

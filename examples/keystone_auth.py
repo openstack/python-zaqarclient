@@ -19,7 +19,9 @@ URL = 'http://localhost:8888'
 
 
 def create_post_delete(queue_name, messages):
-    """Creates a queue, posts messages to it and finally deletes it with
+    """Auth example
+
+    Creates a queue, posts messages to it and finally deletes it with
     keystone auth strategy enabled on Zaqar server side.
 
     :params queue_name: The name of the queue

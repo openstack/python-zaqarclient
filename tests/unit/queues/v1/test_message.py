@@ -33,7 +33,7 @@ class TestMessageIterator(base.QueuesTestBase):
                         'ttl': 800,
                         'age': 790,
                         'body': {'event': 'ActivateAccount',
-                                'mode': 'active'}
+                                 'mode': 'active'}
                     }]
                     }
 
@@ -51,7 +51,7 @@ class TestMessageIterator(base.QueuesTestBase):
                         'ttl': 800,
                         'age': 790,
                         'body': {'event': 'ActivateAccount',
-                                'mode': 'active'}
+                                 'mode': 'active'}
                     }]
                     }
 
@@ -82,7 +82,7 @@ class TestMessageIterator(base.QueuesTestBase):
                         'ttl': 800,
                         'age': 790,
                         'body': {'event': 'ActivateAccount',
-                                'mode': 'active'}
+                                 'mode': 'active'}
                     }]
                     }
 

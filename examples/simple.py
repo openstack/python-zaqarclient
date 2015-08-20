@@ -20,7 +20,9 @@ URL = 'http://localhost:8888'
 
 
 def create_post_delete(queue_name, messages):
-    """Creates a queue, posts messages to it
+    """Simple example
+
+    Creates a queue, posts messages to it
     and finally deletes it.
 
     :params queue_name: The name of the queue
