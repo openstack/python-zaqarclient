@@ -51,6 +51,20 @@ class QueueV1ClaimUnitTest(base.QueuesTestBase):
                 self.assertEqual(result[num]['href'], msg.href)
             self.assertEqual(len(result), num_tested)
 
+    def test_claim_limit(self):
+        def verify_limit(request):
+            self.assertIn('limit', request.params)
+            self.assertEqual(request.params['limit'], 10)
+            # NOTE(flaper87): We don't care about the response here,
+            # fake it.
+            return response.Response(None, "{0: [], 'messages': []}")
+
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            send_method.side_effect = verify_limit
+            self.queue.claim(ttl=60, grace=60, limit=10)
+
     def test_claim_get_by_id(self):
         result = {
             'href': '/v1/queues/fizbit/messages/50b68a50d6cb01?claim_id=4524',

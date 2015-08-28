@@ -356,6 +356,10 @@ def claim_create(transport, request, queue_name, **kwargs):
 
     request.operation = 'claim_create'
     request.params['queue_name'] = queue_name
+
+    if 'limit' in kwargs:
+        request.params['limit'] = kwargs.pop('limit')
+
     request.content = json.dumps(kwargs)
 
     resp = transport.send(request)
