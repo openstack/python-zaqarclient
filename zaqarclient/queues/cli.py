@@ -30,15 +30,16 @@ API_VERSIONS = {
 
 def make_client(instance):
     """Returns an queues service client."""
+    version = instance._api_version[API_NAME]
     queues_client = utils.get_client_class(
         API_NAME,
-        instance._api_version[API_NAME],
+        version,
         API_VERSIONS)
 
     if not instance._url:
         instance._url = instance.get_endpoint_for_service_type(API_NAME)
 
-    return queues_client(url=instance._url)
+    return queues_client(url=instance._url, version=version)
 
 
 def build_option_parser(parser):
