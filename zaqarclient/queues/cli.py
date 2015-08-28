@@ -19,11 +19,12 @@ from openstackclient.common import utils
 
 LOG = logging.getLogger(__name__)
 
-DEFAULT_QUEUES_API_VERSION = '1'
+DEFAULT_QUEUES_API_VERSION = '1.1'
 API_VERSION_OPTION = 'os_queues_api_version'
 API_NAME = "messaging"
 API_VERSIONS = {
     "1": "zaqarclient.queues.v1.client.Client",
+    "1.1": "zaqarclient.queues.v1.client.Client",
 }
 
 
