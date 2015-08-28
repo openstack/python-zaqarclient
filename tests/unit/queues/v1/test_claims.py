@@ -25,7 +25,7 @@ class QueuesV1ClaimsHttpUnitTest(claims.QueueV1ClaimUnitTest):
     version = 1
 
 
-class QueuesV1_1ClaimsHttpUnitTest(claims.QueueV1ClaimUnitTest):
+class QueuesV1_1ClaimsHttpUnitTest(claims.QueueV1_1ClaimUnitTest):
 
     transport_cls = http.HttpTransport
     url = 'http://127.0.0.1:8888/v1.1'
