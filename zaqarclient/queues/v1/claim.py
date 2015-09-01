@@ -59,9 +59,13 @@ class Claim(object):
                                  ttl=self._ttl,
                                  grace=self._grace,
                                  limit=self._limit)
+
         # extract the id from the first message
         if msgs is not None:
+            if self._queue.client.api_version >= 1.1:
+                msgs = msgs['messages']
             self.id = msgs[0]['href'].split('=')[-1]
+
         self._message_iter = iterate._Iterator(self._queue.client,
                                                msgs or [],
                                                'messages',
