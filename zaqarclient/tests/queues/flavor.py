@@ -161,6 +161,7 @@ class QueuesV1_1FlavorFunctionalTest(base.QueuesTestBase):
         flavor_data = {'pool': 'us'}
         flavor = self.client.flavor('tasty', **flavor_data)
         self.addCleanup(flavor.delete)
+        pool.update({'group': 'belly'})
         flavor.update({'pool': 'belly'})
         self.assertEqual('belly', flavor.pool)
 

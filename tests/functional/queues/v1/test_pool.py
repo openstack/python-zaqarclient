@@ -18,7 +18,7 @@ from zaqarclient.tests.queues import pool
 from zaqarclient.transport import http
 
 
-class QueuesV1PoolHttpFunctionalTest(pool.QueuesV1PoolFunctionalTest):
+class QueuesV1_1PoolHttpFunctionalTest(pool.QueuesV1_1PoolFunctionalTest):
 
     is_functional = True
     transport_cls = http.HttpTransport

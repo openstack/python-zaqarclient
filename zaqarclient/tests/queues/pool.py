@@ -123,10 +123,11 @@ class QueuesV1PoolUnitTest(base.QueuesTestBase):
             # doesn't crash.
 
 
-class QueuesV1PoolFunctionalTest(base.QueuesTestBase):
+class QueuesV1_1PoolFunctionalTest(base.QueuesTestBase):
 
     def test_pool_get(self):
         pool_data = {'weight': 10,
+                     'group': 'us',
                      'uri': 'mongodb://127.0.0.1:27017'}
 
         self.client.pool('test', **pool_data)
@@ -138,6 +139,7 @@ class QueuesV1PoolFunctionalTest(base.QueuesTestBase):
 
     def test_pool_create(self):
         pool_data = {'weight': 10,
+                     'group': 'us',
                      'uri': 'mongodb://127.0.0.1:27017'}
 
         pool = self.client.pool('test', **pool_data)
@@ -147,6 +149,7 @@ class QueuesV1PoolFunctionalTest(base.QueuesTestBase):
 
     def test_pool_update(self):
         pool_data = {'weight': 10,
+                     'group': 'us',
                      'uri': 'mongodb://127.0.0.1:27017',
                      'options': {}}
 
@@ -157,6 +160,7 @@ class QueuesV1PoolFunctionalTest(base.QueuesTestBase):
 
     def test_pool_list(self):
         pool_data = {'weight': 10,
+                     'group': 'us',
                      'uri': 'mongodb://127.0.0.1:27017',
                      'options': {}}
         pool = self.client.pool('test', **pool_data)
@@ -168,6 +172,7 @@ class QueuesV1PoolFunctionalTest(base.QueuesTestBase):
 
     def test_pool_delete(self):
         pool_data = {'weight': 10,
+                     'group': 'us',
                      'uri': 'mongodb://127.0.0.1:27017'}
 
         pool = self.client.pool('test', **pool_data)
