@@ -58,6 +58,7 @@ class Pool(object):
             if self.client.api_version >= 1.1:
                 data['group'] = self.group
 
+            req, trans = self.client._request_and_transport()
             core.pool_create(trans, req, self.name, data)
 
     def update(self, pool_data):

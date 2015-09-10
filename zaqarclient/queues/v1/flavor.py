@@ -49,6 +49,7 @@ class Flavor(object):
             data = {'pool': self.pool,
                     'capabilities': self.capabilities}
 
+            req, trans = self.client._request_and_transport()
             core.flavor_create(trans, req, self.name, data)
 
     def update(self, flavor_data):
