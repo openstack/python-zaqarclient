@@ -47,6 +47,27 @@ Contents
 Release Notes
 =============
 
+0.2.0
+-----
+
+* 1934a98 Updated from global requirements
+* 863371b Allow for authentication in functional tests
+* b35689d Don't pass `options` to pool creation
+* 8104ff4 Don't reuse request and transport instances
+* bf841b5 Pass `group` in pool's functional tests
+* 2490ed4 Send claims `limit` as a query param
+* baf6fa7 v1.1 and v2 claims return document not list
+* 0d80728 Make sure the API version is passed down
+* 407925c Make v1.1 the default CLI version
+* 895aad2 Updated from global requirements
+* 8a81c44 Updated from global requirements
+* 705ee75 Implement CLI support for flavor
+* 32a847e Implements CLI for pool
+* 964443d Raises an error if the queue name is empty
+* e9a8d01 Added support to pools and flavors
+* f46979b Removed deprecated 'shard' methods
+* 1a85f83 Update README to work with release tools
+
 0.1.1
 -----
 
