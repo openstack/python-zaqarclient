@@ -362,9 +362,17 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
         msgs_id = [ref.split('/')[-1] for ref in res]
         messages = queue.messages(*msgs_id)
         self.assertTrue(isinstance(messages, iterator._Iterator))
-        # FIXME(flaper87): Fix this as soon as we start
-        # sending `ids=1,2,3` to falcon
-        self.assertEqual(len(list(messages)), 1)
+        messages = list(messages)
+        length = len(messages)
+        if length == 3:
+            bodies = set(message.body for message in messages)
+            self.assertEqual(
+                set(['Post It 1!', 'Post It 2!', 'Post It 3!']), bodies)
+        elif length == 1:
+            # FIXME(therve): Old broken behavior, remove it as some point
+            pass
+        else:
+            self.fail("Wrong number of messages: '%d'" % length)
 
     def test_message_delete_many_functional(self):
         queue = self.client.queue("test_queue")
@@ -381,8 +389,6 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
         queue.delete_messages(*msgs_id)
 
         messages = queue.messages()
-        # FIXME(flaper87): Fix this as soon as we start
-        # sending `ids=1,2,3` to falcon
         self.assertEqual(len(list(messages)), 0)
 
 
