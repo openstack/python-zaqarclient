@@ -38,8 +38,8 @@ class QueuesV1PoolUnitTest(base.QueuesTestBase):
             # ensure exists in the client instance
             # since auto_create's default is True
             pool = self.client.pool('test', **pool_data)
-            self.assertEqual(pool.name, 'test')
-            self.assertEqual(pool.weight, 10)
+            self.assertEqual('test', pool.name)
+            self.assertEqual(10, pool.weight)
 
     def test_pool_get(self):
         pool_data = {'weight': 10,
@@ -56,8 +56,8 @@ class QueuesV1PoolUnitTest(base.QueuesTestBase):
             # ensure exists in the client instance
             # since auto_create's default is True
             pool = self.client.pool('test')
-            self.assertEqual(pool.name, 'test')
-            self.assertEqual(pool.weight, 10)
+            self.assertEqual('test', pool.name)
+            self.assertEqual(10, pool.weight)
 
     def test_pool_update(self):
         pool_data = {'weight': 10,
@@ -133,9 +133,9 @@ class QueuesV1_1PoolFunctionalTest(base.QueuesTestBase):
         self.client.pool('test', **pool_data)
         pool = self.client.pool('test')
 
-        self.assertEqual(pool.name, 'test')
-        self.assertEqual(pool.weight, 10)
-        self.assertEqual(pool.uri, 'mongodb://127.0.0.1:27017')
+        self.assertEqual('test', pool.name)
+        self.assertEqual(10, pool.weight)
+        self.assertEqual('mongodb://127.0.0.1:27017', pool.uri)
 
     def test_pool_create(self):
         pool_data = {'weight': 10,
@@ -144,8 +144,8 @@ class QueuesV1_1PoolFunctionalTest(base.QueuesTestBase):
 
         pool = self.client.pool('test', **pool_data)
         self.addCleanup(pool.delete)
-        self.assertEqual(pool.name, 'test')
-        self.assertEqual(pool.weight, 10)
+        self.assertEqual('test', pool.name)
+        self.assertEqual(10, pool.weight)
 
     def test_pool_update(self):
         pool_data = {'weight': 10,
