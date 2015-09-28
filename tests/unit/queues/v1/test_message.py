@@ -42,7 +42,7 @@ class TestMessageIterator(base.QueuesTestBase):
                                      'messages',
                                      message.create_object(self.queue))
         iterated = [msg for msg in iterator]
-        self.assertEqual(len(iterated), 1)
+        self.assertEqual(1, len(iterated))
 
     def test_stream(self):
         messages = {'links': [],
@@ -73,7 +73,7 @@ class TestMessageIterator(base.QueuesTestBase):
                                          'messages',
                                          message.create_object(self.queue))
             iterated = [msg for msg in iterator.stream()]
-            self.assertEqual(len(iterated), 2)
+            self.assertEqual(2, len(iterated))
 
     def test_iterator_respect_paging(self):
         messages = {'links': [],
@@ -101,7 +101,7 @@ class TestMessageIterator(base.QueuesTestBase):
                                          'messages',
                                          message.create_object(self.queue))
             iterated = [msg for msg in iterator]
-            self.assertEqual(len(iterated), 1)
+            self.assertEqual(1, len(iterated))
 
 
 class QueuesV1MessageHttpUnitTest(test_message.QueuesV1MessageUnitTest):

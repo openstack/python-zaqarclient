@@ -96,7 +96,7 @@ class TestV1Core(base.TestBase):
 
             req = request.Request()
             result = core.queue_get_stats(self.transport, req, 'test')
-            self.assertEqual(result, {})
+            self.assertEqual({}, result)
 
     def test_message_post_one(self):
         messages = {'ttl': 30, 'body': 'Post one!'}
@@ -110,8 +110,7 @@ class TestV1Core(base.TestBase):
 
             core.message_post(self.transport, req, 'test', messages)
             self.assertIn('queue_name', req.params)
-            self.assertEqual(json.loads(req.content),
-                             messages)
+            self.assertEqual(messages, json.loads(req.content))
 
     def test_message_post_many(self):
         messages = [{'ttl': 30, 'body': 'Post one!'},
@@ -127,8 +126,7 @@ class TestV1Core(base.TestBase):
 
             core.message_post(self.transport, req, 'test', messages)
             self.assertIn('queue_name', req.params)
-            self.assertEqual(json.loads(req.content),
-                             messages)
+            self.assertEqual(messages, json.loads(req.content))
 
     def test_message_list(self):
         with mock.patch.object(self.transport, 'send',
@@ -264,4 +262,4 @@ class TestV1_1Core(TestV1Core):
 
             self.assertIn('queue_name', req.params)
             self.assertIn('pop', req.params)
-            self.assertEqual(req.params['pop'], 5)
+            self.assertEqual(5, req.params['pop'])
