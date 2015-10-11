@@ -54,7 +54,7 @@ class TestKeystoneAuth(base.TestBase):
                 get_endpoint.return_value = test_endpoint
 
                 req = self.auth.authenticate(1, request.Request())
-                self.assertEqual(req.endpoint, test_endpoint)
+                self.assertEqual(test_endpoint, req.endpoint)
                 self.assertIn('X-Auth-Token', req.headers)
 
     def test_with_token(self):

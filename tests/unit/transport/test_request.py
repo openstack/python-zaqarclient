@@ -29,8 +29,7 @@ class TestRequest(base.TestBase):
             }
         }
         req = request.prepare_request(auth_opts)
-        self.assertEqual(req.headers['X-Project-Id'],
-                         'my-project')
+        self.assertEqual('my-project', req.headers['X-Project-Id'])
 
     def test_prepare_request(self):
         auth_opts = self.conf.get('auth_opts', {})
@@ -43,4 +42,4 @@ class TestRequest(base.TestBase):
         data = {"data": "tons of GBs"}
         req = request.prepare_request(auth_opts, data=data)
         self.assertTrue(isinstance(req, request.Request))
-        self.assertEqual(req.content, json.dumps(data))
+        self.assertEqual(json.dumps(data), req.content)
