@@ -40,8 +40,8 @@ class QueuesV1_1FlavorUnitTest(base.QueuesTestBase):
             # ensure exists in the client instance
             # since auto_create's default is True
             flavor = self.client.flavor('tasty', **flavor_data)
-            self.assertEqual(flavor.name, 'tasty')
-            self.assertEqual(flavor.pool, 'stomach')
+            self.assertEqual('tasty', flavor.name)
+            self.assertEqual('stomach', flavor.pool)
 
     def test_flavor_get(self):
         flavor_data = {'pool': 'stomach'}
@@ -56,8 +56,8 @@ class QueuesV1_1FlavorUnitTest(base.QueuesTestBase):
             # ensure exists in the client instance
             # since auto_create's default is True
             flavor = self.client.flavor('test')
-            self.assertEqual(flavor.name, 'test')
-            self.assertEqual(flavor.pool, 'stomach')
+            self.assertEqual('test', flavor.name)
+            self.assertEqual('stomach', flavor.pool)
 
     def test_flavor_update(self):
         flavor_data = {'pool': 'stomach'}
@@ -130,8 +130,8 @@ class QueuesV1_1FlavorFunctionalTest(base.QueuesTestBase):
         flavor = self.client.flavor('tasty', **flavor_data)
         self.addCleanup(flavor.delete)
 
-        self.assertEqual(flavor.name, 'tasty')
-        self.assertEqual(flavor.pool, 'us')
+        self.assertEqual('tasty', flavor.name)
+        self.assertEqual('us', flavor.pool)
 
     def test_flavor_get(self):
         pool_data = {'weight': 10,
@@ -147,8 +147,8 @@ class QueuesV1_1FlavorFunctionalTest(base.QueuesTestBase):
         flavor = self.client.flavor('tasty')
         self.addCleanup(flavor.delete)
 
-        self.assertEqual(flavor.name, 'tasty')
-        self.assertEqual(flavor.pool, 'us')
+        self.assertEqual('tasty', flavor.name)
+        self.assertEqual('us', flavor.pool)
 
     def test_flavor_update(self):
         pool_data = {'weight': 10,

@@ -54,7 +54,7 @@ class QueueV1ClaimUnitTest(base.QueuesTestBase):
     def test_claim_limit(self):
         def verify_limit(request):
             self.assertIn('limit', request.params)
-            self.assertEqual(request.params['limit'], 10)
+            self.assertEqual(10, request.params['limit'])
             # NOTE(flaper87): We don't care about the response here,
             # fake it.
             return response.Response(None, "{0: [], 'messages': []}")
@@ -138,7 +138,7 @@ class QueuesV1ClaimFunctionalTest(base.QueuesTestBase):
         res = queue.claim(ttl=100, grace=100)
         claim_id = res.id
         cl = queue.claim(id=claim_id)
-        self.assertEqual(cl.id, claim_id)
+        self.assertEqual(claim_id, cl.id)
 
     def test_claim_create_delete_functional(self):
         queue = self.client.queue("test_queue")
