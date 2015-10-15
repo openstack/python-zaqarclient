@@ -2,6 +2,14 @@
 Python Zaqar Client
 *******************
 
+.. image:: https://img.shields.io/pypi/v/python-zaqarclient.svg
+    :target: https://pypi.python.org/pypi/python-zaqarclient/
+    :alt: Latest Version
+
+.. image:: https://img.shields.io/pypi/dm/python-zaqarclient.svg
+    :target: https://pypi.python.org/pypi/python-zaqarclient/
+    :alt: Downloads
+
 :version: 0.1.0
 :Wiki: `Zaqar Wiki`_
 :Launchpad: `Zaqar Launchpad`_
@@ -88,5 +96,11 @@ first patch.
 
 
 * License: Apache License, Version 2.0
-* Source: http://git.openstack.org/cgit/openstack/python-zaqarclient
-* Bugs: http://bugs.launchpad.net/python-zaqarclient
+* `PyPi`_ - package installation
+* `Bugs`_ - issue tracking
+* `Source`_
+
+.. _PyPi: https://pypi.python.org/pypi/python-zaqarclient
+.. _Bugs: https://bugs.launchpad.net/python-zaqarclient
+.. _Source: https://git.openstack.org/cgit/openstack/python-zaqarclient
+
