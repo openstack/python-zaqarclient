@@ -22,6 +22,11 @@ from cliff import show
 from openstackclient.common import utils
 
 
+def _get_client(obj, parsed_args):
+    obj.log.debug("take_action(%s)" % parsed_args)
+    return obj.app.client_manager.messaging
+
+
 class CreateQueue(show.ShowOne):
     """Create a queue"""
 
@@ -36,13 +41,9 @@ class CreateQueue(show.ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-        self.log.debug("take_action(%s)" % parsed_args)
-
-        client = self.app.client_manager.messaging
-
+        client = _get_client(self, parsed_args)
         queue_name = parsed_args.queue_name
         data = client.queue(queue_name)
-
         columns = ('Name',)
         return columns, utils.get_item_properties(data, columns)
 
@@ -61,11 +62,8 @@ class DeleteQueue(command.Command):
         return parser
 
     def take_action(self, parsed_args):
-        self.log.debug("take_action(%s)" % parsed_args)
-        client = self.app.client_manager.messaging
-
+        client = _get_client(self, parsed_args)
         queue_name = parsed_args.queue_name
-
         client.queue(queue_name).delete()
 
 
@@ -88,10 +86,7 @@ class ListQueues(lister.Lister):
         return parser
 
     def take_action(self, parsed_args):
-        self.log.debug("take_action(%s)" % parsed_args)
-
-        client = self.app.client_manager.messaging
-
+        client = _get_client(self, parsed_args)
         kwargs = {}
         if parsed_args.marker is not None:
             kwargs["marker"] = parsed_args.marker
@@ -118,10 +113,7 @@ class CheckQueueExistence(show.ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-        self.log.debug("take_action(%s)" % parsed_args)
-
-        client = self.app.client_manager.messaging
-
+        client = _get_client(self, parsed_args)
         queue_name = parsed_args.queue_name
         queue = client.queue(queue_name, auto_create=False)
 
@@ -148,10 +140,7 @@ class SetQueueMetadata(command.Command):
         return parser
 
     def take_action(self, parsed_args):
-        self.log.debug("take_action(%s)" % parsed_args)
-
-        client = self.app.client_manager.messaging
-
+        client = _get_client(self, parsed_args)
         queue_name = parsed_args.queue_name
         queue_metadata = parsed_args.queue_metadata
         queue_exists = client.queue(queue_name, auto_create=False).exists()
@@ -183,10 +172,7 @@ class GetQueueMetadata(show.ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-        self.log.debug("take_action(%s)" % parsed_args)
-
-        client = self.app.client_manager.messaging
-
+        client = _get_client(self, parsed_args)
         queue_name = parsed_args.queue_name
         queue = client.queue(queue_name, auto_create=False)
 
@@ -212,10 +198,7 @@ class GetQueueStats(show.ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-        self.log.debug("take_action(%s)" % parsed_args)
-
-        client = self.app.client_manager.messaging
-
+        client = _get_client(self, parsed_args)
         queue_name = parsed_args.queue_name
         queue = client.queue(queue_name, auto_create=False)
 
@@ -262,10 +245,7 @@ class CreatePool(show.ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-        self.log.debug("take_action(%s)" % parsed_args)
-
-        client = self.app.client_manager.messaging
-
+        client = _get_client(self, parsed_args)
         kw_arg = {
             'uri': parsed_args.pool_uri,
             'weight': parsed_args.pool_weight,
@@ -300,8 +280,8 @@ class ShowPool(show.ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-        self.log.debug("take_action(%s)", parsed_args)
-        client = self.app.client_manager.messaging
+        client = _get_client(self, parsed_args)
+
         pool_data = client.pool(parsed_args.pool_name,
                                 auto_create=False).get()
         columns = ('Name', 'Weight', 'URI', 'Group', 'Options')
@@ -341,9 +321,7 @@ class UpdatePool(show.ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-        self.log.debug("take_action(%s)" % parsed_args)
-
-        client = self.app.client_manager.messaging
+        client = _get_client(self, parsed_args)
         kw_arg = {}
 
         if parsed_args.pool_uri:
@@ -362,6 +340,25 @@ class UpdatePool(show.ShowOne):
         return columns, utils.get_dict_properties(pool_data, columns)
 
 
+class DeletePool(command.Command):
+    """Delete a pool"""
+
+    log = logging.getLogger(__name__ + ".DeletePool")
+
+    def get_parser(self, prog_name):
+        parser = super(DeletePool, self).get_parser(prog_name)
+        parser.add_argument(
+            "pool_name",
+            metavar="<pool_name>",
+            help="Name of the pool")
+        return parser
+
+    def take_action(self, parsed_args):
+        client = _get_client(self, parsed_args)
+        pool_name = parsed_args.pool_name
+        client.pool(pool_name, auto_create=False).delete()
+
+
 class DeleteFlavor(command.Command):
     """Delete a flavor"""
 
@@ -376,10 +373,6 @@ class DeleteFlavor(command.Command):
         return parser
 
     def take_action(self, parsed_args):
-        self.log.debug("take_action(%s)" % parsed_args)
-
-        client = self.app.client_manager.messaging
-
+        client = _get_client(self, parsed_args)
         flavor_name = parsed_args.flavor_name
-
         client.flavor(flavor_name).delete()
