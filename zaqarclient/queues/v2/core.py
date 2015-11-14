@@ -46,6 +46,11 @@ message_list = core.message_list
 message_post = core.message_post
 message_delete = core.message_delete
 message_delete_many = core.message_delete_many
+flavor_get = core.flavor_get
+flavor_create = core.flavor_create
+flavor_delete = core.flavor_delete
+flavor_update = core.flavor_update
+flavor_list = core.flavor_list
 
 
 def signed_url_create(transport, request, queue_name, paths=None,

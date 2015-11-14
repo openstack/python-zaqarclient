@@ -191,3 +191,11 @@ class QueuesV1_1FlavorFunctionalTest(base.QueuesTestBase):
         flavor_data = {'pool': 'us'}
         flavor = self.client.flavor('tasty', **flavor_data)
         flavor.delete()
+
+
+class QueuesV2FlavorUnitTest(QueuesV1_1FlavorUnitTest):
+    pass
+
+
+class QueuesV2FlavorFunctionalTest(QueuesV1_1FlavorFunctionalTest):
+    pass
