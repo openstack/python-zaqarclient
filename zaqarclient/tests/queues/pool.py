@@ -175,3 +175,11 @@ class QueuesV1_1PoolFunctionalTest(base.QueuesTestBase):
 
         pool = self.client.pool('test', **pool_data)
         pool.delete()
+
+
+class QueuesV2PoolUnitTest(QueuesV1PoolUnitTest):
+    pass
+
+
+class QueuesV2PoolFunctionalTest(QueuesV1_1PoolFunctionalTest):
+    pass
