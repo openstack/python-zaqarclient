@@ -13,11 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from tests.unit.queues.v1 import test_queues
+from zaqarclient.tests.queues import queues
 from zaqarclient.transport import http
 
 
-class QueuesV2QueueHttpUnitTest(test_queues.QueuesV1QueueHttpUnitTest):
+class QueuesV2QueueHttpUnitTest(queues.QueuesV2QueueUnitTest):
 
     transport_cls = http.HttpTransport
     url = 'http://127.0.0.1:8888/v2'
