@@ -479,3 +479,43 @@ class ShowFlavor(show.ShowOne):
                                     auto_create=False).get()
         columns = ('Name', 'Pool', 'Capabilities')
         return columns, utils.get_dict_properties(flavor_data, columns)
+
+
+class ListFlavors(lister.Lister):
+    """List available flavors"""
+
+    log = logging.getLogger(__name__ + ".ListFlavors")
+
+    def get_parser(self, prog_name):
+        parser = super(ListFlavors, self).get_parser(prog_name)
+        parser.add_argument(
+            "--marker",
+            metavar="<flavor_name>",
+            help="Flavor's paging marker")
+        parser.add_argument(
+            "--limit",
+            metavar="<limit>",
+            help="Page size limit")
+        parser.add_argument(
+            "--detailed",
+            type=bool,
+            default=False,
+            metavar="<detailed>",
+            help="If show detailed capabilities of flavor")
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug("take_action(%s)" % parsed_args)
+
+        client = self.app.client_manager.messaging
+
+        kwargs = {'detailed': parsed_args.detailed}
+        if parsed_args.marker is not None:
+            kwargs["marker"] = parsed_args.marker
+        if parsed_args.limit is not None:
+            kwargs["limit"] = parsed_args.limit
+
+        data = client.flavors(**kwargs)
+        columns = ("Name", 'Pool', 'Capabilities')
+        return (columns,
+                (utils.get_item_properties(s, columns) for s in data))
