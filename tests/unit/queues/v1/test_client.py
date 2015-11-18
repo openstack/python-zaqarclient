@@ -31,13 +31,13 @@ class TestClient(base.TestBase):
     @ddt.data(*VERSIONS)
     def test_transport(self, version):
         cli = client.Client('http://example.com',
-                            version, {})
+                            version, {"auth_opts": {'backend': 'noauth'}})
         self.assertIsNotNone(cli.transport())
 
     @ddt.data(*VERSIONS)
     def test_health_ok(self, version):
         cli = client.Client('http://example.com',
-                            version, {})
+                            version, {"auth_opts": {'backend': 'noauth'}})
         with mock.patch.object(core, 'health', autospec=True) as core_health:
             core_health.return_value = None
             self.assertTrue(cli.health())
@@ -45,7 +45,7 @@ class TestClient(base.TestBase):
     @ddt.data(*VERSIONS)
     def test_health_bad(self, version):
         cli = client.Client('http://example.com',
-                            version, {})
+                            version, {"auth_opts": {'backend': 'noauth'}})
 
         def raise_error(*args, **kwargs):
             raise errors.ServiceUnavailableError()
