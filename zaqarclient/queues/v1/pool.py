@@ -55,7 +55,7 @@ class Pool(object):
                     'weight': self.weight,
                     'options': self.options}
 
-            if self.client.api_version >= 1.1:
+            if self.client.api_version >= 1.1 and self.group:
                 data['group'] = self.group
 
             req, trans = self.client._request_and_transport()
