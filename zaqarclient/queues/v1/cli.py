@@ -308,6 +308,60 @@ class ShowPool(show.ShowOne):
         return columns, utils.get_dict_properties(pool_data, columns)
 
 
+class UpdatePool(show.ShowOne):
+    """Update a pool attribute"""
+
+    log = logging.getLogger(__name__+".UpdatePool")
+
+    def get_parser(self, prog_name):
+        parser = super(UpdatePool, self).get_parser(prog_name)
+        parser.add_argument(
+            "pool_name",
+            metavar="<pool_name>",
+            help="Name of the pool")
+        parser.add_argument(
+            "--pool_uri",
+            metavar="<pool_uri>",
+            help="Storage engine URI")
+        parser.add_argument(
+            "--pool_weight",
+            type=int,
+            metavar="<pool_weight>",
+            help="Weight of the pool")
+        parser.add_argument(
+            "--pool_group",
+            metavar="<pool_group>",
+            help="Group of the pool")
+        parser.add_argument(
+            "--pool_options",
+            type=json.loads,
+            metavar="<pool_options>",
+            help="An optional request component "
+                 "related to storage-specific options")
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug("take_action(%s)" % parsed_args)
+
+        client = self.app.client_manager.messaging
+        kw_arg = {}
+
+        if parsed_args.pool_uri:
+            kw_arg["uri"] = parsed_args.pool_uri
+        if parsed_args.pool_weight:
+            kw_arg["weight"] = parsed_args.pool_weight
+        if parsed_args.pool_group:
+            kw_arg["group"] = parsed_args.pool_group
+        if parsed_args.pool_options:
+            kw_arg["options"] = parsed_args.pool_options
+
+        pool_obj = client.pool(parsed_args.pool_name, auto_create=False)
+        pool_obj.update(kw_arg)
+        pool_data = pool_obj.get()
+        columns = ('Name', 'Weight', 'URI', 'Group', 'Options')
+        return columns, utils.get_dict_properties(pool_data, columns)
+
+
 class DeleteFlavor(command.Command):
     """Delete a flavor"""
 
