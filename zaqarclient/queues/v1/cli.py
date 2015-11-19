@@ -273,6 +273,29 @@ class CreatePool(show.ShowOne):
         return columns, utils.get_item_properties(data, columns)
 
 
+class ShowPool(show.ShowOne):
+    """Display pool details"""
+
+    log = logging.getLogger(__name__ + ".ShowPool")
+
+    def get_parser(self, prog_name):
+        parser = super(ShowPool, self).get_parser(prog_name)
+        parser.add_argument(
+            "pool_name",
+            metavar="<pool_name>",
+            help="Pool to display (name)",
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug("take_action(%s)", parsed_args)
+        client = self.app.client_manager.messaging
+        pool_data = client.pool(parsed_args.pool_name,
+                                auto_create=False).get()
+        columns = ('Name', 'Weight', 'URI', 'Group', 'Options')
+        return columns, utils.get_dict_properties(pool_data, columns)
+
+
 class DeleteFlavor(command.Command):
     """Delete a flavor."""
 
