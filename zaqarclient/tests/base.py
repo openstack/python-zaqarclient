@@ -33,6 +33,7 @@ class TestBase(testtools.TestCase):
 
         self.conf = {
             'auth_opts': {
+                'backend': 'noauth',
                 'options': {
                     'os_project_id': 'my-project'
                 }

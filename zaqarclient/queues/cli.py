@@ -38,9 +38,30 @@ def make_client(instance):
         API_VERSIONS)
 
     if not instance._url:
-        instance._url = instance.get_endpoint_for_service_type(API_NAME)
+        instance._url = instance.get_endpoint_for_service_type(
+            API_NAME,
+            region_name=instance._region_name,
+            interface=instance._interface
+        )
 
-    return queues_client(url=instance._url, version=version)
+    auth_params = instance._auth_params
+    auth_params.update({
+        "auth_token": instance.auth.get_token(instance.session),
+        "insecure": instance._insecure,
+        "cacert": instance._cacert,
+        "region_name": instance._region_name
+    })
+
+    conf = {
+        "auth_opts": {'options': auth_params}
+    }
+
+    LOG.debug('Instantiating queues service client: %s', queues_client)
+    return queues_client(
+        instance._url,
+        version,
+        conf
+    )
 
 
 def build_option_parser(parser):

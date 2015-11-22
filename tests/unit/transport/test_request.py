@@ -28,6 +28,7 @@ class TestRequest(base.TestBase):
                 'os_project_id': 'my-project'
             }
         }
+        auth_opts.update({'backend': 'noauth'})
         req = request.prepare_request(auth_opts)
         self.assertEqual('my-project', req.headers['X-Project-Id'])
 

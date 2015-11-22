@@ -27,7 +27,7 @@ from zaqarclient.transport import request
 
 
 class _FakeKeystoneClient(object):
-    auth_token = 'test-token'
+    auth_token = 'fake-token'
 
     def __init__(self, *args, **kwargs):
         pass
@@ -41,8 +41,7 @@ class TestKeystoneAuth(base.TestBase):
         if not ksclient:
             self.skipTest('Keystone client is not installed')
 
-        self.auth = auth.get_backend(backend='keystone',
-                                     options=self.conf)
+        self.auth = auth.get_backend(options=self.conf)
 
     def test_no_token(self):
         test_endpoint = 'http://example.org:8888'
@@ -56,9 +55,10 @@ class TestKeystoneAuth(base.TestBase):
                 req = self.auth.authenticate(1, request.Request())
                 self.assertEqual(test_endpoint, req.endpoint)
                 self.assertIn('X-Auth-Token', req.headers)
+                self.assertIn(req.headers['X-Auth-Token'], 'fake-token')
 
     def test_with_token(self):
-        self.config(os_auth_token='test-token')
+        self.auth.conf.update({"auth_token": "test-token"})
         req = request.Request(endpoint='http://example.org:8888')
         req = self.auth.authenticate(1, req)
         self.assertIn('X-Auth-Token', req.headers)
