@@ -63,6 +63,10 @@ class Flavor(object):
         req, trans = self.client._request_and_transport()
         core.flavor_delete(trans, req, self.name)
 
+    def get(self):
+        req, trans = self.client._request_and_transport()
+        return core.flavor_get(trans, req, self.name, callback=None)
+
 
 def create_object(parent):
     return lambda args: Flavor(parent, args["name"], auto_create=False)

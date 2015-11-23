@@ -456,3 +456,26 @@ class DeleteFlavor(command.Command):
         client = _get_client(self, parsed_args)
         flavor_name = parsed_args.flavor_name
         client.flavor(flavor_name).delete()
+
+
+class ShowFlavor(show.ShowOne):
+    """Display flavor details"""
+
+    log = logging.getLogger(__name__ + ".ShowFlavor")
+
+    def get_parser(self, prog_name):
+        parser = super(ShowFlavor, self).get_parser(prog_name)
+        parser.add_argument(
+            "flavor_name",
+            metavar="<flavor_name>",
+            help="Flavor to display (name)",
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug("take_action(%s)", parsed_args)
+        client = self.app.client_manager.messaging
+        flavor_data = client.flavor(parsed_args.flavor_name,
+                                    auto_create=False).get()
+        columns = ('Name', 'Pool', 'Capabilities')
+        return columns, utils.get_dict_properties(flavor_data, columns)
