@@ -29,14 +29,18 @@ class Response(object):
     :type: `six.string_types`
     :param headers: Optional headers returned in the response.
     :type: dict
+    :param status_code: Optional status_code returned in the response.
+    :type: `int`
     """
 
-    __slots__ = ('request', 'content', 'headers', '_deserialized')
+    __slots__ = ('request', 'content', 'headers', 'status_code',
+                 '_deserialized')
 
-    def __init__(self, request, content, headers=None):
+    def __init__(self, request, content, headers=None, status_code=None):
         self.request = request
         self.content = content
         self.headers = headers or {}
+        self.status_code = status_code
 
         self._deserialized = None
 

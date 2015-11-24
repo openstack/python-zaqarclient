@@ -29,5 +29,49 @@ V2.schema.update({
         'properties': {
             'queue_name': {'type': 'string'}
         },
-    }
+    },
+    'subscription_create': {
+        'ref': 'queues/{queue_name}/subscriptions',
+        'method': 'POST',
+        'required': ['queue_name'],
+        'properties': {
+            'queue_name': {'type': 'string'}
+        },
+    },
+    'subscription_get': {
+        'ref': 'queues/{queue_name}/subscriptions/{subscription_id}',
+        'method': 'GET',
+        'required': ['queue_name', 'subscription_id'],
+        'properties': {
+            'queue_name': {'type': 'string'},
+            'subscription_id': {'type': 'string'}
+        },
+    },
+    'subscription_update': {
+        'ref': 'queues/{queue_name}/subscriptions/{subscription_id}',
+        'method': 'PATCH',
+        'required': ['queue_name', 'subscription_id'],
+        'properties': {
+            'queue_name': {'type': 'string'},
+            'subscription_id': {'type': 'string'}
+        }
+    },
+    'subscription_delete': {
+        'ref': 'queues/{queue_name}/subscriptions/{subscription_id}',
+        'method': 'DELETE',
+        'required': ['queue_name', 'subscription_id'],
+        'properties': {
+            'queue_name': {'type': 'string'},
+            'subscription_id': {'type': 'string'}
+        }
+    },
+    'subscription_list': {
+        'ref': 'queues/{queue_name}/subscriptions',
+        'method': 'GET',
+        'properties': {
+            'marker': {'type': 'string'},
+            'limit': {'type': 'integer'},
+            'detailed': {'type': 'boolean'}
+        }
+    },
 })

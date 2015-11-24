@@ -108,4 +108,5 @@ class HttpTransport(base.Transport):
         # NOTE(flaper87): This reads the whole content
         # and will consume any attempt of streaming.
         return response.Response(request, resp.text,
-                                 headers=resp.headers)
+                                 headers=resp.headers,
+                                 status_code=resp.status_code)

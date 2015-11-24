@@ -15,7 +15,11 @@
 
 import uuid
 
+from zaqarclient.common import decorators
 from zaqarclient.queues.v1 import client
+from zaqarclient.queues.v1 import iterator
+from zaqarclient.queues.v2 import core
+from zaqarclient.queues.v2 import subscription
 
 
 class Client(client.Client):
@@ -42,3 +46,34 @@ class Client(client.Client):
         self.auth_opts = self.conf.get('auth_opts', {})
         self.client_uuid = self.conf.get('client_uuid',
                                          uuid.uuid4().hex)
+
+    @decorators.version(min_version=2)
+    def subscription(self, queue_name, **kwargs):
+        """Returns a subscription instance
+
+        :param queue_name: Name of the queue to subscribe to.
+        :type queue_name: `six.text_type`
+
+        :returns: A subscription instance
+        :rtype: `subscription.Subscription`
+        """
+        return subscription.Subscription(self, queue_name, **kwargs)
+
+    @decorators.version(min_version=2)
+    def subscriptions(self, **params):
+        """Gets a list of subscriptions from the server
+
+        :param params: Filters to use for getting subscriptions
+        :type params: **kwargs dict.
+
+        :returns: A list of subscriptions
+        :rtype: `list`
+        """
+        req, trans = self._request_and_transport()
+
+        subscription_list = core.subscription_list(trans, req, **params)
+
+        return iterator._Iterator(self,
+                                  subscription_list,
+                                  'subscriptions',
+                                  subscription.create_object(self))

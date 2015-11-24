@@ -71,3 +71,10 @@ class ServiceUnavailableError(TransportError):
 
     This error maps to HTTP's 503
     """
+
+
+class ConflictError(TransportError):
+    """Indicates that the server was unable to service the request
+
+    This error maps to HTTP's 409
+    """

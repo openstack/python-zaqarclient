@@ -33,6 +33,7 @@ import json
 from oslo_utils import timeutils
 
 from zaqarclient.queues.v1 import core
+from zaqarclient.transport import errors
 
 queue_create = core.queue_create
 queue_exists = core.queue_exists
@@ -102,4 +103,120 @@ def signed_url_create(transport, request, queue_name, paths=None,
     request.content = json.dumps(body)
 
     resp = transport.send(request)
+    return resp.deserialized_content
+
+
+def subscription_create(transport, request, queue_name, subscription_data):
+    """Creates a new subscription against the `queue_name`
+
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param queue_name: Queue reference name.
+    :type queue_name: `six.text_type`
+    :param subscription_data: Subscription's properties, i.e: subscriber,
+        ttl, options.
+    :type subscription_data: `dict`
+    """
+
+    request.operation = 'subscription_create'
+    request.params['queue_name'] = queue_name
+    request.content = json.dumps(subscription_data)
+    resp = transport.send(request)
+
+    if resp.status_code == 409:
+        raise errors.ConflictError()
+
+    return resp.deserialized_content
+
+
+def subscription_get(transport, request, queue_name, subscription_id):
+    """Gets a particular subscription data
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param queue_name: Queue reference name.
+    :type queue_name: `six.text_type`
+    :param subscription_id: ID of subscription.
+    :type subscription_id: `six.text_type`
+
+    """
+
+    request.operation = 'subscription_get'
+    request.params['queue_name'] = queue_name
+    request.params['subscription_id'] = subscription_id
+
+    resp = transport.send(request)
+    return resp.deserialized_content
+
+
+def subscription_update(transport, request, queue_name, subscription_id,
+                        subscription_data):
+    """Updates the subscription
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param queue_name: Queue reference name.
+    :type queue_name: `six.text_type`
+    :param subscription_id: ID of subscription.
+    :type subscription_id: `six.text_type`
+    :param subscription_data: Subscription's properties, i.e: subscriber,
+        ttl, options.
+    :type subscription_data: `dict`
+    """
+
+    request.operation = 'subscription_update'
+    request.params['queue_name'] = queue_name
+    request.params['subscription_id'] = subscription_id
+    request.content = json.dumps(subscription_data)
+
+    resp = transport.send(request)
+    return resp.deserialized_content
+
+
+def subscription_delete(transport, request, queue_name, subscription_id):
+    """Deletes the subscription
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param queue_name: Queue reference name.
+    :type queue_name: `six.text_type`
+    :param subscription_id: ID of subscription.
+    :type subscription_id: `six.text_type`
+    """
+
+    request.operation = 'subscription_delete'
+    request.params['queue_name'] = queue_name
+    request.params['subscription_id'] = subscription_id
+    transport.send(request)
+
+
+def subscription_list(transport, request, **kwargs):
+    """Gets a list of subscriptions
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param kwargs: Optional arguments for this operation.
+        - marker: Where to start getting subscriptions from.
+        - limit: Maximum number of subscriptions to get.
+    """
+
+    request.operation = 'subscription_list'
+    request.params.update(kwargs)
+
+    resp = transport.send(request)
+
+    if not resp.content:
+        return {'links': [], 'pools': []}
+
     return resp.deserialized_content
