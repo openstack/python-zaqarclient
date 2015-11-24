@@ -23,7 +23,7 @@ from openstackclient.common import utils
 
 
 class CreateQueue(show.ShowOne):
-    """Create a queue."""
+    """Create a queue"""
 
     log = logging.getLogger(__name__ + ".CreateQueue")
 
@@ -48,7 +48,7 @@ class CreateQueue(show.ShowOne):
 
 
 class DeleteQueue(command.Command):
-    """Delete a queue."""
+    """Delete a queue"""
 
     log = logging.getLogger(__name__ + ".DeleteQueue")
 
@@ -70,7 +70,7 @@ class DeleteQueue(command.Command):
 
 
 class ListQueues(lister.Lister):
-    """List available queues."""
+    """List available queues"""
 
     log = logging.getLogger(__name__ + ".ListQueues")
 
@@ -105,7 +105,7 @@ class ListQueues(lister.Lister):
 
 
 class CheckQueueExistence(show.ShowOne):
-    """Check queue existence."""
+    """Check queue existence"""
 
     log = logging.getLogger(__name__ + ".CheckQueueExistence")
 
@@ -131,7 +131,7 @@ class CheckQueueExistence(show.ShowOne):
 
 
 class SetQueueMetadata(command.Command):
-    """Set queue metadata."""
+    """Set queue metadata"""
 
     log = logging.getLogger(__name__ + ".SetQueueMetadata")
 
@@ -170,7 +170,7 @@ class SetQueueMetadata(command.Command):
 
 
 class GetQueueMetadata(show.ShowOne):
-    """Get queue metadata."""
+    """Get queue metadata"""
 
     log = logging.getLogger(__name__ + ".GetQueueMetadata")
 
@@ -199,7 +199,7 @@ class GetQueueMetadata(show.ShowOne):
 
 
 class GetQueueStats(show.ShowOne):
-    """Get queue stats."""
+    """Get queue stats"""
 
     log = logging.getLogger(__name__ + ".GetQueueStats")
 
@@ -228,7 +228,7 @@ class GetQueueStats(show.ShowOne):
 
 
 class CreatePool(show.ShowOne):
-    """Create a pool."""
+    """Create a pool"""
 
     log = logging.getLogger(__name__ + ".CreatePool")
 
@@ -274,7 +274,7 @@ class CreatePool(show.ShowOne):
 
 
 class DeleteFlavor(command.Command):
-    """Delete a flavor."""
+    """Delete a flavor"""
 
     log = logging.getLogger(__name__ + ".DeleteFlavor")
 
