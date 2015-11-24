@@ -26,3 +26,4 @@ ddt>=0.7.0
 sphinx!=1.2.0,!=1.3b1,<1.3,>=1.1.2
 oslosphinx>=2.5.0 # Apache-2.0
 openstack-doc-tools>=0.23
+python-openstackclient>=2.0.0
