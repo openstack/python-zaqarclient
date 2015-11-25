@@ -21,15 +21,14 @@ class Pool(object):
 
     def __init__(self, client, name,
                  weight=None, uri=None,
-                 group=None,
-                 auto_create=True, **options):
+                 group=None, auto_create=True,
+                 **kwargs):
         self.client = client
-
         self.uri = uri
         self.name = name
         self.weight = weight
         self.group = group
-        self.options = options
+        self.options = kwargs.get("options", {})
 
         if auto_create:
             self.ensure_exists()
@@ -78,4 +77,5 @@ class Pool(object):
 
 
 def create_object(parent):
-    return lambda args: Pool(parent, args["name"], auto_create=False)
+    return lambda kwargs: Pool(parent, kwargs.pop('name'),
+                               auto_create=False, **kwargs)
