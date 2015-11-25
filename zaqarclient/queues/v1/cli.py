@@ -359,6 +359,48 @@ class DeletePool(command.Command):
         client.pool(pool_name, auto_create=False).delete()
 
 
+class ListPools(lister.Lister):
+    """List available Pools"""
+
+    log = logging.getLogger(__name__ + ".ListPools")
+
+    def get_parser(self, prog_name):
+        parser = super(ListPools, self).get_parser(prog_name)
+        parser.add_argument(
+            "--marker",
+            metavar="<pool_name>",
+            help="Pool's paging marker")
+        parser.add_argument(
+            "--limit",
+            metavar="<limit>",
+            help="Page size limit")
+        parser.add_argument(
+            "--detailed",
+            type=bool,
+            metavar="<detailed>",
+            help="Detailed output")
+
+        return parser
+
+    def take_action(self, parsed_args):
+        client = _get_client(self, parsed_args)
+
+        kwargs = {}
+        columns = ["Name", "Weight", "URI", "Group"]
+        if parsed_args.marker is not None:
+            kwargs["marker"] = parsed_args.marker
+        if parsed_args.limit is not None:
+            kwargs["limit"] = parsed_args.limit
+        if parsed_args.detailed is not None and parsed_args.detailed:
+            kwargs["detailed"] = parsed_args.detailed
+            columns.append("Options")
+
+        data = client.pools(**kwargs)
+        columns = tuple(columns)
+        return (columns,
+                (utils.get_item_properties(s, columns) for s in data))
+
+
 class DeleteFlavor(command.Command):
     """Delete a flavor"""
 
