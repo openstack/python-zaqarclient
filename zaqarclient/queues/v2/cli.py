@@ -48,3 +48,8 @@ class GetQueueMetadata(cli.GetQueueMetadata):
 class GetQueueStats(cli.GetQueueStats):
     """Get queue stats"""
     pass
+
+
+class ShowPool(cli.ShowPool):
+    """Display pool details"""
+    pass
