@@ -72,6 +72,10 @@ class Pool(object):
         req, trans = self.client._request_and_transport()
         core.pool_delete(trans, req, self.name)
 
+    def get(self):
+        req, trans = self.client._request_and_transport()
+        return core.pool_get(trans, req, self.name, callback=None)
+
 
 def create_object(parent):
     return lambda args: Pool(parent, args["name"], auto_create=False)
