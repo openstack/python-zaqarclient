@@ -16,6 +16,8 @@
 import os
 
 import fixtures
+import os_client_config
+from six.moves import urllib_parse
 import testtools
 
 _USE_AUTHENTICATION = os.environ.get('ZAQARCLIENT_AUTH_FUNCTIONAL', False)
@@ -51,25 +53,42 @@ class TestBase(testtools.TestCase):
         elif self.is_functional and _USE_AUTHENTICATION:
             self._setup_auth_params()
 
-    def _setup_auth_params(self):
-        # NOTE(flaper87): Hard-code the backend for now since it's the
-        # only one we support
-        self.conf['auth_opts']['backend'] = 'keystone'
-        if 'OS_TOKEN' in os.environ and 'OS_AUTH_URL' in os.environ:
-            options = {'os_token': os.environ['OS_TOKEN'],
-                       'os_auth_url': os.environ['OS_AUTH_URL']}
-        else:
-            project_id = os.environ.get('OS_PROJECT_ID',
-                                        os.environ.get('OS_TENANT_ID', ''))
-            project_name = os.environ.get('OS_PROJECT_NAME',
-                                          os.environ.get('OS_TENANT_NAME', ''))
+    def _credentials(self, cloud='devstack-admin'):
+        """Retrieves credentials to run functional tests
 
-            options = {'os_username': os.environ['OS_USERNAME'],
-                       'os_password': os.environ['OS_PASSWORD'],
-                       'os_project_id': project_id,
-                       'os_project_name': project_name,
-                       'os_auth_url': os.environ['OS_AUTH_URL'],
-                       'insecure': ''}
+        Credentials are either read via os-client-config from the environment
+        or from a config file ('clouds.yaml'). Environment variables override
+        those from the config file.
+
+        devstack produces a clouds.yaml with two named clouds - one named
+        'devstack' which has user privs and one named 'devstack-admin' which
+        has admin privs. This function will default to getting the
+        devstack-admin cloud as that is the current expected behavior.
+        """
+        os_cfg = os_client_config.OpenStackConfig()
+        try:
+            found = os_cfg.get_one_cloud(cloud=cloud)
+        except Exception:
+            found = os_cfg.get_one_cloud()
+        return found
+
+    def _setup_auth_params(self):
+        self.creds = self._credentials().get_auth_args()
+
+        # FIXME(flwang): Now we're hardcode the keystone auth versioin, since
+        # there is a 'bug' with the osc-config which is returning the auth_url
+        # without version. This should be fixed as long as the bug is fixed.
+        parsed_url = urllib_parse.urlparse(self.creds['auth_url'])
+        auth_url = self.creds['auth_url']
+        if not parsed_url.path or parsed_url.path == '/':
+            auth_url = urllib_parse.urljoin(self.creds['auth_url'], 'v2.0')
+
+        self.conf['auth_opts']['backend'] = 'keystone'
+        options = {'os_username': self.creds['username'],
+                   'os_password': self.creds['password'],
+                   'os_project_name': self.creds['project_name'],
+                   'os_project_id': '',
+                   'os_auth_url': auth_url}
 
         self.conf['auth_opts'].setdefault('options', {}).update(options)
 
