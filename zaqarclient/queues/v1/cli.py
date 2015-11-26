@@ -244,12 +244,21 @@ class CreatePool(show.ShowOne):
             help="Storage engine URI")
         parser.add_argument(
             "pool_weight",
+            type=int,
             metavar="<pool_weight>",
             help="weight of the pool")
         parser.add_argument(
-            "pool_group",
+            "--pool_group",
             metavar="<pool_group>",
             help="Group of the pool")
+        parser.add_argument(
+            "--pool_options",
+            type=json.loads,
+            default={},
+            metavar="<pool_options>",
+            help="An optional request component "
+                 "related to storage-specific options")
+
         return parser
 
     def take_action(self, parsed_args):
@@ -257,19 +266,22 @@ class CreatePool(show.ShowOne):
 
         client = self.app.client_manager.messaging
 
-        args = {
-            parsed_args.name,
-            parsed_args.uri,
-            parsed_args.weight,
-            parsed_args.group,
+        kw_arg = {
+            'uri': parsed_args.pool_uri,
+            'weight': parsed_args.pool_weight,
+            'options': parsed_args.pool_options
         }
-        pool_name = parsed_args.pool_name
-        data = client.pool(args, auto_create=False)
 
-        if not data.exists():
-            raise RuntimeError('Pool(%s) does not exist.' % pool_name)
+        if parsed_args.pool_group:
+            kw_arg.update({'group': parsed_args.pool_group})
 
-        columns = ('Name',)
+        data = client.pool(parsed_args.pool_name, **kw_arg)
+
+        if not data:
+            raise RuntimeError('Failed to create pool(%s).' %
+                               parsed_args.pool_name)
+
+        columns = ('Name', 'Weight', 'URI', 'Group', 'Options')
         return columns, utils.get_item_properties(data, columns)
 
 
