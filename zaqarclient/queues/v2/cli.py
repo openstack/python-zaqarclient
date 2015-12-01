@@ -53,3 +53,8 @@ class GetQueueStats(cli.GetQueueStats):
 class ShowPool(cli.ShowPool):
     """Display pool details"""
     pass
+
+
+class UpdatePool(cli.UpdatePool):
+    """Update a pool attribute"""
+    pass
