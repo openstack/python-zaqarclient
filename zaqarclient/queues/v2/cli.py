@@ -50,6 +50,11 @@ class GetQueueStats(cli.GetQueueStats):
     pass
 
 
+class CreatePool(cli.CreatePool):
+    """Create a pool"""
+    pass
+
+
 class ShowPool(cli.ShowPool):
     """Display pool details"""
     pass
@@ -67,4 +72,9 @@ class DeletePool(cli.DeletePool):
 
 class ListPool(cli.ListPools):
     """List available Pools"""
+    pass
+
+
+class DeleteFlavor(cli.DeleteFlavor):
+    """Delete a flavor"""
     pass
