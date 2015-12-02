@@ -63,3 +63,8 @@ class UpdatePool(cli.UpdatePool):
 class DeletePool(cli.DeletePool):
     """Delete a pool"""
     pass
+
+
+class ListPool(cli.ListPools):
+    """List available Pools"""
+    pass
