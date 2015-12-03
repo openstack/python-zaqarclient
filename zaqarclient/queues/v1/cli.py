@@ -401,6 +401,44 @@ class ListPools(lister.Lister):
                 (utils.get_item_properties(s, columns) for s in data))
 
 
+class UpdateFlavor(show.ShowOne):
+    """Update a flavor's attributes"""
+
+    log = logging.getLogger(__name__+".UpdateFlavor")
+
+    def get_parser(self, prog_name):
+        parser = super(UpdateFlavor, self).get_parser(prog_name)
+        parser.add_argument(
+            "flavor_name",
+            metavar="<flavor_name>",
+            help="Name of the flavor")
+        parser.add_argument(
+            "--pool_group",
+            metavar="<pool_group>",
+            help="Pool group the flavor sits on")
+        parser.add_argument(
+            "--capabilities",
+            metavar="<capabilities>",
+            type=json.loads,
+            help="Describes flavor-specific capabilities.")
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug("take_action(%s)" % parsed_args)
+        client = self.app.client_manager.messaging
+        kwargs = {}
+        if parsed_args.pool_group:
+            kwargs['pool'] = parsed_args.pool_group
+        if parsed_args.capabilities:
+            kwargs['capabilities'] = json.loads(parsed_args.capabilities)
+
+        flavor = client.flavor(parsed_args.flavor_name, auto_create=False)
+        columns = ('Name', 'Pool', 'Capabilities')
+        flavor.update(kwargs)
+        flavor_data = flavor.get()
+        return columns, utils.get_dict_properties(flavor_data, columns)
+
+
 class DeleteFlavor(command.Command):
     """Delete a flavor"""
 
