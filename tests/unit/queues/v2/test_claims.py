@@ -1,4 +1,4 @@
-# Copyright (c) 2014 Rackspace Hosting.
+# Copyright (c) Rackspace Hosting.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,22 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from zaqarclient.tests.queues import claims
 from zaqarclient.transport import http
 
 
-class QueuesV1ClaimHttpFunctionalTest(claims.QueuesV1ClaimFunctionalTest):
+class QueuesV2ClaimsHttpUnitTest(claims.QueueV2ClaimUnitTest):
 
-    is_functional = True
     transport_cls = http.HttpTransport
-    url = 'http://127.0.0.1:8888'
-    version = 1
-
-
-class QueuesV1_1ClaimHttpFunctionalTest(claims.QueuesV1_1ClaimFunctionalTest):
-
-    is_functional = True
-    transport_cls = http.HttpTransport
-    url = 'http://127.0.0.1:8888'
-    version = 1.1
+    url = 'http://127.0.0.1:8888/v2'
+    version = 2

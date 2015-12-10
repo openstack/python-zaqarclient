@@ -181,3 +181,15 @@ class QueueV1_1ClaimUnitTest(QueueV1ClaimUnitTest):
                 num_tested += 1
                 self.assertEqual(result[num]['href'], msg.href)
             self.assertEqual(len(result), num_tested)
+
+
+class QueuesV1_1ClaimFunctionalTest(QueuesV1ClaimFunctionalTest):
+    pass
+
+
+class QueueV2ClaimUnitTest(QueueV1_1ClaimUnitTest):
+    pass
+
+
+class QueuesV2ClaimFunctionalTest(QueuesV1_1ClaimFunctionalTest):
+    pass

@@ -56,6 +56,10 @@ flavor_create = core.flavor_create
 flavor_delete = core.flavor_delete
 flavor_update = core.flavor_update
 flavor_list = core.flavor_list
+claim_create = core.claim_create
+claim_get = core.claim_get
+claim_update = core.claim_update
+claim_delete = core.claim_delete
 
 
 def signed_url_create(transport, request, queue_name, paths=None,
