@@ -463,5 +463,9 @@ class QueuesV1_1QueueFunctionalTest(QueuesV1QueueFunctionalTest):
         self.assertEqual(1, len(list(remaining)))
 
 
+class QueuesV2QueueUnitTest(QueuesV1_1QueueUnitTest):
+    pass
+
+
 class QueuesV2QueueFunctionalTest(QueuesV1_1QueueFunctionalTest):
     pass

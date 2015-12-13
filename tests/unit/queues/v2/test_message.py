@@ -16,14 +16,15 @@
 import json
 import mock
 
-from tests.unit.queues.v1 import test_message as msg
 from zaqarclient.queues.v1 import iterator as iterate
-from zaqarclient.queues.v1 import message
+from zaqarclient.queues.v2 import message
+from zaqarclient.tests.queues import base
+from zaqarclient.tests.queues import messages as test_message
 from zaqarclient.transport import http
 from zaqarclient.transport import response
 
 
-class TestMessageIterator(msg.TestMessageIterator):
+class TestMessageIterator(base.QueuesTestBase):
     def test_no_next_iteration(self):
         messages = {'links': [],
                     'messages': [{
@@ -102,7 +103,7 @@ class TestMessageIterator(msg.TestMessageIterator):
             self.assertEqual(len(iterated), 1)
 
 
-class QueuesV2MessageHttpUnitTest(msg.QueuesV1MessageHttpUnitTest):
+class QueuesV2MessageHttpUnitTest(test_message.QueuesV2MessageUnitTest):
 
     transport_cls = http.HttpTransport
     url = 'http://127.0.0.1:8888/v2'
