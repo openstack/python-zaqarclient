@@ -21,12 +21,12 @@ class Flavor(object):
 
     def __init__(self, client, name,
                  pool=None, auto_create=True,
-                 **capabilities):
+                 **kwargs):
         self.client = client
 
         self.name = name
         self.pool = pool
-        self.capabilities = capabilities
+        self.capabilities = kwargs.get('capabilities', {})
 
         if auto_create:
             self.ensure_exists()
@@ -69,4 +69,5 @@ class Flavor(object):
 
 
 def create_object(parent):
-    return lambda args: Flavor(parent, args["name"], auto_create=False)
+    return lambda kwargs: Flavor(parent, kwargs.pop('name'),
+                                 auto_create=False, **kwargs)
