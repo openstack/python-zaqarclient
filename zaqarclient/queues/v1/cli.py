@@ -612,3 +612,33 @@ class CreateClaim(lister.Lister):
         data = queue.claim(**kwargs)
         return (columns,
                 (utils.get_item_properties(s, keys) for s in data))
+
+
+class QueryClaim(lister.Lister):
+    """Display claim details"""
+
+    log = logging.getLogger(__name__ + ".QueryClaim")
+
+    def get_parser(self, prog_name):
+        parser = super(QueryClaim, self).get_parser(prog_name)
+        parser.add_argument(
+            "queue_name",
+            metavar="<queue_name>",
+            help="Name of the claimed queue")
+        parser.add_argument(
+            "claim_id",
+            metavar="<claim_id>",
+            help="ID of the claim")
+
+        return parser
+
+    def take_action(self, parsed_args):
+        client = _get_client(self, parsed_args)
+
+        queue = client.queue(parsed_args.queue_name, auto_create=False)
+        keys = ("_id", "age", "ttl", "body")
+        columns = ("Message_ID", "Age", "TTL", "Message")
+        data = queue.claim(id=parsed_args.claim_id)._get()
+
+        return (columns,
+                (utils.get_item_properties(s, keys) for s in data))
