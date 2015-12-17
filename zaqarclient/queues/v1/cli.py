@@ -439,6 +439,47 @@ class UpdateFlavor(show.ShowOne):
         return columns, utils.get_dict_properties(flavor_data, columns)
 
 
+class CreateFlavor(show.ShowOne):
+    """Create a pool flavor"""
+
+    log = logging.getLogger(__name__ + ".CreateFlavor")
+
+    def get_parser(self, prog_name):
+        parser = super(CreateFlavor, self).get_parser(prog_name)
+        parser.add_argument(
+            "flavor_name",
+            metavar="<flavor_name>",
+            help="Name of the flavor")
+        parser.add_argument(
+            "pool_group",
+            metavar="<pool_group>",
+            help="Pool group for flavor")
+        parser.add_argument(
+            "--capabilities",
+            metavar="<capabilities>",
+            type=json.loads,
+            default={},
+            help="Describes flavor-specific capabilities")
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug("take_action(%s)" % parsed_args)
+
+        client = self.app.client_manager.messaging
+
+        # FIXME(flwang): For now, we still use `pool` though it's not really
+        # correct since it's representing `pool_group` actually. But given we
+        # will remove pool group soon and get a 1:n mapping for flavor:pool,
+        # so let's keep it as it's, just for now.
+        kwargs = {'capabilities': parsed_args.capabilities}
+        data = client.flavor(parsed_args.flavor_name,
+                             pool=parsed_args.pool_group,
+                             **kwargs)
+
+        columns = ('Name', 'Pool', 'Capabilities')
+        return columns, utils.get_item_properties(data, columns)
+
+
 class DeleteFlavor(command.Command):
     """Delete a flavor"""
 
