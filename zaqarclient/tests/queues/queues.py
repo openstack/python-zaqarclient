@@ -227,7 +227,7 @@ class QueuesV1QueueUnitTest(base.QueuesTestBase):
 
             rst = self.queue.delete_messages('50b68a50d6f5b8c8a7c62b01',
                                              '50b68a50d6f5b8c8a7c62b02')
-            self.assertEqual(None, rst)
+            self.assertIsNone(rst)
 
             # NOTE(flaper87): Nothing to assert here,
             # just checking our way down to the transport
