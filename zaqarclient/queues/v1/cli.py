@@ -43,7 +43,7 @@ class CreateQueue(show.ShowOne):
     def take_action(self, parsed_args):
         client = _get_client(self, parsed_args)
         queue_name = parsed_args.queue_name
-        data = client.queue(queue_name)
+        data = client.queue(queue_name, force_create=True)
         columns = ('Name',)
         return columns, utils.get_item_properties(data, columns)
 

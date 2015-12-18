@@ -23,7 +23,20 @@ from zaqarclient.queues.v1 import message
 
 class Queue(object):
 
-    def __init__(self, client, name, auto_create=True):
+    def __init__(self, client, name, auto_create=True, force_create=False):
+        """Initialize queue object
+
+        :param client: The client object of Zaqar.
+        :type client: `object`
+        :param name: Name of the queue.
+        :type name: `six.string_type`
+        :param auto_create: If create the queue automatically in database.
+        :type auto_create: `boolean`
+        :param force_create: If create the queue and skip the API version
+            check, which is useful for command line interface.
+        :type force_create: `boolean`
+        :returns: The queue object.
+        """
         self.client = client
 
         if name == "":
@@ -34,7 +47,7 @@ class Queue(object):
         self._metadata = None
 
         if auto_create:
-            self.ensure_exists()
+            self.ensure_exists(force_create=force_create)
 
     @property
     def name(self):
@@ -48,7 +61,7 @@ class Queue(object):
         else:
             return core.queue_exists(trans, req, self._name)
 
-    def ensure_exists(self):
+    def ensure_exists(self, force_create=False):
         """Ensures a queue exists
 
         This method is not race safe,
@@ -56,7 +69,7 @@ class Queue(object):
         right after it was called.
         """
         req, trans = self.client._request_and_transport()
-        if req.api.is_supported('queue_set_metadata'):
+        if force_create or req.api.is_supported('queue_set_metadata'):
             core.queue_create(trans, req, self._name)
 
     def metadata(self, new_meta=None, force_reload=False):
