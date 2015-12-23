@@ -83,3 +83,8 @@ class DeleteFlavor(cli.DeleteFlavor):
 class ShowFlavor(cli.ShowFlavor):
     """Display flavor details"""
     pass
+
+
+class UpdateFlavor(cli.UpdateFlavor):
+    """Update a flavor's attributes"""
+    pass
