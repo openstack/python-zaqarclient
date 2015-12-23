@@ -80,8 +80,7 @@ class Claim(object):
 
     @property
     def age(self):
-        if self._age is None:
-            self._get()
+        self._get()
         return self._age
 
     @property
