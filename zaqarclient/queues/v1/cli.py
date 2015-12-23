@@ -690,3 +690,28 @@ class RenewClaim(lister.Lister):
 
         return (columns,
                 (utils.get_item_properties(s, keys) for s in data))
+
+
+class ReleaseClaim(command.Command):
+    """Delete a claim"""
+
+    log = logging.getLogger(__name__ + ".ReleaseClaim")
+
+    def get_parser(self, prog_name):
+        parser = super(ReleaseClaim, self).get_parser(prog_name)
+        parser.add_argument(
+            "queue_name",
+            metavar="<queue_name>",
+            help="Name of the claimed queue")
+        parser.add_argument(
+            "claim_id",
+            metavar="<claim_id>",
+            help="Claim ID to delete")
+
+        return parser
+
+    def take_action(self, parsed_args):
+        client = _get_client(self, parsed_args)
+
+        queue = client.queue(parsed_args.queue_name, auto_create=False)
+        queue.claim(id=parsed_args.claim_id).delete()
