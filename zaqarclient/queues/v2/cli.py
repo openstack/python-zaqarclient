@@ -78,3 +78,8 @@ class ListPool(cli.ListPools):
 class DeleteFlavor(cli.DeleteFlavor):
     """Delete a flavor"""
     pass
+
+
+class ShowFlavor(cli.ShowFlavor):
+    """Display flavor details"""
+    pass
