@@ -30,11 +30,6 @@ class ListQueues(cli.ListQueues):
     pass
 
 
-class CheckQueueExistence(cli.CheckQueueExistence):
-    """Check queue existence"""
-    pass
-
-
 class SetQueueMetadata(cli.SetQueueMetadata):
     """Set queue metadata"""
     pass
