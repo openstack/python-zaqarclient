@@ -30,16 +30,6 @@ class ListQueues(cli.ListQueues):
     pass
 
 
-class SetQueueMetadata(cli.SetQueueMetadata):
-    """Set queue metadata"""
-    pass
-
-
-class GetQueueMetadata(cli.GetQueueMetadata):
-    """Get queue metadata"""
-    pass
-
-
 class GetQueueStats(cli.GetQueueStats):
     """Get queue stats"""
     pass
