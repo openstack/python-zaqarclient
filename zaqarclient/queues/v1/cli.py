@@ -642,3 +642,51 @@ class QueryClaim(lister.Lister):
 
         return (columns,
                 (utils.get_item_properties(s, keys) for s in data))
+
+
+class RenewClaim(lister.Lister):
+    """Renew a claim"""
+
+    log = logging.getLogger(__name__ + ".RenewClaim")
+
+    def get_parser(self, prog_name):
+        parser = super(RenewClaim, self).get_parser(prog_name)
+        parser.add_argument(
+            "queue_name",
+            metavar="<queue_name>",
+            help="Name of the claimed queue")
+        parser.add_argument(
+            "claim_id",
+            metavar="<claim_id>",
+            help="Claim ID")
+        parser.add_argument(
+            "--ttl",
+            metavar="<ttl>",
+            type=int,
+            help="Time to live in seconds for claim")
+        parser.add_argument(
+            "--grace",
+            metavar="<grace>",
+            type=int,
+            help="The message grace period in seconds")
+
+        return parser
+
+    def take_action(self, parsed_args):
+        client = _get_client(self, parsed_args)
+
+        queue = client.queue(parsed_args.queue_name, auto_create=False)
+        kwargs = {}
+        if parsed_args.ttl is not None:
+            kwargs["ttl"] = parsed_args.ttl
+        if parsed_args.grace is not None:
+            kwargs["grace"] = parsed_args.grace
+
+        claim_obj = queue.claim(id=parsed_args.claim_id)
+        claim_obj.update(**kwargs)
+        data = claim_obj._get()
+        keys = ("_id", "age", "ttl", "body")
+        columns = ("Message_ID", "Age", "TTL", "Message")
+
+        return (columns,
+                (utils.get_item_properties(s, keys) for s in data))
