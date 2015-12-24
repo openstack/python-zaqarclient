@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
 import mock
 
 from zaqarclient.tests.queues import base
@@ -44,6 +45,32 @@ class QueuesV2SubscriptionUnitTest(base.QueuesTestBase):
             self.assertEqual(3600, subscription.ttl)
             self.assertEqual('fake_id', subscription.id)
 
+    def test_subscription_update(self):
+        subscription_data = {'subscriber': 'http://trigger.me',
+                             'ttl': 3600}
+
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            create_resp = response.Response(None,
+                                            '{"subscription_id": "fake_id"}')
+            get_content = ('{"subscriber": "http://trigger.me","ttl": 3600, '
+                           '"id": "fake_id"}')
+            get_resp = response.Response(None, get_content)
+            update_content = json.dumps({'subscriber': 'fake_subscriber'})
+            update_resp = response.Response(None, update_content)
+            send_method.side_effect = iter([create_resp, get_resp,
+                                            update_resp])
+
+            # NOTE(flwang): This will call
+            # ensure exists in the client instance
+            # since auto_create's default is True
+            subscription = self.client.subscription('beijing',
+                                                    **subscription_data)
+
+            subscription.update({'subscriber': 'fake_subscriber'})
+            self.assertEqual('fake_subscriber', subscription.subscriber)
+
 
 class QueuesV2SubscriptionFunctionalTest(base.QueuesTestBase):
 
@@ -72,3 +99,11 @@ class QueuesV2SubscriptionFunctionalTest(base.QueuesTestBase):
 
         self.assertEqual('http://trigger.he', self.subscription_2.subscriber)
         self.assertEqual(7200, self.subscription_2.ttl)
+
+    def test_subscription_update(self):
+        sub = self.client.subscription(self.queue_name, auto_create=False,
+                                       **{'id': self.subscription_1.id})
+        data = {'subscriber': 'http://trigger.ok', 'ttl': 1000}
+        sub.update(data)
+        self.assertEqual('http://trigger.ok', sub.subscriber)
+        self.assertEqual(1000, sub.ttl)
