@@ -15,6 +15,7 @@
 import json
 import logging
 
+from cliff import command
 from cliff import show
 
 from openstackclient.common import utils
@@ -210,3 +211,28 @@ class UpdateSubscription(show.ShowOne):
 
         columns = ('ID', 'Subscriber', 'TTL', 'Options')
         return columns, utils.get_item_properties(data, columns)
+
+
+class DeleteSubscription(command.Command):
+    """Delete a subscription"""
+
+    log = logging.getLogger(__name__ + ".DeleteSubscription")
+
+    def get_parser(self, prog_name):
+        parser = super(DeleteSubscription, self).get_parser(prog_name)
+        parser.add_argument(
+            "queue_name",
+            metavar="<queue_name>",
+            help="Name of the queue for the subscription")
+        parser.add_argument(
+            "subscription_id",
+            metavar="<subscription_id>",
+            help="ID of the subscription"
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        client = _get_client(self, parsed_args)
+        client.subscription(parsed_args.queue_name,
+                            id=parsed_args.subscription_id,
+                            auto_create=False).delete()

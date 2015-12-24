@@ -17,6 +17,7 @@ import json
 import mock
 
 from zaqarclient.tests.queues import base
+from zaqarclient.transport import errors
 from zaqarclient.transport import response
 
 
@@ -71,6 +72,35 @@ class QueuesV2SubscriptionUnitTest(base.QueuesTestBase):
             subscription.update({'subscriber': 'fake_subscriber'})
             self.assertEqual('fake_subscriber', subscription.subscriber)
 
+    def test_subscription_delete(self):
+        subscription_data = {'subscriber': 'http://trigger.me',
+                             'ttl': 3600}
+
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            create_resp = response.Response(None,
+                                            '{"subscription_id": "fake_id"}')
+            get_content = ('{"subscriber": "http://trigger.me","ttl": 3600, '
+                           '"id": "fake_id"}')
+            get_resp = response.Response(None, get_content)
+            send_method.side_effect = iter([create_resp, get_resp, None,
+                                            errors.ResourceNotFound])
+
+            # NOTE(flwang): This will call
+            # ensure exists in the client instance
+            # since auto_create's default is True
+            subscription = self.client.subscription('beijing',
+                                                    **subscription_data)
+            self.assertEqual('http://trigger.me', subscription.subscriber)
+            self.assertEqual(3600, subscription.ttl)
+            self.assertEqual('fake_id', subscription.id)
+
+            subscription.delete()
+            self.assertRaises(errors.ResourceNotFound,
+                              self.client.subscription,
+                              'beijing', **{'id': 'fake_id'})
+
 
 class QueuesV2SubscriptionFunctionalTest(base.QueuesTestBase):
 
@@ -107,3 +137,10 @@ class QueuesV2SubscriptionFunctionalTest(base.QueuesTestBase):
         sub.update(data)
         self.assertEqual('http://trigger.ok', sub.subscriber)
         self.assertEqual(1000, sub.ttl)
+
+    def test_subscription_delete(self):
+        self.subscription_1.delete()
+
+        subscription_data = {'id': self.subscription_1.id}
+        self.assertRaises(errors.ResourceNotFound, self.client.subscription,
+                          self.queue_name, **subscription_data)
