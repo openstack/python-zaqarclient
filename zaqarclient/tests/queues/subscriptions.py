@@ -101,6 +101,24 @@ class QueuesV2SubscriptionUnitTest(base.QueuesTestBase):
                               self.client.subscription,
                               'beijing', **{'id': 'fake_id'})
 
+    def test_subscription_get(self):
+        subscription_data = {'subscriber': 'http://trigger.me',
+                             'ttl': 3600}
+
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, json.dumps(subscription_data))
+            send_method.return_value = resp
+
+            # NOTE(flaper87): This will call
+            # ensure exists in the client instance
+            # since auto_create's default is True
+            kwargs = {'id': 'fake_id'}
+            subscription = self.client.subscription('test', **kwargs)
+            self.assertEqual('http://trigger.me', subscription.subscriber)
+            self.assertEqual(3600, subscription.ttl)
+
 
 class QueuesV2SubscriptionFunctionalTest(base.QueuesTestBase):
 
@@ -144,3 +162,10 @@ class QueuesV2SubscriptionFunctionalTest(base.QueuesTestBase):
         subscription_data = {'id': self.subscription_1.id}
         self.assertRaises(errors.ResourceNotFound, self.client.subscription,
                           self.queue_name, **subscription_data)
+
+    def test_subscription_get(self):
+        kwargs = {'id': self.subscription_1.id}
+        subscription_get = self.client.subscription(self.queue_name, **kwargs)
+
+        self.assertEqual('http://trigger.me', subscription_get.subscriber)
+        self.assertEqual(3600, subscription_get.ttl)
