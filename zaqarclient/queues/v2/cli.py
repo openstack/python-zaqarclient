@@ -55,7 +55,7 @@ class DeletePool(cli.DeletePool):
     pass
 
 
-class ListPool(cli.ListPools):
+class ListPools(cli.ListPools):
     """List available Pools"""
     pass
 
