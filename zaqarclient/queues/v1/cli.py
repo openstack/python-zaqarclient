@@ -560,3 +560,54 @@ class ListFlavors(lister.Lister):
         columns = ("Name", 'Pool', 'Capabilities')
         return (columns,
                 (utils.get_item_properties(s, columns) for s in data))
+
+
+class CreateClaim(lister.Lister):
+    """Create claim and return a list of claimed messages"""
+
+    log = logging.getLogger(__name__ + ".CreateClaim")
+
+    def get_parser(self, prog_name):
+        parser = super(CreateClaim, self).get_parser(prog_name)
+        parser.add_argument(
+            "queue_name",
+            metavar="<queue_name>",
+            help="Name of the queue to be claim")
+        parser.add_argument(
+            "--ttl",
+            metavar="<ttl>",
+            type=int,
+            default=300,
+            help="Time to live in seconds for claim")
+        parser.add_argument(
+            "--grace",
+            metavar="<grace>",
+            type=int,
+            default=60,
+            help="The message grace period in seconds")
+        parser.add_argument(
+            "--limit",
+            metavar="<limit>",
+            type=int,
+            default=10,
+            help="Claims a set of messages, up to limit")
+
+        return parser
+
+    def take_action(self, parsed_args):
+        client = _get_client(self, parsed_args)
+
+        kwargs = {}
+        if parsed_args.ttl is not None:
+            kwargs["ttl"] = parsed_args.ttl
+        if parsed_args.grace is not None:
+            kwargs["grace"] = parsed_args.grace
+        if parsed_args.limit is not None:
+            kwargs["limit"] = parsed_args.limit
+
+        queue = client.queue(parsed_args.queue_name, auto_create=False)
+        keys = ("claim_id", "_id", "ttl", "age", 'body')
+        columns = ("Claim_ID", "Message_ID", "TTL", "Age", "Messages")
+        data = queue.claim(**kwargs)
+        return (columns,
+                (utils.get_item_properties(s, keys) for s in data))
