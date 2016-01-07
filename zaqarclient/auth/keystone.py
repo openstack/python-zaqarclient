@@ -65,16 +65,15 @@ class KeystoneAuth(base.AuthBackend):
             the auth information.
         """
 
-        token = self.conf.get('auth_token')
+        def get_options(k):
+            return self.conf.get(k, self.conf.get("os_%s" % k))
+
+        token = get_options('auth_token')
         if not token or not request.endpoint:
             # NOTE(flaper87): Lets assume all the
             # required information was provided
             # either through env variables or CLI
             # params. Let keystoneclient fail otherwise.
-
-            def get_options(k):
-                k = k if k in self.conf else "os_"+k
-                return self.conf.get(k, None)
 
             ks_kwargs = {}
             keys = ("username", "password", "project_id",
