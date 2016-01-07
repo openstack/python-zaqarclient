@@ -14,6 +14,8 @@
 
 from zaqarclient.queues.v1 import cli
 
+from openstackclient.common import utils
+
 
 class CreateQueue(cli.CreateQueue):
     """Create a queue"""
@@ -73,3 +75,27 @@ class ShowFlavor(cli.ShowFlavor):
 class UpdateFlavor(cli.UpdateFlavor):
     """Update a flavor's attributes"""
     pass
+
+
+class CreateFlavor(cli.CreateFlavor):
+    """Create a pool flavor"""
+
+    def take_action(self, parsed_args):
+        self.log.debug("take_action(%s)" % parsed_args)
+
+        client = self.app.client_manager.messaging
+
+        # FIXME(flwang): For now, we still use `pool` though it's not really
+        # correct since it's representing `pool_group` actually. But given we
+        # will remove pool group soon and get a 1:n mapping for flavor:pool,
+        # so let's keep it as it's, just for now.
+        kwargs = {}
+        if parsed_args.capabilities != {}:
+            raise AttributeError("<--capabilities> option is only\
+             available in client api version < 2")
+        data = client.flavor(parsed_args.flavor_name,
+                             pool=parsed_args.pool_group,
+                             **kwargs)
+
+        columns = ('Name', 'Pool', 'Capabilities')
+        return columns, utils.get_item_properties(data, columns)

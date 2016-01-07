@@ -459,7 +459,8 @@ class CreateFlavor(show.ShowOne):
             metavar="<capabilities>",
             type=json.loads,
             default={},
-            help="Describes flavor-specific capabilities")
+            help="Describes flavor-specific capabilities, "
+                 "This option is only available in client api version < 2 .")
         return parser
 
     def take_action(self, parsed_args):

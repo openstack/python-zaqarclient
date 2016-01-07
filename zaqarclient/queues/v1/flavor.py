@@ -46,8 +46,9 @@ class Flavor(object):
             self.capabilities = flavor.get("capabilities", {})
 
         except errors.ResourceNotFound:
-            data = {'pool': self.pool,
-                    'capabilities': self.capabilities}
+            data = {'pool': self.pool}
+            if self.client.api_version <= 1.1:
+                data['capabilities'] = self.capabilities
 
             req, trans = self.client._request_and_transport()
             core.flavor_create(trans, req, self.name, data)
