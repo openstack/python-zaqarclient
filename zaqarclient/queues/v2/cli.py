@@ -99,3 +99,8 @@ class CreateFlavor(cli.CreateFlavor):
 
         columns = ('Name', 'Pool', 'Capabilities')
         return columns, utils.get_item_properties(data, columns)
+
+
+class ListFlavors(cli.ListFlavors):
+    """List available flavors"""
+    pass
