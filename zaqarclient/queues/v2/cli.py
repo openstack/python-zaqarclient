@@ -313,6 +313,26 @@ class ListSubscriptions(lister.Lister):
                 (utils.get_item_properties(s, columns) for s in data))
 
 
+class CreateClaim(cli.CreateClaim):
+    """Create claim and return a list of claimed messages"""
+    pass
+
+
+class QueryClaim(cli.QueryClaim):
+    """Display claim details"""
+    pass
+
+
+class RenewClaim(cli.RenewClaim):
+    """Renew a claim"""
+    pass
+
+
+class ReleaseClaim(cli.ReleaseClaim):
+    """Delete a claim"""
+    pass
+
+
 class CreateSignedUrl(show.ShowOne):
     """Create a queue"""
 
