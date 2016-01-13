@@ -14,7 +14,6 @@
 # limitations under the License.
 
 from zaqarclient.queues.v1 import core
-from zaqarclient.transport import errors
 
 
 class Flavor(object):
@@ -39,19 +38,18 @@ class Flavor(object):
         right after it was called.
         """
         req, trans = self.client._request_and_transport()
+        # As of now on PUT, zaqar server updates flavor if it is already
+        # exists else it will create a new one. The zaqar client should
+        # maitain symmetry with zaqar server.
+        # TBD(mdnadeem): Have to change this code when zaqar server
+        # behaviour change for PUT operation.
 
-        try:
-            flavor = core.flavor_get(trans, req, self.name)
-            self.pool = flavor["pool"]
-            self.capabilities = flavor.get("capabilities", {})
+        data = {'pool': self.pool}
+        if self.client.api_version <= 1.1:
+            data['capabilities'] = self.capabilities
 
-        except errors.ResourceNotFound:
-            data = {'pool': self.pool}
-            if self.client.api_version <= 1.1:
-                data['capabilities'] = self.capabilities
-
-            req, trans = self.client._request_and_transport()
-            core.flavor_create(trans, req, self.name, data)
+        req, trans = self.client._request_and_transport()
+        core.flavor_create(trans, req, self.name, data)
 
     def update(self, flavor_data):
         req, trans = self.client._request_and_transport()
