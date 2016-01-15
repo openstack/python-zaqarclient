@@ -119,6 +119,30 @@ class QueuesV2SubscriptionUnitTest(base.QueuesTestBase):
             self.assertEqual('http://trigger.me', subscription.subscriber)
             self.assertEqual(3600, subscription.ttl)
 
+    def test_subscription_list(self):
+        subscription_data = {'subscriptions':
+                             [{'id': '568afabb508f153573f6a56f',
+                               'subscriber': 'http://trigger.me',
+                               'ttl': 3600,
+                               'options': {}},
+                              {'id': '568afabb508f153573f6a56x',
+                               'subscriber': 'http://trigger.you',
+                               'ttl': 7200,
+                               'options': {}}]}
+
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            list_resp = response.Response(None,
+                                          json.dumps(subscription_data))
+            send_method.side_effect = iter([list_resp])
+
+            # NOTE(flwang): This will call
+            # ensure exists in the client instance
+            # since auto_create's default is True
+            subscriptions = self.client.subscriptions('beijing')
+            self.assertEqual(2, len(list(subscriptions)))
+
 
 class QueuesV2SubscriptionFunctionalTest(base.QueuesTestBase):
 
@@ -169,3 +193,12 @@ class QueuesV2SubscriptionFunctionalTest(base.QueuesTestBase):
 
         self.assertEqual('http://trigger.me', subscription_get.subscriber)
         self.assertEqual(3600, subscription_get.ttl)
+
+    def test_subscription_list(self):
+        subscriptions = self.client.subscriptions(self.queue_name)
+        subscriptions = list(subscriptions)
+        self.assertEqual(2, len(subscriptions))
+
+        subscriber_list = [s.subscriber for s in subscriptions]
+        self.assertIn('http://trigger.me', subscriber_list)
+        self.assertIn('http://trigger.he', subscriber_list)

@@ -60,7 +60,7 @@ class Client(client.Client):
         return subscription.Subscription(self, queue_name, **kwargs)
 
     @decorators.version(min_version=2)
-    def subscriptions(self, **params):
+    def subscriptions(self, queue_name, **params):
         """Gets a list of subscriptions from the server
 
         :param params: Filters to use for getting subscriptions
@@ -71,7 +71,10 @@ class Client(client.Client):
         """
         req, trans = self._request_and_transport()
 
-        subscription_list = core.subscription_list(trans, req, **params)
+        subscription_list = core.subscription_list(trans, req, queue_name,
+                                                   **params)
+        for s in subscription_list['subscriptions']:
+            s['queue_name'] = queue_name
 
         return iterator._Iterator(self,
                                   subscription_list,

@@ -16,6 +16,7 @@ import json
 import logging
 
 from cliff import command
+from cliff import lister
 from cliff import show
 
 from openstackclient.common import utils
@@ -264,3 +265,49 @@ class ShowSubscription(show.ShowOne):
                                         **kwargs)
         columns = ('ID', 'Subscriber', 'TTL', 'Options')
         return columns, utils.get_dict_properties(pool_data.__dict__, columns)
+
+
+class ListSubscriptions(lister.Lister):
+    """List available subscriptions"""
+
+    log = logging.getLogger(__name__ + ".ListSubscriptions")
+
+    def get_parser(self, prog_name):
+        parser = super(ListSubscriptions, self).get_parser(prog_name)
+        parser.add_argument(
+            "queue_name",
+            metavar="<queue_name>",
+            help="Name of the queue to subscribe to")
+        parser.add_argument(
+            "--marker",
+            metavar="<subscription_id>",
+            help="Subscription's paging marker, "
+            "the ID of the last subscription of the previous page")
+        parser.add_argument(
+            "--limit",
+            metavar="<limit>",
+            help="Page size limit, default value is 20")
+        parser.add_argument(
+            "--detailed",
+            type=bool,
+            default=False,
+            metavar="<detailed>",
+            help="Whether to show subscription metadata")
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug("take_action(%s)" % parsed_args)
+
+        client = self.app.client_manager.messaging
+
+        kwargs = {'queue_name': parsed_args.queue_name,
+                  'detailed': parsed_args.detailed}
+        if parsed_args.marker is not None:
+            kwargs["marker"] = parsed_args.marker
+        if parsed_args.limit is not None:
+            kwargs["limit"] = parsed_args.limit
+
+        data = client.subscriptions(**kwargs)
+        columns = ('ID', 'Subscriber', 'TTL', 'Options')
+        return (columns,
+                (utils.get_item_properties(s, columns) for s in data))

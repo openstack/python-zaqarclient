@@ -76,9 +76,9 @@ class Subscription(object):
 
 
 def create_object(parent):
-    return lambda kwargs: Subscription(parent, kwargs["queue_name"],
-                                       subscriber=kwargs['subscriber'],
-                                       ttl=kwargs['ttl'],
-                                       id=kwargs['id'],
+    return lambda kwargs: Subscription(parent, kwargs.pop("queue_name"),
+                                       subscriber=kwargs.pop('subscriber'),
+                                       ttl=kwargs.pop('ttl'),
+                                       id=kwargs.pop('id'),
                                        auto_create=False,
                                        **kwargs)
