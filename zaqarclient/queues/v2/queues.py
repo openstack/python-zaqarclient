@@ -27,6 +27,12 @@ class Queue(queues.Queue):
         return core.signed_url_create(trans, req, self._name, paths=paths,
                                       ttl_seconds=ttl_seconds, methods=methods)
 
+    def subscriptions(self, detailed=False, marker=None, limit=20):
+        return self.client.subscriptions(queue_name=self._name,
+                                         detailed=detailed,
+                                         marker=marker,
+                                         limit=limit)
+
 
 def create_object(parent):
     return lambda args: Queue(parent, args["name"], auto_create=False)
