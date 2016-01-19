@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from zaqarclient import errors
 from zaqarclient.queues.v1 import queues
 from zaqarclient.queues.v2 import core
 from zaqarclient.queues.v2 import message
@@ -21,19 +20,13 @@ from zaqarclient.queues.v2 import message
 
 class Queue(queues.Queue):
 
-    def message(self, message_id):
-        """Gets a message by id
+    message_module = message
 
-        :param message_id: Message's reference
-        :type message_id: `six.text_type`
-
-        :returns: A message
-        :rtype: `dict`
-        """
+    def signed_url(self, paths=None, ttl_seconds=None, methods=None):
         req, trans = self.client._request_and_transport()
-        if self.client.api_version >= 2:
-            raise errors.InvalidOperation("Unavailable on versions >= 2")
-        else:
-            msg = core.message_get(trans, req, self._name,
-                                   message_id)
-            return message.Message(self, **msg)
+        return core.signed_url_create(trans, req, self._name, paths=paths,
+                                      ttl_seconds=ttl_seconds, methods=methods)
+
+
+def create_object(parent):
+    return lambda args: Queue(parent, args["name"], auto_create=False)

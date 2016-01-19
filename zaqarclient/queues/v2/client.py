@@ -19,6 +19,7 @@ from zaqarclient.common import decorators
 from zaqarclient.queues.v1 import client
 from zaqarclient.queues.v1 import iterator
 from zaqarclient.queues.v2 import core
+from zaqarclient.queues.v2 import queues
 from zaqarclient.queues.v2 import subscription
 
 
@@ -37,6 +38,8 @@ class Client(client.Client):
             - options
     :type options: `dict`
     """
+
+    queues_module = queues
 
     def __init__(self, url=None, version=2, conf=None):
         self.conf = conf or {}

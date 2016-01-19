@@ -42,6 +42,8 @@ class Client(object):
     :type options: `dict`
     """
 
+    queues_module = queues
+
     def __init__(self, url=None, version=1, conf=None):
         self.conf = conf or {}
 
@@ -96,7 +98,7 @@ class Client(object):
         :returns: A queue instance
         :rtype: `queues.Queue`
         """
-        return queues.Queue(self, ref, **kwargs)
+        return self.queues_module.Queue(self, ref, **kwargs)
 
     def queues(self, **params):
         """Gets a list of queues from the server
@@ -111,7 +113,7 @@ class Client(object):
         return iterator._Iterator(self,
                                   queue_list,
                                   'queues',
-                                  queues.create_object(self))
+                                  self.queues_modules.create_object(self))
 
     def follow(self, ref):
         """Follows ref.
