@@ -43,6 +43,7 @@ queue_set_metadata = core.queue_set_metadata
 queue_get_stats = core.queue_get_stats
 queue_delete = core.queue_delete
 queue_list = core.queue_list
+message_get = core.message_get
 message_list = core.message_list
 message_post = core.message_post
 message_delete = core.message_delete

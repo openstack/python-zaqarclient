@@ -16,10 +16,12 @@
 
 from zaqarclient.auth import base
 from zaqarclient.auth import keystone
+from zaqarclient.auth import signed_url
 
 _BACKENDS = {
     'noauth': base.NoAuth,
-    'keystone': keystone.KeystoneAuth
+    'keystone': keystone.KeystoneAuth,
+    'signed-url': signed_url.SignedURLAuth,
 }
 
 

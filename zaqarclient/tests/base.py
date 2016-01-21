@@ -75,7 +75,7 @@ class TestBase(testtools.TestCase):
     def _setup_auth_params(self):
         self.creds = self._credentials().get_auth_args()
 
-        # FIXME(flwang): Now we're hardcode the keystone auth versioin, since
+        # FIXME(flwang): Now we're hardcode the keystone auth version, since
         # there is a 'bug' with the osc-config which is returning the auth_url
         # without version. This should be fixed as long as the bug is fixed.
         parsed_url = urllib_parse.urlparse(self.creds['auth_url'])

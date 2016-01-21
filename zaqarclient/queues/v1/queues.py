@@ -23,6 +23,8 @@ from zaqarclient.queues.v1 import message
 
 class Queue(object):
 
+    message_module = message
+
     def __init__(self, client, name, auto_create=True, force_create=False):
         """Initialize queue object
 
@@ -153,7 +155,7 @@ class Queue(object):
         req, trans = self.client._request_and_transport()
         msg = core.message_get(trans, req, self._name,
                                message_id)
-        return message.Message(self, **msg)
+        return self.message_module.Message(self, **msg)
 
     def messages(self, *messages, **params):
         """Gets a list of messages from the server
@@ -195,7 +197,7 @@ class Queue(object):
         return iterator._Iterator(self.client,
                                   msgs,
                                   'messages',
-                                  message.create_object(self))
+                                  self.message_module.create_object(self))
 
     def delete_messages(self, *messages):
         """Deletes a set of messages from the server
@@ -223,7 +225,7 @@ class Queue(object):
         return iterator._Iterator(self.client,
                                   msgs,
                                   'messages',
-                                  message.create_object(self))
+                                  self.message_module.create_object(self))
 
     def claim(self, id=None, ttl=None, grace=None,
               limit=None):
