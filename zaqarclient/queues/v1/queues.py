@@ -71,7 +71,7 @@ class Queue(object):
         right after it was called.
         """
         req, trans = self.client._request_and_transport()
-        if force_create or float(self.client.api_version) < 1.1:
+        if force_create or self.client.api_version < 1.1:
             core.queue_create(trans, req, self._name)
 
     def metadata(self, new_meta=None, force_reload=False):
@@ -95,7 +95,7 @@ class Queue(object):
         # NOTE(jeffrey4l): Ensure that metadata is cleared when the new_meta
         # is a empty dict.
         if new_meta is not None:
-            if float(self.client.api_version) < 1.1:
+            if self.client.api_version < 1.1:
                 core.queue_set_metadata(trans, req, self._name, new_meta)
             else:
                 core.queue_create(trans, req, self._name, metadata=new_meta)

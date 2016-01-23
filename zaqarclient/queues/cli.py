@@ -32,6 +32,11 @@ API_VERSIONS = {
 def make_client(instance):
     """Returns an queues service client."""
     version = instance._api_version[API_NAME]
+    try:
+        version = int(version)
+    except ValueError:
+        version = float(version)
+
     queues_client = utils.get_client_class(
         API_NAME,
         version,
