@@ -24,9 +24,6 @@ from zaqarclient.transport import response
 
 class QueuesV1_1FlavorUnitTest(base.QueuesTestBase):
 
-    url = 'http://127.0.0.1:8888/v1.1'
-    version = 1.1
-
     def test_flavor_create(self):
         flavor_data = {'pool': 'stomach'}
 
@@ -115,9 +112,6 @@ class QueuesV1_1FlavorUnitTest(base.QueuesTestBase):
 
 
 class QueuesV1_1FlavorFunctionalTest(base.QueuesTestBase):
-
-    url = 'http://127.0.0.1:8888/v1.1'
-    version = 1.1
 
     def test_flavor_create(self):
         pool_data = {'uri': 'mongodb://127.0.0.1:27017',
