@@ -113,7 +113,7 @@ class Client(object):
         return iterator._Iterator(self,
                                   queue_list,
                                   'queues',
-                                  self.queues_modules.create_object(self))
+                                  self.queues_module.create_object(self))
 
     def follow(self, ref):
         """Follows ref.
