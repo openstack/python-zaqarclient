@@ -24,7 +24,7 @@ class Subscription(object):
         self.client = client
 
         self.id = id
-        self.queue_name = queue_name,
+        self.queue_name = queue_name
         self.subscriber = subscriber
         self.ttl = ttl
         self.options = kwargs.get('options', {})
