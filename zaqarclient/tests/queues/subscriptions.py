@@ -121,14 +121,16 @@ class QueuesV2SubscriptionUnitTest(base.QueuesTestBase):
 
     def test_subscription_list(self):
         subscription_data = {'subscriptions':
-                             [{'id': '568afabb508f153573f6a56f',
+                             [{'source': 'beijing',
+                               'id': '568afabb508f153573f6a56f',
                                'subscriber': 'http://trigger.me',
                                'ttl': 3600,
                                'options': {}},
-                              {'id': '568afabb508f153573f6a56x',
+                              {'source': 'beijing',
+                               'id': '568afabb508f153573f6a56x',
                                'subscriber': 'http://trigger.you',
                                'ttl': 7200,
-                               'options': {}}]}
+                               'options': {'oh stop': 'triggering'}}]}
 
         with mock.patch.object(self.transport, 'send',
                                autospec=True) as send_method:
@@ -140,8 +142,20 @@ class QueuesV2SubscriptionUnitTest(base.QueuesTestBase):
             # NOTE(flwang): This will call
             # ensure exists in the client instance
             # since auto_create's default is True
-            subscriptions = self.client.subscriptions('beijing')
-            self.assertEqual(2, len(list(subscriptions)))
+            subscriptions = list(self.client.subscriptions('beijing'))
+            self.assertEqual(2, len(subscriptions))
+
+            subscriber_list = [s.subscriber for s in subscriptions]
+            self.assertIn('http://trigger.me', subscriber_list)
+            self.assertIn('http://trigger.you', subscriber_list)
+
+            # Let's pick one of the subscriptions and check all of its fields
+            for sub in subscriptions:
+                if sub.subscriber == 'http://trigger.you':
+                    self.assertEqual('beijing', sub.queue_name)
+                    self.assertEqual('568afabb508f153573f6a56x', sub.id)
+                    self.assertEqual(7200, sub.ttl)
+                    self.assertEqual({'oh stop': 'triggering'}, sub.options)
 
 
 class QueuesV2SubscriptionFunctionalTest(base.QueuesTestBase):
@@ -156,7 +170,8 @@ class QueuesV2SubscriptionFunctionalTest(base.QueuesTestBase):
         self.addCleanup(queue.delete)
 
         subscription_data_1 = {'subscriber': 'http://trigger.me', 'ttl': 3600}
-        subscription_data_2 = {'subscriber': 'http://trigger.he', 'ttl': 7200}
+        subscription_data_2 = {'subscriber': 'http://trigger.he', 'ttl':
+                               7200, 'options': {'check everything': True}}
         self.subscription_1 = self.client.subscription(self.queue_name,
                                                        **subscription_data_1)
         self.addCleanup(self.subscription_1.delete)
@@ -202,3 +217,11 @@ class QueuesV2SubscriptionFunctionalTest(base.QueuesTestBase):
         subscriber_list = [s.subscriber for s in subscriptions]
         self.assertIn('http://trigger.me', subscriber_list)
         self.assertIn('http://trigger.he', subscriber_list)
+
+        # Let's pick one of the subscriptions and check all of its fields
+        for sub in subscriptions:
+            if sub.subscriber == 'http://trigger.he':
+                self.assertEqual('beijing', sub.queue_name)
+                self.assertEqual(self.subscription_2.id, sub.id)
+                self.assertEqual(7200, sub.ttl)
+                self.assertEqual({'check everything': True}, sub.options)
