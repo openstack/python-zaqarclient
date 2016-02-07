@@ -14,7 +14,6 @@
 # limitations under the License.
 
 from zaqarclient.queues.v2 import core
-from zaqarclient.transport import errors
 
 
 class Subscription(object):
@@ -45,16 +44,12 @@ class Subscription(object):
                                  'ttl': self.ttl,
                                  'options': self.options
                                  }
-            try:
-                subscription = core.subscription_create(trans, req,
-                                                        self.queue_name,
-                                                        subscription_data)
+            subscription = core.subscription_create(trans, req,
+                                                    self.queue_name,
+                                                    subscription_data)
 
-                if subscription and 'subscription_id' in subscription:
-                    self.id = subscription['subscription_id']
-            except errors.ConflictError:
-                # ConflictError means the subscription already exists.
-                print('The subscriber has been existed already.')
+            if subscription and 'subscription_id' in subscription:
+                self.id = subscription['subscription_id']
 
         if self.id:
             sub = core.subscription_get(trans, req, self.queue_name, self.id)

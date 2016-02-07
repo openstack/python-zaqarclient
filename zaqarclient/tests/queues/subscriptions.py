@@ -46,6 +46,19 @@ class QueuesV2SubscriptionUnitTest(base.QueuesTestBase):
             self.assertEqual(3600, subscription.ttl)
             self.assertEqual('fake_id', subscription.id)
 
+    def test_subscription_create_duplicate_throws_conflicterror(self):
+        subscription_data = {'subscriber': 'http://trigger.me',
+                             'ttl': 3600}
+
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            create_resp = response.Response(None, None, status_code=409)
+            send_method.return_value = create_resp
+
+            self.assertRaises(errors.ConflictError, self.client.subscription,
+                              'beijing', **subscription_data)
+
     def test_subscription_update(self):
         subscription_data = {'subscriber': 'http://trigger.me',
                              'ttl': 3600}
@@ -171,6 +184,11 @@ class QueuesV2SubscriptionFunctionalTest(base.QueuesTestBase):
 
         self.assertEqual('http://trigger.he', self.subscription_2.subscriber)
         self.assertEqual(7200, self.subscription_2.ttl)
+
+    def test_subscription_create_duplicate_throws_conflicterror(self):
+        subscription_data_1 = {'subscriber': 'http://trigger.me', 'ttl': 3600}
+        self.assertRaises(errors.ConflictError, self.client.subscription,
+                          'beijing', **subscription_data_1)
 
     def test_subscription_update(self):
         sub = self.client.subscription(self.queue_name, auto_create=False,
