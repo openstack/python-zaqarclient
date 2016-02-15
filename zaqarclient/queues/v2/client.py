@@ -76,8 +76,6 @@ class Client(client.Client):
 
         subscription_list = core.subscription_list(trans, req, queue_name,
                                                    **params)
-        for s in subscription_list['subscriptions']:
-            s['queue_name'] = queue_name
 
         return iterator._Iterator(self,
                                   subscription_list,
