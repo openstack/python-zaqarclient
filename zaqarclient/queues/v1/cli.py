@@ -20,6 +20,7 @@ from cliff import lister
 from cliff import show
 
 from openstackclient.common import utils
+from zaqarclient.transport import errors
 
 
 def _get_client(obj, parsed_args):
@@ -202,11 +203,13 @@ class GetQueueStats(show.ShowOne):
         queue_name = parsed_args.queue_name
         queue = client.queue(queue_name, auto_create=False)
 
-        if not queue.exists():
+        try:
+            stats = queue.stats
+        except errors.ResourceNotFound:
             raise RuntimeError('Queue(%s) does not exist.' % queue_name)
 
         columns = ("Stats",)
-        data = dict(stats=queue.stats)
+        data = dict(stats=stats)
         return columns, utils.get_dict_properties(data, columns)
 
 
