@@ -96,14 +96,20 @@ class HttpTransport(base.Transport):
                                    data=request.content)
 
         if resp.status_code in self.http_to_zaqar:
+            kwargs = {}
             try:
-                msg = json.loads(resp.text)['description']
+                error_body = json.loads(resp.text)
+                kwargs['title'] = error_body['title']
+                kwargs['description'] = error_body['description']
             except Exception:
                 # TODO(flaper87): Log this exception
                 # but don't stop raising the corresponding
                 # exception
-                msg = ''
-            raise self.http_to_zaqar[resp.status_code](msg)
+                # Note(Eva-i): most of the error responses from Zaqar have
+                # dict with title and description in their bodies. If it's not
+                # the case, let's just show body text.
+                kwargs['text'] = resp.text
+            raise self.http_to_zaqar[resp.status_code](**kwargs)
 
         # NOTE(flaper87): This reads the whole content
         # and will consume any attempt of streaming.

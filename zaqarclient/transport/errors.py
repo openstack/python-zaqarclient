@@ -24,11 +24,23 @@ from zaqarclient import errors
 
 __all__ = ['TransportError', 'ResourceNotFound', 'MalformedRequest',
            'UnauthorizedError', 'ForbiddenError', 'ServiceUnavailableError',
-           'InternalServerError']
+           'InternalServerError', 'ConflictError']
 
 
 class TransportError(errors.ZaqarError):
     """Base class for all transport errors."""
+
+    code = None
+
+    def __init__(self, title=None, description=None, text=None):
+        msg = 'Error response from Zaqar. Code: {0}.'.format(self.code)
+        if title:
+            msg += ' Title: {0}.'.format(title)
+        if description:
+            msg += ' Description: {0}.'.format(description)
+        if text:
+            msg += ' Text: {0}.'.format(text)
+        super(TransportError, self).__init__(msg)
 
 
 class ResourceNotFound(TransportError):
@@ -37,12 +49,16 @@ class ResourceNotFound(TransportError):
     This error maps to HTTP's 404
     """
 
+    code = 404
+
 
 class MalformedRequest(TransportError):
     """Indicates that a request is malformed
 
     This error maps to HTTP's 400
     """
+
+    code = 400
 
 
 class UnauthorizedError(TransportError):
@@ -51,12 +67,16 @@ class UnauthorizedError(TransportError):
     This error maps to HTTP's 401
     """
 
+    code = 401
+
 
 class ForbiddenError(TransportError):
     """Indicates that a request is forbidden to access the particular resource
 
     This error maps to HTTP's 403
     """
+
+    code = 403
 
 
 class InternalServerError(TransportError):
@@ -65,6 +85,8 @@ class InternalServerError(TransportError):
     This error maps to HTTP's 500
     """
 
+    code = 500
+
 
 class ServiceUnavailableError(TransportError):
     """Indicates that the server was unable to service the request
@@ -72,9 +94,13 @@ class ServiceUnavailableError(TransportError):
     This error maps to HTTP's 503
     """
 
+    code = 503
+
 
 class ConflictError(TransportError):
     """Indicates that the server was unable to service the request
 
     This error maps to HTTP's 409
     """
+
+    code = 409
