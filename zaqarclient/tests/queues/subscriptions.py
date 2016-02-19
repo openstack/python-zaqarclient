@@ -50,11 +50,15 @@ class QueuesV2SubscriptionUnitTest(base.QueuesTestBase):
         subscription_data = {'subscriber': 'http://trigger.me',
                              'ttl': 3600}
 
-        with mock.patch.object(self.transport, 'send',
-                               autospec=True) as send_method:
+        with mock.patch.object(self.transport.client, 'request',
+                               autospec=True) as request_method:
 
-            create_resp = response.Response(None, None, status_code=409)
-            send_method.return_value = create_resp
+            class FakeRawResponse(object):
+                def __init__(self):
+                    self.text = ''
+                    self.headers = {}
+                    self.status_code = 409
+            request_method.return_value = FakeRawResponse()
 
             self.assertRaises(errors.ConflictError, self.client.subscription,
                               'beijing', **subscription_data)
