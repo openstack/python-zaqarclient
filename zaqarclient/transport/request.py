@@ -46,11 +46,16 @@ def prepare_request(auth_opts=None, data=None, **kwargs):
     # TODO(flaper87): Do something smarter
     # to get the api_version.
     req = auth_backend.authenticate(1, req)
-    req.headers['X-Project-Id'] = auth_opts.get(
-        'options', {}).get('os_project_id', {})
 
-    # In case of noauth backend, a default project id will be added to header.
-    if (not req.headers['X-Project-Id'] and
+    project_id = auth_opts.get('options', {}).get('os_project_id', {})
+
+    # Let's add project id header, only if it will have non-empty value.
+    if project_id:
+        req.headers['X-Project-Id'] = project_id
+
+    # In case of noauth backend and no specified project id, the default
+    # project id will be added as header.
+    if ('X-Project-Id' not in req.headers and
             auth_opts.get("backend") == "noauth"):
         req.headers['X-Project-Id'] = "fake_project_id_for_noauth"
 
