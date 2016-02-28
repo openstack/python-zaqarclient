@@ -33,7 +33,6 @@ import json
 from oslo_utils import timeutils
 
 from zaqarclient.queues.v1 import core
-from zaqarclient.transport import errors
 
 queue_create = core.queue_create
 queue_exists = core.queue_exists
@@ -126,9 +125,6 @@ def subscription_create(transport, request, queue_name, subscription_data):
     request.params['queue_name'] = queue_name
     request.content = json.dumps(subscription_data)
     resp = transport.send(request)
-
-    if resp.status_code == 409:
-        raise errors.ConflictError()
 
     return resp.deserialized_content
 

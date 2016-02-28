@@ -32,6 +32,7 @@ class HttpTransport(base.Transport):
         401: errors.UnauthorizedError,
         403: errors.ForbiddenError,
         404: errors.ResourceNotFound,
+        409: errors.ConflictError,
         500: errors.InternalServerError,
         503: errors.ServiceUnavailableError
     }
