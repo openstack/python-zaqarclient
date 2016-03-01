@@ -50,6 +50,17 @@ class Client(client.Client):
         self.client_uuid = self.conf.get('client_uuid',
                                          uuid.uuid4().hex)
 
+    def queue(self, ref, **kwargs):
+        """Returns a queue instance
+
+        :param ref: Queue's reference id.
+        :type ref: `six.text_type`
+
+        :returns: A queue instance
+        :rtype: `queues.Queue`
+        """
+        return queues.Queue(self, ref, **kwargs)
+
     @decorators.version(min_version=2)
     def subscription(self, queue_name, **kwargs):
         """Returns a subscription instance

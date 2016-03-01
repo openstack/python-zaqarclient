@@ -62,4 +62,9 @@ class QueuesV1MessageUnitTest(base.QueuesTestBase):
 
 
 class QueuesV2MessageUnitTest(QueuesV1MessageUnitTest):
-    pass
+
+    def test_message_delete_with_claim(self):
+        pass
+
+    def test_message_delete(self):
+        pass
