@@ -18,7 +18,6 @@ import mock
 
 from zaqarclient.queues.v1 import iterator
 from zaqarclient.tests.queues import base
-from zaqarclient.transport import errors
 from zaqarclient.transport import response
 
 
@@ -31,7 +30,7 @@ class QueuesV1_1FlavorUnitTest(base.QueuesTestBase):
                                autospec=True) as send_method:
 
             resp = response.Response(None, None)
-            send_method.side_effect = iter([errors.ResourceNotFound, resp])
+            send_method.return_value = resp
 
             # NOTE(flaper87): This will call
             # ensure exists in the client instance
@@ -41,7 +40,7 @@ class QueuesV1_1FlavorUnitTest(base.QueuesTestBase):
             self.assertEqual('stomach', flavor.pool)
 
     def test_flavor_get(self):
-        flavor_data = {'pool': 'stomach'}
+        flavor_data = {'name': 'test', 'pool': 'stomach'}
 
         with mock.patch.object(self.transport, 'send',
                                autospec=True) as send_method:
@@ -53,8 +52,9 @@ class QueuesV1_1FlavorUnitTest(base.QueuesTestBase):
             # ensure exists in the client instance
             # since auto_create's default is True
             flavor = self.client.flavor('test')
-            self.assertEqual('test', flavor.name)
-            self.assertEqual('stomach', flavor.pool)
+            flavor1 = flavor.get()
+            self.assertEqual('test', flavor1['name'])
+            self.assertEqual('stomach', flavor1['pool'])
 
     def test_flavor_update(self):
         flavor_data = {'pool': 'stomach'}
@@ -131,18 +131,17 @@ class QueuesV1_1FlavorFunctionalTest(base.QueuesTestBase):
         pool_data = {'weight': 10,
                      'group': 'us',
                      'uri': 'mongodb://127.0.0.1:27017'}
-        self.client.pool('stomach', **pool_data)
 
         pool = self.client.pool('stomach', **pool_data)
         self.addCleanup(pool.delete)
 
         flavor_data = {'pool': 'us'}
-        self.client.flavor('tasty', **flavor_data)
-        flavor = self.client.flavor('tasty')
+        flavor = self.client.flavor('tasty', **flavor_data)
+        resp_data = flavor.get()
         self.addCleanup(flavor.delete)
 
-        self.assertEqual('tasty', flavor.name)
-        self.assertEqual('us', flavor.pool)
+        self.assertEqual('tasty', resp_data['name'])
+        self.assertEqual('us', resp_data['pool'])
 
     def test_flavor_update(self):
         pool_data = {'weight': 10,
