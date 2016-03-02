@@ -18,7 +18,6 @@ import mock
 
 from zaqarclient.queues.v1 import iterator
 from zaqarclient.tests.queues import base
-from zaqarclient.transport import errors
 from zaqarclient.transport import response
 
 
@@ -32,7 +31,7 @@ class QueuesV1PoolUnitTest(base.QueuesTestBase):
                                autospec=True) as send_method:
 
             resp = response.Response(None, None)
-            send_method.side_effect = iter([errors.ResourceNotFound, resp])
+            send_method.return_value = resp
 
             # NOTE(flaper87): This will call
             # ensure exists in the client instance
@@ -43,6 +42,7 @@ class QueuesV1PoolUnitTest(base.QueuesTestBase):
 
     def test_pool_get(self):
         pool_data = {'weight': 10,
+                     'name': 'test',
                      'uri': 'sqlite://',
                      'options': {}}
 
@@ -55,9 +55,11 @@ class QueuesV1PoolUnitTest(base.QueuesTestBase):
             # NOTE(flaper87): This will call
             # ensure exists in the client instance
             # since auto_create's default is True
+
             pool = self.client.pool('test')
-            self.assertEqual('test', pool.name)
-            self.assertEqual(10, pool.weight)
+            pool1 = pool.get()
+            self.assertEqual('test', pool1['name'])
+            self.assertEqual(10, pool1['weight'])
 
     def test_pool_update(self):
         pool_data = {'weight': 10,
@@ -130,21 +132,22 @@ class QueuesV1_1PoolFunctionalTest(base.QueuesTestBase):
                      'group': 'us',
                      'uri': 'mongodb://127.0.0.1:27017'}
 
-        self.client.pool('test', **pool_data)
-        pool = self.client.pool('test')
+        pool = self.client.pool('FuncTestPool', **pool_data)
+        resp_data = pool.get()
+        self.addCleanup(pool.delete)
 
-        self.assertEqual('test', pool.name)
-        self.assertEqual(10, pool.weight)
-        self.assertEqual('mongodb://127.0.0.1:27017', pool.uri)
+        self.assertEqual('FuncTestPool', resp_data['name'])
+        self.assertEqual(10, resp_data['weight'])
+        self.assertEqual('mongodb://127.0.0.1:27017', resp_data['uri'])
 
     def test_pool_create(self):
         pool_data = {'weight': 10,
                      'group': 'us',
                      'uri': 'mongodb://127.0.0.1:27017'}
 
-        pool = self.client.pool('test', **pool_data)
+        pool = self.client.pool('FuncTestPool', **pool_data)
         self.addCleanup(pool.delete)
-        self.assertEqual('test', pool.name)
+        self.assertEqual('FuncTestPool', pool.name)
         self.assertEqual(10, pool.weight)
 
     def test_pool_update(self):
@@ -152,7 +155,7 @@ class QueuesV1_1PoolFunctionalTest(base.QueuesTestBase):
                      'group': 'us',
                      'uri': 'mongodb://127.0.0.1:27017'}
 
-        pool = self.client.pool('test', **pool_data)
+        pool = self.client.pool('FuncTestPool', **pool_data)
         self.addCleanup(pool.delete)
         pool.update({'weight': 20})
         self.assertEqual(20, pool.weight)
@@ -161,7 +164,7 @@ class QueuesV1_1PoolFunctionalTest(base.QueuesTestBase):
         pool_data = {'weight': 10,
                      'group': 'us',
                      'uri': 'mongodb://127.0.0.1:27017'}
-        pool = self.client.pool('test', **pool_data)
+        pool = self.client.pool('FuncTestPool', **pool_data)
         self.addCleanup(pool.delete)
 
         pools = self.client.pools()
@@ -173,7 +176,7 @@ class QueuesV1_1PoolFunctionalTest(base.QueuesTestBase):
                      'group': 'us',
                      'uri': 'mongodb://127.0.0.1:27017'}
 
-        pool = self.client.pool('test', **pool_data)
+        pool = self.client.pool('FuncTestPool', **pool_data)
         pool.delete()
 
 

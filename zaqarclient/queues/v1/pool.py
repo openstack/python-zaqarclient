@@ -14,7 +14,6 @@
 # limitations under the License.
 
 from zaqarclient.queues.v1 import core
-from zaqarclient.transport import errors
 
 
 class Pool(object):
@@ -41,24 +40,21 @@ class Pool(object):
         right after it was called.
         """
         req, trans = self.client._request_and_transport()
+        # As of now on PUT, zaqar server updates pool if it is already
+        # exists else it will create a new one. The zaqar client should
+        # maitain symmetry with zaqar server.
+        # TBD(mdnadeem): Have to change this code when zaqar server
+        # behaviour change for PUT operation.
 
-        try:
-            pool = core.pool_get(trans, req, self.name)
-            self.uri = pool["uri"]
-            self.weight = pool["weight"]
-            self.group = pool.get("group", None)
-            self.options = pool.get("options", {})
+        data = {'uri': self.uri,
+                'weight': self.weight,
+                'options': self.options}
 
-        except errors.ResourceNotFound:
-            data = {'uri': self.uri,
-                    'weight': self.weight,
-                    'options': self.options}
+        if self.client.api_version >= 1.1 and self.group:
+            data['group'] = self.group
 
-            if self.client.api_version >= 1.1 and self.group:
-                data['group'] = self.group
-
-            req, trans = self.client._request_and_transport()
-            core.pool_create(trans, req, self.name, data)
+        req, trans = self.client._request_and_transport()
+        core.pool_create(trans, req, self.name, data)
 
     def update(self, pool_data):
         req, trans = self.client._request_and_transport()
