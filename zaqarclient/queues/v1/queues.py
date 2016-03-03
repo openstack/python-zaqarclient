@@ -97,8 +97,11 @@ class Queue(object):
         if new_meta is not None:
             if self.client.api_version < 1.1:
                 core.queue_set_metadata(trans, req, self._name, new_meta)
-            else:
+            elif not len(new_meta):
+                # if metadata is empty dict, clear existing metadata
                 core.queue_create(trans, req, self._name, metadata=new_meta)
+            else:
+                core.queue_update(trans, req, self._name, metadata=new_meta)
             self._metadata = new_meta
 
         # TODO(flaper87): Cache with timeout

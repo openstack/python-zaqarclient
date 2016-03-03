@@ -294,6 +294,15 @@ V1_1.schema.update({
         }
     },
 
+    'queue_update': {
+        'ref': 'queues/{queue_name}',
+        'method': 'PATCH',
+        'required': ['queue_name'],
+        'properties': {
+            'queue_name': {'type': 'string'}
+        }
+    },
+
     'message_pop': {
         'ref': 'queues/{queue_name}/messages',
         'method': 'DELETE',
