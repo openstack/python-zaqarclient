@@ -74,4 +74,14 @@ V2.schema.update({
             'detailed': {'type': 'boolean'}
         }
     },
+
+    'ping': {
+        'ref': 'ping',
+        'method': 'GET',
+    },
+
+    'health': {
+        'ref': 'health',
+        'method': 'GET',
+    },
 })
