@@ -144,9 +144,8 @@ class SetQueueMetadata(command.Command):
         client = _get_client(self, parsed_args)
         queue_name = parsed_args.queue_name
         queue_metadata = parsed_args.queue_metadata
-        queue_exists = client.queue(queue_name, auto_create=False).exists()
-
-        if not queue_exists:
+        if (client.api_version == 1 and
+                not client.queue(queue_name, auto_create=False).exists()):
             raise RuntimeError("Queue(%s) does not exist." % queue_name)
 
         try:
@@ -177,7 +176,7 @@ class GetQueueMetadata(show.ShowOne):
         queue_name = parsed_args.queue_name
         queue = client.queue(queue_name, auto_create=False)
 
-        if not queue.exists():
+        if client.api_version == 1 and not queue.exists():
             raise RuntimeError("Queue(%s) does not exist." % queue_name)
 
         columns = ("Metadata",)

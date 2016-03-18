@@ -422,6 +422,20 @@ class QueuesV1_1QueueUnitTest(QueuesV1QueueUnitTest):
             # just checking our way down to the transport
             # doesn't crash.
 
+    def test_queue_metadata(self):
+        test_metadata = {'type': 'Bank Accounts'}
+
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, json.dumps(test_metadata))
+            send_method.return_value = resp
+            self.assertRaises(RuntimeError, self.queue.metadata, test_metadata)
+
+    def test_queue_metadata_update(self):
+        # v1.1 doesn't support set queue metadata
+        pass
+
 
 class QueuesV1_1QueueFunctionalTest(QueuesV1QueueFunctionalTest):
 
@@ -464,6 +478,14 @@ class QueuesV1_1QueueFunctionalTest(QueuesV1QueueFunctionalTest):
         remaining = queue.messages(echo=True)
         self.assertEqual(1, len(list(remaining)))
 
+    def test_queue_metadata_functional(self):
+        # v1.1 doesn't support set queue metadata
+        pass
+
+    def test_queue_metadata_reload_functional(self):
+        # v1.1 doesn't support set queue metadata
+        pass
+
 
 class QueuesV2QueueUnitTest(QueuesV1_1QueueUnitTest):
 
@@ -496,6 +518,45 @@ class QueuesV2QueueUnitTest(QueuesV1_1QueueUnitTest):
             subscriber_list = [s.subscriber for s in list(subscriptions)]
             self.assertIn('http://trigger.me', subscriber_list)
             self.assertIn('http://trigger.you', subscriber_list)
+
+    def test_queue_metadata(self):
+        # checked in "test_queue_metadata_update"
+        pass
+
+    def test_queue_metadata_update(self):
+        test_metadata = {'type': 'Bank Accounts', 'name': 'test1'}
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, json.dumps(test_metadata))
+            send_method.return_value = resp
+
+            # add 'test_metadata'
+            metadata = self.queue.metadata(new_meta=test_metadata)
+            self.assertEqual(test_metadata, metadata)
+
+        new_metadata_replace = {'type': 'test', 'name': 'test1'}
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, json.dumps(new_metadata_replace))
+            send_method.return_value = resp
+            # repalce 'type'
+            metadata = self.queue.metadata(
+                new_meta=new_metadata_replace)
+            expect_metadata = {'type': 'test', "name": 'test1'}
+            self.assertEqual(expect_metadata, metadata)
+
+        remove_metadata = {'name': 'test1'}
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, json.dumps(remove_metadata))
+            send_method.return_value = resp
+            # remove 'type'
+            metadata = self.queue.metadata(new_meta=remove_metadata)
+            expect_metadata = {"name": 'test1'}
+            self.assertEqual(expect_metadata, metadata)
 
 
 class QueuesV2QueueFunctionalTest(QueuesV1_1QueueFunctionalTest):
@@ -535,3 +596,80 @@ class QueuesV2QueueFunctionalTest(QueuesV1_1QueueFunctionalTest):
         get_subscriptions = queue.subscriptions()
         self.assertTrue(isinstance(get_subscriptions, iterator._Iterator))
         self.assertEqual(2, len(list(get_subscriptions)))
+
+    def test_queue_metadata_reload_functional(self):
+        test_metadata = {'type': 'Bank Accounts', 'name': 'test1'}
+        queue = self.client.queue("meta-test", force_create=True)
+        self.addCleanup(queue.delete)
+
+        queue.metadata(new_meta=test_metadata)
+        # NOTE(flaper87): Overwrite the cached value
+        # but don't clear it.
+        queue._metadata = 'test'
+        expect_metadata = {'type': 'Bank Accounts', 'name': 'test1',
+                           '_max_messages_post_size': 262144,
+                           '_default_message_ttl': 3600}
+        metadata = queue.metadata(force_reload=True)
+        self.assertEqual(expect_metadata, metadata)
+
+    def test_queue_metadata_functional(self):
+        queue = self.client.queue("meta-test", force_create=True)
+        self.addCleanup(queue.delete)
+        # add two metadatas
+        test_metadata = {'type': 'Bank Accounts', 'name': 'test1'}
+        queue.metadata(new_meta=test_metadata)
+        # NOTE(flaper87): Clear metadata's cache
+        queue._metadata = None
+        metadata = queue.metadata()
+        expect_metadata = {'type': 'Bank Accounts', 'name': 'test1',
+                           '_max_messages_post_size': 262144,
+                           '_default_message_ttl': 3600}
+        self.assertEqual(expect_metadata, metadata)
+
+        # replace 'type', '_default_message_ttl' and add a new one 'age'
+        replace_add_metadata = {'type': 'test', 'name': 'test1', 'age': 13,
+                                '_default_message_ttl': 1000}
+        queue.metadata(new_meta=replace_add_metadata)
+        queue._metadata = None
+        metadata = queue.metadata()
+        expect_metadata = {'type': 'test', 'name': 'test1', 'age': 13,
+                           '_max_messages_post_size': 262144,
+                           '_default_message_ttl': 1000}
+        self.assertEqual(expect_metadata, metadata)
+
+        # replace 'name', remove 'type', '_default_message_ttl' and add a new
+        # one 'fake'.
+        replace_remove_add_metadata = {'name': 'test2',
+                                       'age': 13,
+                                       'fake': 'test_fake',
+                                       }
+        queue.metadata(new_meta=replace_remove_add_metadata)
+        queue._metadata = None
+        metadata = queue.metadata()
+        expect_metadata = {'name': 'test2', 'age': 13, 'fake': 'test_fake',
+                           '_max_messages_post_size': 262144,
+                           '_default_message_ttl': 3600}
+        self.assertEqual(expect_metadata, metadata)
+
+        # replace 'name' to empty string and add a new empty dict 'empty_dict'.
+        replace_add_metadata = {'name': '',
+                                'age': 13,
+                                'fake': 'test_fake',
+                                'empty_dict': {}
+                                }
+        queue.metadata(new_meta=replace_add_metadata)
+        queue._metadata = None
+        metadata = queue.metadata()
+        expect_metadata = {'name': '', 'age': 13, 'fake': 'test_fake',
+                           '_max_messages_post_size': 262144,
+                           '_default_message_ttl': 3600, 'empty_dict': {}}
+        self.assertEqual(expect_metadata, metadata)
+
+        # Delete all metadata.
+        remove_all = {}
+        queue.metadata(new_meta=remove_all)
+        queue._metadata = None
+        metadata = queue.metadata()
+        expect_metadata = {'_max_messages_post_size': 262144,
+                           '_default_message_ttl': 3600}
+        self.assertEqual(expect_metadata, metadata)

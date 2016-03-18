@@ -33,6 +33,56 @@ class Queue(queues.Queue):
                                          marker=marker,
                                          limit=limit)
 
+    def metadata(self, new_meta=None, force_reload=False):
+        """Get metadata and return it
+
+        :param new_meta: A dictionary containing
+            an updated metadata object. If present
+            the queue metadata will be updated in
+            remote server. If the new_meta is empty,
+            the metadata object will be cleared.
+        :type new_meta: `dict`
+        :param force_reload: Whether to ignored the
+            cached metadata and reload it from the
+            server.
+        :type force_reload: `bool`
+
+        :returns: The queue metadata.
+        """
+        req, trans = self.client._request_and_transport()
+
+        # TODO(flaper87): Cache with timeout
+        if new_meta is None and self._metadata and not force_reload:
+            return self._metadata
+        else:
+            self._metadata = core.queue_get(trans, req, self._name)
+
+        if new_meta is not None:
+            temp_metadata = self._metadata.copy()
+            changes = []
+            for key, value in new_meta.items():
+                # If key exists, replace it's value.
+                if self._metadata.get(key, None):
+                    changes.append({'op': 'replace',
+                                    'path': '/metadata/%s' % key,
+                                    'value': value})
+                    temp_metadata.pop(key)
+                # If not, add the new key.
+                else:
+                    changes.append({'op': 'add',
+                                    'path': '/metadata/%s' % key,
+                                    'value': value})
+            # For the keys which are not included in the new metadata, remove
+            # them.
+            for key, value in temp_metadata.items():
+                changes.append({'op': 'remove',
+                                'path': '/metadata/%s' % key})
+
+            self._metadata = core.queue_update(trans, req, self._name,
+                                               metadata=changes)
+
+        return self._metadata
+
 
 def create_object(parent):
     return lambda args: Queue(parent, args["name"], auto_create=False)

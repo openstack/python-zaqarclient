@@ -97,13 +97,10 @@ class Queue(object):
         # NOTE(jeffrey4l): Ensure that metadata is cleared when the new_meta
         # is a empty dict.
         if new_meta is not None:
-            if self.client.api_version < 1.1:
-                core.queue_set_metadata(trans, req, self._name, new_meta)
-            elif not len(new_meta):
-                # if metadata is empty dict, clear existing metadata
-                core.queue_create(trans, req, self._name, metadata=new_meta)
-            else:
-                core.queue_update(trans, req, self._name, metadata=new_meta)
+            if self.client.api_version == 1.1:
+                raise RuntimeError("V1.1 doesn't support to set the queue's "
+                                   "metadata. Please use V1.0 or V2.")
+            core.queue_set_metadata(trans, req, self._name, new_meta)
             self._metadata = new_meta
 
         # TODO(flaper87): Cache with timeout

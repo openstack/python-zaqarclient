@@ -48,6 +48,16 @@ class GetQueueStats(cli.GetQueueStats):
     pass
 
 
+class SetQueueMetadata(cli.SetQueueMetadata):
+    """Set queue metadata"""
+    pass
+
+
+class GetQueueMetadata(cli.GetQueueMetadata):
+    """Get queue metadata"""
+    pass
+
+
 class CreatePool(cli.CreatePool):
     """Create a pool"""
     pass

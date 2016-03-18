@@ -78,6 +78,11 @@ _CLIENTS = {1: cv1.Client,
 
 
 def Client(url=None, version=None, conf=None):
+    # NOTE: Please don't mix use the Client object with different version at
+    # the same time. Because the cache mechanism of queue's metadata will lead
+    # to unexpected response value.
+    # Please see zaqarclient.queues.v1.queues.Queue.metadata and
+    # zaqarclient.queues.v2.queues.Queue.metadata for more detail.
     try:
         return _CLIENTS[version](url, version, conf)
     except KeyError:
