@@ -279,7 +279,7 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
         # NOTE(flaper87): Clear metadata's cache
         queue._metadata = None
         metadata = queue.metadata()
-        self.assertEqual(test_metadata, metadata)
+        self.assertEqual(test_metadata['type'], metadata['type'])
 
     def test_queue_metadata_reload_functional(self):
         test_metadata = {'type': 'Bank Accounts'}
@@ -290,7 +290,7 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
         # but don't clear it.
         queue._metadata = 'test'
         metadata = queue.metadata(force_reload=True)
-        self.assertEqual(test_metadata, metadata)
+        self.assertEqual(test_metadata['type'], metadata['type'])
 
     def test_message_post_functional(self):
         messages = [
