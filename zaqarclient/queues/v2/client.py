@@ -92,3 +92,14 @@ class Client(client.Client):
                                   subscription_list,
                                   'subscriptions',
                                   subscription.create_object(self))
+
+    def ping(self):
+        """Gets the health status of Zaqar server."""
+        req, trans = self._request_and_transport()
+        return core.ping(trans, req)
+
+    @decorators.version(min_version=1.1)
+    def health(self):
+        """Gets the detailed health status of Zaqar server."""
+        req, trans = self._request_and_transport()
+        return core.health(trans, req)

@@ -220,3 +220,42 @@ def subscription_list(transport, request, queue_name, **kwargs):
         return {'links': [], 'subscriptions': []}
 
     return resp.deserialized_content
+
+
+def ping(transport, request, callback=None):
+    """Check the health of web head for load balancing
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param callback: Optional callable to use as callback.
+        If specified, this request will be sent asynchronously.
+        (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
+    :type callback: Callable object.
+    """
+
+    request.operation = 'ping'
+    try:
+        transport.send(request)
+        return True
+    except Exception:
+        return False
+
+
+def health(transport, request, callback=None):
+    """Get detailed health status of Zaqar server
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param callback: Optional callable to use as callback.
+        If specified, this request will be sent asynchronously.
+        (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
+    :type callback: Callable object.
+    """
+
+    request.operation = 'health'
+    resp = transport.send(request)
+    return resp.deserialized_content

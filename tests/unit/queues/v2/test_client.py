@@ -18,15 +18,18 @@ import mock
 import ddt
 
 from zaqarclient.queues import client
-from zaqarclient.queues.v1 import core
-from zaqarclient.tests import base
+from zaqarclient.tests.queues import base
 from zaqarclient.transport import errors
+from zaqarclient.transport import http
 
 VERSIONS = [2]
 
 
 @ddt.ddt
-class TestClient(base.TestBase):
+class TestClient(base.QueuesTestBase):
+    transport_cls = http.HttpTransport
+    url = 'http://127.0.0.1:8888/v2'
+    version = VERSIONS[0]
 
     @ddt.data(*VERSIONS)
     def test_transport(self, version):
@@ -35,21 +38,18 @@ class TestClient(base.TestBase):
         self.assertIsNotNone(cli.transport())
 
     @ddt.data(*VERSIONS)
-    def test_health_ok(self, version):
-        cli = client.Client('http://example.com',
-                            version, {"auth_opts": {'backend': 'noauth'}})
-        with mock.patch.object(core, 'health', autospec=True) as core_health:
-            core_health.return_value = None
-            self.assertTrue(cli.health())
+    def test_ping_ok(self, version):
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+            send_method.return_value = None
+            self.assertTrue(self.client.ping())
 
     @ddt.data(*VERSIONS)
-    def test_health_bad(self, version):
-        cli = client.Client('http://example.com',
-                            version, {"auth_opts": {'backend': 'noauth'}})
-
+    def test_ping_bad(self, version):
         def raise_error(*args, **kwargs):
             raise errors.ServiceUnavailableError()
 
-        with mock.patch.object(core, 'health', autospec=True) as core_health:
-            core_health.side_effect = raise_error
-            self.assertFalse(cli.health())
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+            send_method.side_effect = raise_error
+            self.assertFalse(self.client.ping())
