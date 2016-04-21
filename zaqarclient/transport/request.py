@@ -93,7 +93,12 @@ class Request(object):
                  headers=None, api=None):
 
         self._api = None
-        self._api_mod = api
+        # ensure that some values like "v1.0" could work as "v1"
+        self._api_mod = None
+        if api and int(api) == api:
+            self._api_mod = 'queues.v' + str(int(api))
+        elif api:
+            self._api_mod = 'queues.v' + str(api)
 
         self.endpoint = endpoint
         self.operation = operation
