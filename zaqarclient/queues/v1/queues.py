@@ -48,7 +48,9 @@ class Queue(object):
         self._name = name
         self._metadata = None
 
-        if auto_create:
+        # NOTE(flwang): If force_create is True, then even though auto_create
+        # is not True, the queue should be created anyway.
+        if auto_create or force_create:
             self.ensure_exists(force_create=force_create)
 
     @property
