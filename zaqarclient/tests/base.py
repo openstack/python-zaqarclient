@@ -82,6 +82,9 @@ class TestBase(testtools.TestCase):
         auth_url = self.creds['auth_url']
         if not parsed_url.path or parsed_url.path == '/':
             auth_url = urllib_parse.urljoin(self.creds['auth_url'], 'v2.0')
+        if (parsed_url.path == '/identity_v2_admin' or
+                parsed_url.path == '/identity'):
+            auth_url = '%s/v2.0' % auth_url
 
         self.conf['auth_opts']['backend'] = 'keystone'
         options = {'os_username': self.creds['username'],
