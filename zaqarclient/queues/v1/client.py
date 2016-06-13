@@ -71,10 +71,9 @@ class Client(object):
         return (trans or self.transport)
 
     def _request_and_transport(self):
-        api = 'queues.v' + str(self.api_version)
         req = request.prepare_request(self.auth_opts,
                                       endpoint=self.api_url,
-                                      api=api)
+                                      api=self.api_version)
 
         req.headers['Client-ID'] = self.client_uuid
 
