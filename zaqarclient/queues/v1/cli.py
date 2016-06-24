@@ -18,8 +18,8 @@ import logging
 from cliff import command
 from cliff import lister
 from cliff import show
+from osc_lib import utils
 
-from openstackclient.common import utils
 from zaqarclient.transport import errors
 
 
