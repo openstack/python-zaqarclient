@@ -15,9 +15,7 @@
 import json
 import logging
 
-from cliff import command
-from cliff import lister
-from cliff import show
+from osc_lib.command import command
 from osc_lib import utils
 
 from zaqarclient.queues.v1 import cli
@@ -127,7 +125,7 @@ class ListFlavors(cli.ListFlavors):
     pass
 
 
-class CreateSubscription(show.ShowOne):
+class CreateSubscription(command.ShowOne):
     """Create a subscription for queue"""
 
     log = logging.getLogger(__name__ + ".CreateSubscription")
@@ -174,7 +172,7 @@ class CreateSubscription(show.ShowOne):
         return columns, utils.get_item_properties(data, columns)
 
 
-class UpdateSubscription(show.ShowOne):
+class UpdateSubscription(command.ShowOne):
     """Update a subscription"""
 
     log = logging.getLogger(__name__ + ".UpdateSubscription")
@@ -249,7 +247,7 @@ class DeleteSubscription(command.Command):
                             auto_create=False).delete()
 
 
-class ShowSubscription(show.ShowOne):
+class ShowSubscription(command.ShowOne):
     """Display subscription details"""
 
     log = logging.getLogger(__name__ + ".ShowSubscription")
@@ -277,7 +275,7 @@ class ShowSubscription(show.ShowOne):
         return columns, utils.get_dict_properties(pool_data.__dict__, columns)
 
 
-class ListSubscriptions(lister.Lister):
+class ListSubscriptions(command.Lister):
     """List available subscriptions"""
 
     log = logging.getLogger(__name__ + ".ListSubscriptions")
@@ -343,7 +341,7 @@ class ReleaseClaim(cli.ReleaseClaim):
     pass
 
 
-class CreateSignedUrl(show.ShowOne):
+class CreateSignedUrl(command.ShowOne):
     """Create a queue"""
 
     log = logging.getLogger(__name__ + ".CreateSignedUrl")
@@ -405,7 +403,7 @@ class CreateSignedUrl(show.ShowOne):
         )
 
 
-class Ping(show.ShowOne):
+class Ping(command.ShowOne):
     """Check if Zaqar server is alive or not"""
 
     log = logging.getLogger(__name__ + ".Ping")

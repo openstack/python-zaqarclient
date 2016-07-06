@@ -15,9 +15,7 @@
 import json
 import logging
 
-from cliff import command
-from cliff import lister
-from cliff import show
+from osc_lib.command import command
 from osc_lib import utils
 
 from zaqarclient.transport import errors
@@ -28,7 +26,7 @@ def _get_client(obj, parsed_args):
     return obj.app.client_manager.messaging
 
 
-class CreateQueue(show.ShowOne):
+class CreateQueue(command.ShowOne):
     """Create a queue"""
 
     log = logging.getLogger(__name__ + ".CreateQueue")
@@ -68,7 +66,7 @@ class DeleteQueue(command.Command):
         client.queue(queue_name).delete()
 
 
-class ListQueues(lister.Lister):
+class ListQueues(command.Lister):
     """List available queues"""
 
     log = logging.getLogger(__name__ + ".ListQueues")
@@ -100,7 +98,7 @@ class ListQueues(lister.Lister):
                 (utils.get_item_properties(s, columns) for s in data))
 
 
-class CheckQueueExistence(show.ShowOne):
+class CheckQueueExistence(command.ShowOne):
     """Check queue existence"""
 
     log = logging.getLogger(__name__ + ".CheckQueueExistence")
@@ -158,7 +156,7 @@ class SetQueueMetadata(command.Command):
             metadata(new_meta=valid_metadata)
 
 
-class GetQueueMetadata(show.ShowOne):
+class GetQueueMetadata(command.ShowOne):
     """Get queue metadata"""
 
     log = logging.getLogger(__name__ + ".GetQueueMetadata")
@@ -184,7 +182,7 @@ class GetQueueMetadata(show.ShowOne):
         return columns, utils.get_dict_properties(data, columns)
 
 
-class GetQueueStats(show.ShowOne):
+class GetQueueStats(command.ShowOne):
     """Get queue stats"""
 
     log = logging.getLogger(__name__ + ".GetQueueStats")
@@ -212,7 +210,7 @@ class GetQueueStats(show.ShowOne):
         return columns, utils.get_dict_properties(data, columns)
 
 
-class CreatePool(show.ShowOne):
+class CreatePool(command.ShowOne):
     """Create a pool"""
 
     log = logging.getLogger(__name__ + ".CreatePool")
@@ -267,7 +265,7 @@ class CreatePool(show.ShowOne):
         return columns, utils.get_item_properties(data, columns)
 
 
-class ShowPool(show.ShowOne):
+class ShowPool(command.ShowOne):
     """Display pool details"""
 
     log = logging.getLogger(__name__ + ".ShowPool")
@@ -290,7 +288,7 @@ class ShowPool(show.ShowOne):
         return columns, utils.get_dict_properties(pool_data, columns)
 
 
-class UpdatePool(show.ShowOne):
+class UpdatePool(command.ShowOne):
     """Update a pool attribute"""
 
     log = logging.getLogger(__name__+".UpdatePool")
@@ -361,7 +359,7 @@ class DeletePool(command.Command):
         client.pool(pool_name, auto_create=False).delete()
 
 
-class ListPools(lister.Lister):
+class ListPools(command.Lister):
     """List available Pools"""
 
     log = logging.getLogger(__name__ + ".ListPools")
@@ -403,7 +401,7 @@ class ListPools(lister.Lister):
                 (utils.get_item_properties(s, columns) for s in data))
 
 
-class UpdateFlavor(show.ShowOne):
+class UpdateFlavor(command.ShowOne):
     """Update a flavor's attributes"""
 
     log = logging.getLogger(__name__+".UpdateFlavor")
@@ -441,7 +439,7 @@ class UpdateFlavor(show.ShowOne):
         return columns, utils.get_dict_properties(flavor_data, columns)
 
 
-class CreateFlavor(show.ShowOne):
+class CreateFlavor(command.ShowOne):
     """Create a pool flavor"""
 
     log = logging.getLogger(__name__ + ".CreateFlavor")
@@ -502,7 +500,7 @@ class DeleteFlavor(command.Command):
         client.flavor(flavor_name).delete()
 
 
-class ShowFlavor(show.ShowOne):
+class ShowFlavor(command.ShowOne):
     """Display flavor details"""
 
     log = logging.getLogger(__name__ + ".ShowFlavor")
@@ -525,7 +523,7 @@ class ShowFlavor(show.ShowOne):
         return columns, utils.get_dict_properties(flavor_data, columns)
 
 
-class ListFlavors(lister.Lister):
+class ListFlavors(command.Lister):
     """List available flavors"""
 
     log = logging.getLogger(__name__ + ".ListFlavors")
@@ -565,7 +563,7 @@ class ListFlavors(lister.Lister):
                 (utils.get_item_properties(s, columns) for s in data))
 
 
-class CreateClaim(lister.Lister):
+class CreateClaim(command.Lister):
     """Create claim and return a list of claimed messages"""
 
     log = logging.getLogger(__name__ + ".CreateClaim")
@@ -616,7 +614,7 @@ class CreateClaim(lister.Lister):
                 (utils.get_item_properties(s, keys) for s in data))
 
 
-class QueryClaim(lister.Lister):
+class QueryClaim(command.Lister):
     """Display claim details"""
 
     log = logging.getLogger(__name__ + ".QueryClaim")
@@ -646,7 +644,7 @@ class QueryClaim(lister.Lister):
                 (utils.get_item_properties(s, keys) for s in data))
 
 
-class RenewClaim(lister.Lister):
+class RenewClaim(command.Lister):
     """Renew a claim"""
 
     log = logging.getLogger(__name__ + ".RenewClaim")
