@@ -17,9 +17,22 @@ import abc
 
 import six
 
+from zaqarclient.transport import errors
+
 
 @six.add_metaclass(abc.ABCMeta)
 class Transport(object):
+
+    # common HTTP codes used by multiple transports
+    http_to_zaqar = {
+        400: errors.MalformedRequest,
+        401: errors.UnauthorizedError,
+        403: errors.ForbiddenError,
+        404: errors.ResourceNotFound,
+        409: errors.ConflictError,
+        500: errors.InternalServerError,
+        503: errors.ServiceUnavailableError
+    }
 
     def __init__(self, options):
         self.options = options
