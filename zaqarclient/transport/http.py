@@ -18,25 +18,10 @@ import json
 
 from zaqarclient.common import http
 from zaqarclient.transport import base
-# NOTE(flaper87): Something is completely borked
-# with some imports. Using `from ... import errors`
-# will end up importing `zaqarclient.errors` instead
-# of transports
-import zaqarclient.transport.errors as errors
 from zaqarclient.transport import response
 
 
 class HttpTransport(base.Transport):
-
-    http_to_zaqar = {
-        400: errors.MalformedRequest,
-        401: errors.UnauthorizedError,
-        403: errors.ForbiddenError,
-        404: errors.ResourceNotFound,
-        409: errors.ConflictError,
-        500: errors.InternalServerError,
-        503: errors.ServiceUnavailableError
-    }
 
     def __init__(self, options):
         super(HttpTransport, self).__init__(options)
