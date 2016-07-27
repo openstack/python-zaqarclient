@@ -28,9 +28,12 @@ API_VERSIONS = {
     "2": "zaqarclient.queues.v2.client.Client",
 }
 
+_MESSAGING_ENDPOINT = None
+
 
 def make_client(instance):
     """Returns an queues service client."""
+    global _MESSAGING_ENDPOINT
     version = instance._api_version[API_NAME]
     try:
         version = int(version)
@@ -42,14 +45,15 @@ def make_client(instance):
         version,
         API_VERSIONS)
 
-    if not instance._url:
-        instance._url = instance.get_endpoint_for_service_type(
+    # TODO(wangxiyuan): Use public attributes instead of private attributes.
+    if not _MESSAGING_ENDPOINT:
+        _MESSAGING_ENDPOINT = instance.get_endpoint_for_service_type(
             API_NAME,
             region_name=instance._region_name,
             interface=instance._interface
         )
 
-    auth_params = instance._auth_params
+    auth_params = instance.get_configuration()['auth']
     auth_params.update({
         "auth_token": instance.auth.get_token(instance.session),
         "insecure": instance._insecure,
@@ -63,7 +67,7 @@ def make_client(instance):
 
     LOG.debug('Instantiating queues service client: %s', queues_client)
     return queues_client(
-        instance._url,
+        _MESSAGING_ENDPOINT,
         version,
         conf
     )
