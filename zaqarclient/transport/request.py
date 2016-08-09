@@ -90,7 +90,7 @@ class Request(object):
 
     def __init__(self, endpoint='', operation='',
                  ref='', content=None, params=None,
-                 headers=None, api=None):
+                 headers=None, api=None, verify=True, cert=None):
 
         self._api = None
         # ensure that some values like "v1.0" could work as "v1"
@@ -106,6 +106,8 @@ class Request(object):
         self.content = content
         self.params = params or {}
         self.headers = headers or {}
+        self.verify = verify
+        self.cert = cert
 
     @property
     def api(self):

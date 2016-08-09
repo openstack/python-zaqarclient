@@ -86,7 +86,9 @@ class HttpTransport(base.Transport):
                                    url=url,
                                    params=request.params,
                                    headers=headers,
-                                   data=request.content)
+                                   data=request.content,
+                                   verify=request.verify,
+                                   cert=request.cert)
 
         if resp.status_code in self.http_to_zaqar:
             kwargs = {}

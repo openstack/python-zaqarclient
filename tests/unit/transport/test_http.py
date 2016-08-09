@@ -57,7 +57,9 @@ class TestHttpTransport(base.TestBase):
             request_method.assert_called_with('GET', url=final_url,
                                               params=final_params,
                                               headers=final_headers,
-                                              data=None)
+                                              data=None,
+                                              verify=True,
+                                              cert=None)
 
     def test_send_without_api(self):
         params = {'name': 'Test',
@@ -79,7 +81,9 @@ class TestHttpTransport(base.TestBase):
             request_method.assert_called_with('GET', url=final_url,
                                               params=params,
                                               headers=final_headers,
-                                              data=None)
+                                              data=None,
+                                              verify=True,
+                                              cert=None)
 
     def test_error_handling(self):
         params = {'name': 'Opportunity',

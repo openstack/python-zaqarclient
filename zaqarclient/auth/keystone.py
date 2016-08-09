@@ -203,4 +203,8 @@ class KeystoneAuth(base.AuthBackend):
         # NOTE(flaper87): Update the request spec
         # with the final token.
         request.headers['X-Auth-Token'] = token
+        # NOTE(flwang): We also need to apply the insecure and cacert when
+        # talking with Zaqar server.
+        request.verify = not get_options('insecure')
+        request.cert = get_options('cacert')
         return request
