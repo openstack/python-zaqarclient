@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from distutils.version import LooseVersion
+from distutils import version
 import json
 
 from zaqarclient.common import http
@@ -75,7 +75,8 @@ class HttpTransport(base.Transport):
         # request's headers directly.
         headers = request.headers.copy()
         if (request.operation == 'queue_update' and
-                LooseVersion(request.api.label) >= LooseVersion('v2')):
+                (version.LooseVersion(request.api.label) >=
+                    version.LooseVersion('v2'))):
             headers['content-type'] = \
                 'application/openstack-messaging-v2.0-json-patch'
         else:
