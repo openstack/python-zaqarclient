@@ -204,10 +204,15 @@ class QueuesV2SubscriptionFunctionalTest(base.QueuesTestBase):
         self.assertEqual('http://trigger.he', self.subscription_2.subscriber)
         self.assertEqual(7200, self.subscription_2.ttl)
 
-    def test_subscription_create_duplicate_throws_conflicterror(self):
-        subscription_data_1 = {'subscriber': 'http://trigger.me', 'ttl': 3600}
-        self.assertRaises(errors.ConflictError, self.client.subscription,
-                          'beijing', **subscription_data_1)
+    def test_subscription_create_duplicate(self):
+        subscription_data_2 = {'subscriber': 'http://trigger.he', 'ttl':
+                               7200, 'options': {'check everything': True}}
+        # Now Zaqar support subscription confirm, when users try to recreate a
+        # subscription which is already created and not confirmed, Zaqar will
+        # try to reconfirm this subscription and return 201 instead of 409.
+        new_subscription = self.client.subscription('beijing',
+                                                    **subscription_data_2)
+        self.assertEqual(new_subscription.id, self.subscription_2.id)
 
     def test_subscription_update(self):
         sub = self.client.subscription(self.queue_name, auto_create=False,
