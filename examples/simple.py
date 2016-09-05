@@ -14,7 +14,7 @@
 
 # NOTE(flaper87): Client should be moved to
 # an upper package. It's version agnostic.
-from zaqarclient.queues.v1 import client
+from zaqarclient.queues.v2 import client
 
 URL = 'http://localhost:8888'
 
@@ -30,7 +30,11 @@ def create_post_delete(queue_name, messages):
     :params messages: Messages to post.
     :type messages: list
     """
-    cli = client.Client(URL, version=1.1)
+    # Note: credential information should be provided
+    # using `conf` keyword argument if authentication
+    # is enabled at server side. Please refer to
+    # keystone_auth.py for more information.
+    cli = client.Client(URL, version=2)
     queue = cli.queue(queue_name)
     queue.post(messages)
 

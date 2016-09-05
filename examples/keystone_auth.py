@@ -13,7 +13,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from zaqarclient.queues.v1 import client
+from zaqarclient.queues.v2 import client
 
 URL = 'http://localhost:8888'
 

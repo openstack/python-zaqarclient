@@ -15,10 +15,13 @@
 
 import time
 
-from zaqarclient.queues.v1 import client
+from zaqarclient.queues.v2 import client
 
 URL = 'http://localhost:8888'
 
+# Note: credential information should be provided using `conf`
+# keyword argument if authentication is enabled at server side.
+# Please refer to keystone_auth.py for more information.
 cli = client.Client(URL)
 queue = cli.queue('worker-jobs')
 
