@@ -43,9 +43,7 @@ def prepare_request(auth_opts=None, data=None, **kwargs):
 
     req = Request(**kwargs)
     auth_backend = auth.get_backend(**(auth_opts or {}))
-    # TODO(flaper87): Do something smarter
-    # to get the api_version.
-    req = auth_backend.authenticate(1, req)
+    req = auth_backend.authenticate(kwargs.get('api'), req)
 
     project_id = auth_opts.get('options', {}).get('os_project_id', {})
 
@@ -86,11 +84,17 @@ class Request(object):
     :type headers: dict
     :param api: Api entry point. i.e: 'queues.v1'
     :type api: `six.text_type`.
+    :param verify: If verify the SSL cert
+    :type verify: bool
+    :param cert: certificate of SSL
+    :type cert: `six.text_type`
+    :param session: Keystone session
+    :type session: keystone session object
     """
 
     def __init__(self, endpoint='', operation='',
                  ref='', content=None, params=None,
-                 headers=None, api=None, verify=True, cert=None):
+                 headers=None, api=None, verify=True, cert=None, session=None):
 
         self._api = None
         # ensure that some values like "v1.0" could work as "v1"
@@ -108,6 +112,7 @@ class Request(object):
         self.headers = headers or {}
         self.verify = verify
         self.cert = cert
+        self.session = session
 
     @property
     def api(self):

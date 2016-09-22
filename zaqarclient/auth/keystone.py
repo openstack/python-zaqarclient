@@ -194,7 +194,8 @@ class KeystoneAuth(base.AuthBackend):
             for k in keys:
                 ks_kwargs.update({k: get_options(k)})
 
-            ks_session = self._get_keystone_session(**ks_kwargs)
+            ks_session = (request.session or
+                          self._get_keystone_session(**ks_kwargs))
             if not token:
                 token = ks_session.get_token()
             if not request.endpoint:

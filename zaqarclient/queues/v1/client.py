@@ -39,12 +39,14 @@ class Client(object):
         - auth_opts: Authentication options:
             - backend
             - options
+    :param session: keystone session. But it's just place holder, we wont'
+        support it in v1.
     :type options: `dict`
     """
 
     queues_module = queues
 
-    def __init__(self, url=None, version=1, conf=None):
+    def __init__(self, url=None, version=1, conf=None, session=None):
         self.conf = conf or {}
 
         self.api_url = url
@@ -52,6 +54,7 @@ class Client(object):
         self.auth_opts = self.conf.get('auth_opts', {})
         self.client_uuid = self.conf.get('client_uuid',
                                          uuid.uuid4().hex)
+        self.session = session
 
     def _get_transport(self, request):
         """Gets a transport and caches its instance
@@ -73,7 +76,8 @@ class Client(object):
     def _request_and_transport(self):
         req = request.prepare_request(self.auth_opts,
                                       endpoint=self.api_url,
-                                      api=self.api_version)
+                                      api=self.api_version,
+                                      session=self.session)
 
         req.headers['Client-ID'] = self.client_uuid
 

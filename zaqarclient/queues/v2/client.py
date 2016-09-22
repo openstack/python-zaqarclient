@@ -41,7 +41,7 @@ class Client(client.Client):
 
     queues_module = queues
 
-    def __init__(self, url=None, version=2, conf=None):
+    def __init__(self, url=None, version=2, conf=None, session=None):
         self.conf = conf or {}
 
         self.api_url = url
@@ -49,6 +49,7 @@ class Client(client.Client):
         self.auth_opts = self.conf.get('auth_opts', {})
         self.client_uuid = self.conf.get('client_uuid',
                                          uuid.uuid4().hex)
+        self.session = session
 
     def queue(self, ref, **kwargs):
         """Returns a queue instance
