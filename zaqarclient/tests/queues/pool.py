@@ -168,7 +168,7 @@ class QueuesV1_1PoolFunctionalTest(base.QueuesTestBase):
         self.addCleanup(pool.delete)
 
         pools = self.client.pools()
-        self.assertTrue(isinstance(pools, iterator._Iterator))
+        self.assertIsInstance(pools, iterator._Iterator)
         self.assertEqual(1, len(list(pools)))
 
     def test_pool_delete(self):

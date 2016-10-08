@@ -171,7 +171,7 @@ class QueuesV1_1FlavorFunctionalTest(base.QueuesTestBase):
         self.addCleanup(flavor.delete)
 
         flavors = self.client.flavors()
-        self.assertTrue(isinstance(flavors, iterator._Iterator))
+        self.assertIsInstance(flavors, iterator._Iterator)
         self.assertEqual(1, len(list(flavors)))
 
     def test_flavor_delete(self):

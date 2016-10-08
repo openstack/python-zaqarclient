@@ -314,7 +314,7 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
         queue.post(messages)
 
         messages = queue.messages()
-        self.assertTrue(isinstance(messages, iterator._Iterator))
+        self.assertIsInstance(messages, iterator._Iterator)
         self.assertGreaterEqual(len(list(messages)), 0)
 
     def test_message_list_echo_functional(self):
@@ -329,7 +329,7 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
         ]
         queue.post(messages)
         messages = queue.messages(echo=True)
-        self.assertTrue(isinstance(messages, iterator._Iterator))
+        self.assertIsInstance(messages, iterator._Iterator)
         self.assertGreaterEqual(len(list(messages)), 3)
 
     def test_message_get_functional(self):
@@ -346,7 +346,7 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
         res = queue.post(messages)['resources']
         msg_id = res[0].split('/')[-1]
         msg = queue.message(msg_id)
-        self.assertTrue(isinstance(msg, message.Message))
+        self.assertIsInstance(msg, message.Message)
         self.assertEqual(res[0], msg.href)
 
     def test_message_get_many_functional(self):
@@ -363,7 +363,7 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
         res = queue.post(messages)['resources']
         msgs_id = [ref.split('/')[-1] for ref in res]
         messages = queue.messages(*msgs_id)
-        self.assertTrue(isinstance(messages, iterator._Iterator))
+        self.assertIsInstance(messages, iterator._Iterator)
         messages = list(messages)
         length = len(messages)
         if length == 3:
@@ -472,7 +472,7 @@ class QueuesV1_1QueueFunctionalTest(QueuesV1QueueFunctionalTest):
 
         queue.post(messages)
         messages = queue.pop(count=2)
-        self.assertTrue(isinstance(messages, iterator._Iterator))
+        self.assertIsInstance(messages, iterator._Iterator)
         self.assertEqual(2, len(list(messages)))
 
         remaining = queue.messages(echo=True)
@@ -594,7 +594,7 @@ class QueuesV2QueueFunctionalTest(QueuesV1_1QueueFunctionalTest):
                                   subscriber='http://trigger.you')
 
         get_subscriptions = queue.subscriptions()
-        self.assertTrue(isinstance(get_subscriptions, iterator._Iterator))
+        self.assertIsInstance(get_subscriptions, iterator._Iterator)
         self.assertEqual(2, len(list(get_subscriptions)))
 
     def test_queue_metadata_reload_functional(self):

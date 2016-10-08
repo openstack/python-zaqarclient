@@ -48,4 +48,4 @@ class QueuesV2HealthFunctionalTest(base.QueuesTestBase):
         health = self.client.health()
         # NOTE(flwang): If everything is ok, then zaqar server will return a
         # JSON(dict).
-        self.assertTrue(isinstance(health, dict))
+        self.assertIsInstance(health, dict)

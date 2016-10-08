@@ -129,7 +129,7 @@ class QueuesV1ClaimFunctionalTest(base.QueuesTestBase):
         queue.post(messages)
 
         messages = queue.claim(ttl=120, grace=120)
-        self.assertTrue(isinstance(messages, claim.Claim))
+        self.assertIsInstance(messages, claim.Claim)
         self.assertGreaterEqual(len(list(messages)), 0)
 
     def test_claim_get_functional(self):

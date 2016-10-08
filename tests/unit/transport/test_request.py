@@ -37,34 +37,34 @@ class TestRequest(base.TestBase):
     def test_prepare_request(self):
         auth_opts = self.conf.get('auth_opts', {})
         req = request.prepare_request(auth_opts)
-        self.assertTrue(isinstance(req, request.Request))
+        self.assertIsInstance(req, request.Request)
         self.assertIsNone(req.content)
 
     def test_prepare_request_with_data(self):
         auth_opts = self.conf.get('auth_opts', {})
         data = {"data": "tons of GBs"}
         req = request.prepare_request(auth_opts, data=data)
-        self.assertTrue(isinstance(req, request.Request))
+        self.assertIsInstance(req, request.Request)
         self.assertEqual(json.dumps(data), req.content)
 
     def test_request_with_right_version(self):
         auth_opts = self.conf.get('auth_opts', {})
         api_version = 1
         req = request.prepare_request(auth_opts, api=api_version)
-        self.assertTrue(isinstance(req.api, api_v1.V1))
+        self.assertIsInstance(req.api, api_v1.V1)
 
         api_version = 1.0
         req = request.prepare_request(auth_opts, api=api_version)
-        self.assertTrue(isinstance(req.api, api_v1.V1))
+        self.assertIsInstance(req.api, api_v1.V1)
 
         api_version = 1.1
         req = request.prepare_request(auth_opts, api=api_version)
-        self.assertTrue(isinstance(req.api, api_v1.V1_1))
+        self.assertIsInstance(req.api, api_v1.V1_1)
 
         api_version = 2
         req = request.prepare_request(auth_opts, api=api_version)
-        self.assertTrue(isinstance(req.api, api_v2.V2))
+        self.assertIsInstance(req.api, api_v2.V2)
 
         api_version = 2.0
         req = request.prepare_request(auth_opts, api=api_version)
-        self.assertTrue(isinstance(req.api, api_v2.V2))
+        self.assertIsInstance(req.api, api_v2.V2)

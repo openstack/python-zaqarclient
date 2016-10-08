@@ -24,8 +24,8 @@ class TestClient(base.TestBase):
         version = list(client._CLIENTS.keys())[0]
         cli = client.Client('http://example.com',
                             version, {})
-        self.assertTrue(isinstance(cli,
-                                   client._CLIENTS[version]))
+        self.assertIsInstance(cli,
+                              client._CLIENTS[version])
 
     def test_version_failure(self):
         self.assertRaises(errors.ZaqarError,
