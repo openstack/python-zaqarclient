@@ -15,6 +15,7 @@
 
 import mock
 import requests as prequest
+from requests.packages.urllib3 import response
 
 from zaqarclient.tests import base
 from zaqarclient.tests.transport import api
@@ -31,7 +32,9 @@ class TestHttpTransport(base.TestBase):
         self.api = api.FakeApi()
         self.transport = http.HttpTransport(self.conf)
 
-    def test_basic_send(self):
+    @mock.patch.object(prequest.packages.urllib3.response.HTTPResponse,
+                       'stream')
+    def test_basic_send(self, mock_stream):
         params = {'name': 'Test',
                   'address': 'Outer space'}
         req = request.Request('http://example.org/',
@@ -42,6 +45,8 @@ class TestHttpTransport(base.TestBase):
                                autospec=True) as request_method:
 
             resp = prequest.Response()
+            raw = response.HTTPResponse()
+            resp.raw = raw
             request_method.return_value = resp
 
             # NOTE(flaper87): Bypass the API
@@ -61,7 +66,9 @@ class TestHttpTransport(base.TestBase):
                                               verify=True,
                                               cert=None)
 
-    def test_send_without_api(self):
+    @mock.patch.object(prequest.packages.urllib3.response.HTTPResponse,
+                       'stream')
+    def test_send_without_api(self, mock_stream):
         params = {'name': 'Test',
                   'address': 'Outer space'}
         req = request.Request('http://example.org/',
@@ -72,6 +79,8 @@ class TestHttpTransport(base.TestBase):
                                autospec=True) as request_method:
 
             resp = prequest.Response()
+            raw = response.HTTPResponse()
+            resp.raw = raw
             request_method.return_value = resp
             self.transport.send(req)
 
@@ -85,7 +94,9 @@ class TestHttpTransport(base.TestBase):
                                               verify=True,
                                               cert=None)
 
-    def test_error_handling(self):
+    @mock.patch.object(prequest.packages.urllib3.response.HTTPResponse,
+                       'stream')
+    def test_error_handling(self, mock_stream):
         params = {'name': 'Opportunity',
                   'address': 'NASA'}
         req = request.Request('http://example.org/',
@@ -100,6 +111,8 @@ class TestHttpTransport(base.TestBase):
             for response_code, exception in exception_iterator:
 
                 resp = prequest.Response()
+                raw = response.HTTPResponse()
+                resp.raw = raw
                 resp.status_code = response_code
                 request_method.return_value = resp
                 self.assertRaises(exception, lambda: self.transport.send(req))
