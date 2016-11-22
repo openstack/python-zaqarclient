@@ -16,9 +16,13 @@
 from distutils import version
 import json
 
+from oslo_utils import importutils
+
 from zaqarclient.common import http
 from zaqarclient.transport import base
 from zaqarclient.transport import response
+
+osprofiler_web = importutils.try_import("osprofiler.web")
 
 
 class HttpTransport(base.Transport):
@@ -81,6 +85,9 @@ class HttpTransport(base.Transport):
                 'application/openstack-messaging-v2.0-json-patch'
         else:
             headers['content-type'] = 'application/json'
+
+        if osprofiler_web:
+            headers.update(osprofiler_web.get_trace_id_headers())
 
         resp = self.client.request(method,
                                    url=url,
