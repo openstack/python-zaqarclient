@@ -22,5 +22,4 @@ class QueuesV1_1PoolHttpFunctionalTest(pool.QueuesV1_1PoolFunctionalTest):
 
     is_functional = True
     transport_cls = http.HttpTransport
-    url = 'http://127.0.0.1:8888'
     version = 1.1

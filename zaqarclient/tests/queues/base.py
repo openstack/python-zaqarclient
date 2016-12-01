@@ -14,16 +14,20 @@
 # limitations under the License.
 
 import mock
+from oslo_utils import netutils
 
 from zaqarclient.queues import client
 from zaqarclient.tests import base
 from zaqarclient.tests.transport import dummy
 
 
+MY_IP = netutils.get_my_ipv4()
+
+
 class QueuesTestBase(base.TestBase):
 
     transport_cls = dummy.DummyTransport
-    url = 'http://127.0.0.1:8888/v1'
+    url = 'http://%s:8888' % MY_IP
     version = 1
 
     def setUp(self):

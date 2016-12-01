@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from zaqarclient.tests.queues import flavor
 from zaqarclient.transport import http
 
@@ -23,5 +22,4 @@ class QueuesV1_1FlavorHttpFunctionalTest(
 
     is_functional = True
     transport_cls = http.HttpTransport
-    url = 'http://127.0.0.1:8888'
     version = 1.1

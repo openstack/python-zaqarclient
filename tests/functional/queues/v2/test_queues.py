@@ -22,5 +22,4 @@ class QueuesV2QueueHttpFunctionalTest(queues.QueuesV2QueueFunctionalTest):
 
     is_functional = True
     transport_cls = http.HttpTransport
-    url = 'http://127.0.0.1:8888'
     version = 2
