@@ -18,6 +18,7 @@ import logging
 from osc_lib.command import command
 from osc_lib import utils
 
+from zaqarclient._i18n import _
 from zaqarclient.queues.v1 import cli
 
 
@@ -128,6 +129,7 @@ class ListFlavors(cli.ListFlavors):
 class CreateSubscription(command.ShowOne):
     """Create a subscription for queue"""
 
+    _description = _("Create a subscription for queue")
     log = logging.getLogger(__name__ + ".CreateSubscription")
 
     def get_parser(self, prog_name):
@@ -175,6 +177,7 @@ class CreateSubscription(command.ShowOne):
 class UpdateSubscription(command.ShowOne):
     """Update a subscription"""
 
+    _description = _("Update a subscription")
     log = logging.getLogger(__name__ + ".UpdateSubscription")
 
     def get_parser(self, prog_name):
@@ -225,6 +228,7 @@ class UpdateSubscription(command.ShowOne):
 class DeleteSubscription(command.Command):
     """Delete a subscription"""
 
+    _description = _("Delete a subscription")
     log = logging.getLogger(__name__ + ".DeleteSubscription")
 
     def get_parser(self, prog_name):
@@ -250,6 +254,7 @@ class DeleteSubscription(command.Command):
 class ShowSubscription(command.ShowOne):
     """Display subscription details"""
 
+    _description = _("Display subscription details")
     log = logging.getLogger(__name__ + ".ShowSubscription")
 
     def get_parser(self, prog_name):
@@ -278,6 +283,7 @@ class ShowSubscription(command.ShowOne):
 class ListSubscriptions(command.Lister):
     """List available subscriptions"""
 
+    _description = _("List available subscriptions")
     log = logging.getLogger(__name__ + ".ListSubscriptions")
 
     def get_parser(self, prog_name):
@@ -342,8 +348,9 @@ class ReleaseClaim(cli.ReleaseClaim):
 
 
 class CreateSignedUrl(command.ShowOne):
-    """Create a queue"""
+    """Create a pre-signed url"""
 
+    _description = _("Create a pre-signed url")
     log = logging.getLogger(__name__ + ".CreateSignedUrl")
 
     def get_parser(self, prog_name):
@@ -406,6 +413,7 @@ class CreateSignedUrl(command.ShowOne):
 class Ping(command.ShowOne):
     """Check if Zaqar server is alive or not"""
 
+    _description = _("Check if Zaqar server is alive or not")
     log = logging.getLogger(__name__ + ".Ping")
 
     def take_action(self, parsed_args):
@@ -418,6 +426,7 @@ class Ping(command.ShowOne):
 class Health(command.Command):
     """Display detailed health status of Zaqar server"""
 
+    _description = _("Display detailed health status of Zaqar server")
     log = logging.getLogger(__name__ + ".Health")
 
     def take_action(self, parsed_args):
