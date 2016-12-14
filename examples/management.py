@@ -18,7 +18,11 @@ URL = 'http://localhost:8888'
 
 
 def healthy():
-    cli = client.Client(url=URL, version=1)
+    # Note: credential information should be provided
+    # using `conf` keyword argument if authentication
+    # is enabled at server side. Please refer to
+    # keystone_auth.py for more information.
+    cli = client.Client(url=URL, version=2)
     return True if cli.health() else False
 
 if __name__ == '__main__':
