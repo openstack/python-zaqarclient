@@ -180,8 +180,6 @@ class QueuesV2SubscriptionFunctionalTest(base.QueuesTestBase):
     def setUp(self):
         super(QueuesV2SubscriptionFunctionalTest, self).setUp()
 
-        # TODO(flwang): Now there is a bug(#1529168) for the subscription TTL,
-        # so we will add a test case for TTL after the bug fixed.
         self.queue_name = 'beijing'
         queue = self.client.queue(self.queue_name, force_create=True)
         self.addCleanup(queue.delete)
