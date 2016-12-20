@@ -43,6 +43,7 @@ Contents
    :maxdepth: 1
 
    client
+   command-line
 
 Release Notes
 =============
