@@ -13,3 +13,4 @@ Click the Link below for the details.
    :maxdepth: 1
 
    command/queue
+   command/claim
