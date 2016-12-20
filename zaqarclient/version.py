@@ -13,7 +13,10 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import pbr.version
 import pkg_resources
+
+version_info = pbr.version.VersionInfo('python-zaqarclient')
 
 try:
     # First, try to get our version out of PKG-INFO. If we're installed,
@@ -25,5 +28,4 @@ try:
 except pkg_resources.DistributionNotFound:
     # No PKG-INFO? We're probably running from a checkout, then. Let pbr do
     # its thing to figure out a version number.
-    import pbr.version
-    version_string = str(pbr.version.VersionInfo('python-zaqarclient'))
+    version_string = str(version_info)

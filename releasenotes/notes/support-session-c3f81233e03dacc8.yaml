@@ -1,0 +1,3 @@
+---
+features:
+  - Now Zaqar client support using keystone session to init "Client" object.
