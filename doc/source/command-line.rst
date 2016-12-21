@@ -18,3 +18,4 @@ Click the Link below for the details.
    command/flavor
    command/ping
    command/health
+   command/subscription
