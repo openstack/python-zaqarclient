@@ -77,4 +77,4 @@ class TestWsTransport(base.TestBase):
                 self.assertEqual(data['body']['payload'], 'foo')
                 break
             if count >= 4:
-                self.fail('Failed to recieve expected message.')
+                self.fail('Failed to receive expected message.')

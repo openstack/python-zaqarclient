@@ -95,7 +95,7 @@ class Queue(object):
         req, trans = self.client._request_and_transport()
 
         # NOTE(jeffrey4l): Ensure that metadata is cleared when the new_meta
-        # is a empty dict.
+        # is an empty dict.
         if new_meta is not None:
             if self.client.api_version == 1.1:
                 raise RuntimeError("V1.1 doesn't support to set the queue's "
