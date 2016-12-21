@@ -16,3 +16,5 @@ Click the Link below for the details.
    command/claim
    command/pool
    command/flavor
+   command/ping
+   command/health
