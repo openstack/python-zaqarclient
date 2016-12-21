@@ -15,3 +15,4 @@ Click the Link below for the details.
    command/queue
    command/claim
    command/pool
+   command/flavor
