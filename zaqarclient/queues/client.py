@@ -24,7 +24,7 @@ server and a version number::
 
     from zaqarclient.queues import client
 
-    cli = client.Client(\'http://zaqar.example.com:8888/\', version=1.1)
+    cli = client.Client(\'http://zaqar.example.com:8888/\', version=2)
 
 which will load the appropriate client based on the specified
 version. Optionally, you can also supply a config dictionary::
@@ -32,7 +32,7 @@ version. Optionally, you can also supply a config dictionary::
     from zaqarclient.queues import client
 
     cli = client.Client(\'http://zaqar.example.com:8888/\',
-                        version=1.1, conf={})
+                        version=2, conf={})
 
 The arguments passed to this function will be passed to the client
 instances as well.
@@ -42,11 +42,11 @@ lower level API as it has been designed to ease the interaction with
 the server and it gives enough control for the most common cases.
 
 A simple example for accessing an existing queue through a client
-instance - based on the API v1.1 - would look like::
+instance - based on the API v2 - would look like::
 
     from zaqarclient.queues import client
 
-    cli = client.Client(\'http://zaqar.example.com:8888/\', version=1.1)
+    cli = client.Client(\'http://zaqar.example.com:8888/\', version=2)
     queue = cli.queue(\'my_queue\')
 
 Through the queue instance will be then possible to access all the
@@ -58,7 +58,7 @@ allows you to also access admin endpoints, for example::
 
     from zaqarclient.queues import client
 
-    cli = client.Client(\'http://zaqar.example.com:8888/\', version=1.1)
+    cli = client.Client(\'http://zaqar.example.com:8888/\', version=2)
     flavor = cli.flavor(\'tasty\',
                         pool=\'my-pool-group\',
                         auto_create=True)
