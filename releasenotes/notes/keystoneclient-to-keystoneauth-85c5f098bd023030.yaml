@@ -1,0 +1,5 @@
+---
+features:
+  - The auth mechanism has been upgraded from keystone client to keystoneauth
+    to support keystone V3.
+    [Blueprint `keystoneclient-to-keystoneauth <https://blueprints.launchpad.net/python-zaqarclient/+spec/keystoneclient-to-keystoneauth>`_]

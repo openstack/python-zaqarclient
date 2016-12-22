@@ -48,6 +48,12 @@ Contents
 Release Notes
 =============
 
+New Release Note
+----------------
+
+We use reno to publish the release note now. Please see `Release Page`_ for
+more detail.
+
 0.2.0
 -----
 
@@ -88,3 +94,5 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+.. _`Release Page`: https://releases.openstack.org

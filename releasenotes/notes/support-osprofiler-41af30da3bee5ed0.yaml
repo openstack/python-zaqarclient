@@ -1,0 +1,4 @@
+---
+features:
+  - Support to create profiling traces for Zaqar. To use this feature, Zaqar
+    should enable it first. The command is like "openstack --os-profile <SECRET_KEY> queue list"
