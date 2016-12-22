@@ -6,12 +6,30 @@
 Welcome to Zaqar-Client's documentation!
 ========================================
 
-Contents:
+Contents
+--------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
+   unreleased
 
+OpenStack Releases
+------------------
+
+The ZaqarClient release that was current when the corresponding
+OpenStack release was made is shown below:
+
+=================   ===================
+OpenStack Release   ZaqarClient Release
+=================   ===================
+Newton              1.2.0
+=================   ===================
+
+Further details for historical OpenStack releases are found at the
+`OpenStack Releases`_ page.
+
+.. _`OpenStack Releases`: http://releases.openstack.org/
 
 Indices and tables
 ==================
