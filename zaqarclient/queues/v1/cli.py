@@ -18,6 +18,7 @@ import logging
 from osc_lib.command import command
 from osc_lib import utils
 
+from zaqarclient._i18n import _
 from zaqarclient.transport import errors
 
 
@@ -29,6 +30,7 @@ def _get_client(obj, parsed_args):
 class CreateQueue(command.ShowOne):
     """Create a queue"""
 
+    _description = _("Create a queue")
     log = logging.getLogger(__name__ + ".CreateQueue")
 
     def get_parser(self, prog_name):
@@ -50,6 +52,7 @@ class CreateQueue(command.ShowOne):
 class DeleteQueue(command.Command):
     """Delete a queue"""
 
+    _description = _("Delete a queue")
     log = logging.getLogger(__name__ + ".DeleteQueue")
 
     def get_parser(self, prog_name):
@@ -69,6 +72,7 @@ class DeleteQueue(command.Command):
 class ListQueues(command.Lister):
     """List available queues"""
 
+    _description = _("List available queues")
     log = logging.getLogger(__name__ + ".ListQueues")
 
     def get_parser(self, prog_name):
@@ -101,6 +105,7 @@ class ListQueues(command.Lister):
 class CheckQueueExistence(command.ShowOne):
     """Check queue existence"""
 
+    _description = _("Check queue existence")
     log = logging.getLogger(__name__ + ".CheckQueueExistence")
 
     def get_parser(self, prog_name):
@@ -124,6 +129,7 @@ class CheckQueueExistence(command.ShowOne):
 class SetQueueMetadata(command.Command):
     """Set queue metadata"""
 
+    _description = _("Set queue metadata")
     log = logging.getLogger(__name__ + ".SetQueueMetadata")
 
     def get_parser(self, prog_name):
@@ -159,6 +165,7 @@ class SetQueueMetadata(command.Command):
 class GetQueueMetadata(command.ShowOne):
     """Get queue metadata"""
 
+    _description = _("Get queue metadata")
     log = logging.getLogger(__name__ + ".GetQueueMetadata")
 
     def get_parser(self, prog_name):
@@ -185,6 +192,7 @@ class GetQueueMetadata(command.ShowOne):
 class GetQueueStats(command.ShowOne):
     """Get queue stats"""
 
+    _description = _("Get queue stats")
     log = logging.getLogger(__name__ + ".GetQueueStats")
 
     def get_parser(self, prog_name):
@@ -213,6 +221,7 @@ class GetQueueStats(command.ShowOne):
 class CreatePool(command.ShowOne):
     """Create a pool"""
 
+    _description = _("Create a pool")
     log = logging.getLogger(__name__ + ".CreatePool")
 
     def get_parser(self, prog_name):
@@ -268,6 +277,7 @@ class CreatePool(command.ShowOne):
 class ShowPool(command.ShowOne):
     """Display pool details"""
 
+    _description = _("Display pool details")
     log = logging.getLogger(__name__ + ".ShowPool")
 
     def get_parser(self, prog_name):
@@ -291,6 +301,7 @@ class ShowPool(command.ShowOne):
 class UpdatePool(command.ShowOne):
     """Update a pool attribute"""
 
+    _description = _("Update a pool attribute")
     log = logging.getLogger(__name__+".UpdatePool")
 
     def get_parser(self, prog_name):
@@ -343,6 +354,7 @@ class UpdatePool(command.ShowOne):
 class DeletePool(command.Command):
     """Delete a pool"""
 
+    _description = _("Delete a pool")
     log = logging.getLogger(__name__ + ".DeletePool")
 
     def get_parser(self, prog_name):
@@ -362,6 +374,7 @@ class DeletePool(command.Command):
 class ListPools(command.Lister):
     """List available Pools"""
 
+    _description = _("List available Pools")
     log = logging.getLogger(__name__ + ".ListPools")
 
     def get_parser(self, prog_name):
@@ -404,6 +417,7 @@ class ListPools(command.Lister):
 class UpdateFlavor(command.ShowOne):
     """Update a flavor's attributes"""
 
+    _description = _("Update a flavor's attributes")
     log = logging.getLogger(__name__+".UpdateFlavor")
 
     def get_parser(self, prog_name):
@@ -442,6 +456,7 @@ class UpdateFlavor(command.ShowOne):
 class CreateFlavor(command.ShowOne):
     """Create a pool flavor"""
 
+    _description = _("Create a pool flavor")
     log = logging.getLogger(__name__ + ".CreateFlavor")
 
     def get_parser(self, prog_name):
@@ -484,6 +499,7 @@ class CreateFlavor(command.ShowOne):
 class DeleteFlavor(command.Command):
     """Delete a flavor"""
 
+    _description = _("Delete a flavor")
     log = logging.getLogger(__name__ + ".DeleteFlavor")
 
     def get_parser(self, prog_name):
@@ -503,6 +519,7 @@ class DeleteFlavor(command.Command):
 class ShowFlavor(command.ShowOne):
     """Display flavor details"""
 
+    _description = _("Display flavor details")
     log = logging.getLogger(__name__ + ".ShowFlavor")
 
     def get_parser(self, prog_name):
@@ -526,6 +543,7 @@ class ShowFlavor(command.ShowOne):
 class ListFlavors(command.Lister):
     """List available flavors"""
 
+    _description = _("List available flavors")
     log = logging.getLogger(__name__ + ".ListFlavors")
 
     def get_parser(self, prog_name):
@@ -566,6 +584,7 @@ class ListFlavors(command.Lister):
 class CreateClaim(command.Lister):
     """Create claim and return a list of claimed messages"""
 
+    _description = _("Create claim and return a list of claimed messages")
     log = logging.getLogger(__name__ + ".CreateClaim")
 
     def get_parser(self, prog_name):
@@ -617,6 +636,7 @@ class CreateClaim(command.Lister):
 class QueryClaim(command.Lister):
     """Display claim details"""
 
+    _description = _("Display claim details")
     log = logging.getLogger(__name__ + ".QueryClaim")
 
     def get_parser(self, prog_name):
@@ -647,6 +667,7 @@ class QueryClaim(command.Lister):
 class RenewClaim(command.Lister):
     """Renew a claim"""
 
+    _description = _("Renew a claim")
     log = logging.getLogger(__name__ + ".RenewClaim")
 
     def get_parser(self, prog_name):
@@ -695,6 +716,7 @@ class RenewClaim(command.Lister):
 class ReleaseClaim(command.Command):
     """Delete a claim"""
 
+    _description = _("Delete a claim")
     log = logging.getLogger(__name__ + ".ReleaseClaim")
 
     def get_parser(self, prog_name):
