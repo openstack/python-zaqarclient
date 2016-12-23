@@ -19,7 +19,6 @@ Python Zaqar Client
     :target: https://pypi.python.org/pypi/python-zaqarclient/
     :alt: Downloads
 
-:version: 0.1.0
 :Wiki: `Zaqar Wiki`_
 :Launchpad: `Zaqar Launchpad`_
 :Review: `Code Review`_
