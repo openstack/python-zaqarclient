@@ -1,0 +1,4 @@
+---
+features:
+  - Zaqar client now support SSL and insecure for the request.
+    [Blueprint `support-ssl-insecure <https://blueprints.launchpad.net/python-zaqarclient/+spec/support-ssl-insecure>`_]

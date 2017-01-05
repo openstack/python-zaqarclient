@@ -1,0 +1,4 @@
+---
+features:
+  - Zaqar client has the doc page now. The link will work after a new release.
+    [Link `python-zaqarclient doc page <https://docs.openstack.org/developer/python-zaqarclient>`_]
