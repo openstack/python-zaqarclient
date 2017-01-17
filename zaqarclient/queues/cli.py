@@ -14,10 +14,8 @@
 
 """OpenStackClient plugin for Messaging service."""
 
-import logging
-
 from osc_lib import utils
-
+from oslo_log import log as logging
 
 LOG = logging.getLogger(__name__)
 
