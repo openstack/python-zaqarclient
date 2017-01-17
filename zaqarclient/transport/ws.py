@@ -13,9 +13,9 @@
 #   under the License.
 #
 import json
-import logging
 import uuid
 
+from oslo_log import log as logging
 from oslo_utils import importutils
 
 from zaqarclient.transport import base
