@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import zaqarclient
 from zaqarclient import errors
 from zaqarclient.queues import client
 from zaqarclient.tests import base
@@ -32,3 +33,6 @@ class TestClient(base.TestBase):
                           client.Client,
                           'http://example.org',
                           -1, {})
+
+    def test_module_version(self):
+        self.assertTrue(hasattr(zaqarclient, '__version__'))
