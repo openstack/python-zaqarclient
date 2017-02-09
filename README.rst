@@ -42,9 +42,10 @@ The latest stable release can be installed from PyPI::
 
     pip install --upgrade python-zaqarclient
 
-For the adventurous, you may also install the latest code directly from GitHub::
+For the adventurous, you may also install the latest code directly from git
+.openstack.org::
 
-    pip install git+https://github.com/openstack/python-zaqarclient.git
+    pip install git+https://git.openstack.org/openstack/python-zaqarclient.git
 
 =================
 What's in the box
@@ -72,8 +73,8 @@ Command line interface
 ----------------------
 
 Zaqar bases its client implementation in the `OpenStack Client`_. It can be
-installed and configured by following the instructions in `Getting Started`_
-and `Configuration`_ in the OpenStack Client readme respectively.
+installed and configured by following the instructions in *Getting Started*
+and *Configuration* in the `OpenStack Client Readme`_ respectively.
 
 The CLI currently allows creation, removal and listing of queues. Some examples
 are::
@@ -82,9 +83,8 @@ are::
     $  openstack queue create myqueue
     $  openstack queue delete myqueue
 
-.. _`OpenStack Client`: https://github.com/openstack/python-openstackclient
-.. _`Getting Started`: https://github.com/openstack/python-openstackclient#getting-started
-.. _`Configuration`: https://github.com/openstack/python-openstackclient#configuration
+.. _`OpenStack Client`: https://git.openstack.org/cgit/openstack/python-openstackclient
+.. _`OpenStack Client Readme`: https://git.openstack.org/cgit/openstack/python-openstackclient/tree/README.rst
 
 ============
 Contributing
@@ -94,8 +94,8 @@ Be sure to reference the `HACKING`_ file for details on coding style. You may
 also wish to read through Zaqar's `Contributor Guide`_ before contributing your
 first patch.
 
-.. _Zaqar: https://github.com/openstack/zaqar
-.. _HACKING: https://github.com/openstack/python-zaqarclient/tree/master/HACKING.rst
+.. _Zaqar: https://git.openstack.org/cgit/openstack/zaqar
+.. _HACKING: https://git.openstack.org/cgit/openstack/python-zaqarclient/tree/HACKING.rst
 .. _Zaqar Wiki: https://wiki.openstack.org/wiki/Zaqar
 .. _Contributor Guide: https://wiki.openstack.org/wiki/Zaqar#Contributor_Guide
 .. _Zaqar Launchpad: https://launchpad.net/zaqar
