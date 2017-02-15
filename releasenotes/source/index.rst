@@ -24,6 +24,7 @@ OpenStack release was made is shown below:
 =================   ===================
 OpenStack Release   ZaqarClient Release
 =================   ===================
+Ocata               1.4.0
 Newton              1.2.0
 =================   ===================
 
