@@ -88,6 +88,27 @@ def queue_update(transport, request, name, metadata, callback=None):
     return resp.deserialized_content
 
 
+def queue_purge(transport, request, name, resource_types=None):
+    """Purge resources under a queue
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param name: Queue reference name.
+    :type name: `six.text_type`
+    :param resource_types: Resource types will be purged
+    :type resource_types: `list`
+    """
+    request.operation = 'queue_purge'
+    request.params['queue_name'] = name
+    if resource_types:
+        request.content = json.dumps({'resource_types': [resource_types]})
+
+    resp = transport.send(request)
+    return resp.deserialized_content
+
+
 def signed_url_create(transport, request, queue_name, paths=None,
                       ttl_seconds=None, project_id=None, methods=None):
     """Creates a signed URL given a queue name

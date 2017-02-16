@@ -83,6 +83,11 @@ class Queue(queues.Queue):
 
         return self._metadata
 
+    def purge(self, resource_types=None):
+        req, trans = self.client._request_and_transport()
+        core.queue_purge(trans, req, self._name,
+                         resource_types=resource_types)
+
 
 def create_object(parent):
     return lambda args: Queue(parent, args["name"], auto_create=False)

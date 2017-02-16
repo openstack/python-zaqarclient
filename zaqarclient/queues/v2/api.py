@@ -22,6 +22,14 @@ class V2(api.V1_1):
 
 
 V2.schema.update({
+    'queue_purge': {
+        'ref': 'queues/{queue_name}/purge',
+        'method': 'POST',
+        'required': ['queue_name'],
+        'properties': {
+            'queue_name': {'type': 'string'}
+        }
+    },
     'signed_url_create': {
         'ref': 'queues/{queue_name}/share',
         'method': 'POST',

@@ -558,6 +558,30 @@ class QueuesV2QueueUnitTest(QueuesV1_1QueueUnitTest):
             expect_metadata = {"name": 'test1'}
             self.assertEqual(expect_metadata, metadata)
 
+    def test_queue_purge(self):
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, None)
+            send_method.return_value = resp
+
+            self.queue.purge()
+
+            # NOTE(flwang): Nothing to assert here,
+            # just checking our way down to the transport
+            # doesn't crash.
+
+    def test_queue_purge_messages(self):
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, None)
+            send_method.return_value = resp
+
+            self.queue.purge(resource_types=['messages'])
+            self.assertEqual({"resource_types": [["messages"]]},
+                             json.loads(send_method.call_args[0][0].content))
+
 
 class QueuesV2QueueFunctionalTest(QueuesV1_1QueueFunctionalTest):
 
