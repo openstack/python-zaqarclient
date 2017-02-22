@@ -72,6 +72,7 @@ class PurgeQueue(command.Command):
         parser.add_argument(
             "--resource_types",
             metavar="<resource_types>",
+            action='append',
             choices=['messages', 'subscriptions'],
             help="Resource types want to be purged.")
         return parser

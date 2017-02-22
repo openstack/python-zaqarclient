@@ -103,7 +103,7 @@ def queue_purge(transport, request, name, resource_types=None):
     request.operation = 'queue_purge'
     request.params['queue_name'] = name
     if resource_types:
-        request.content = json.dumps({'resource_types': [resource_types]})
+        request.content = json.dumps({'resource_types': resource_types})
 
     resp = transport.send(request)
     return resp.deserialized_content
