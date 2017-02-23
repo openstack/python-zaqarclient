@@ -27,6 +27,8 @@ class Subscription(object):
         self.subscriber = subscriber
         self.ttl = ttl
         self.options = kwargs.get('options', {})
+        self.age = kwargs.get('age')
+        self.confirmed = kwargs.get('confirmed')
 
         if auto_create:
             self.ensure_exists()
@@ -56,6 +58,8 @@ class Subscription(object):
             self.subscriber = sub.get('subscriber')
             self.ttl = sub.get('ttl')
             self.options = sub.get('options')
+            self.age = sub.get('age')
+            self.confirmed = sub.get('confirmed')
 
     def update(self, subscription_data):
         req, trans = self.client._request_and_transport()
@@ -75,5 +79,7 @@ def create_object(parent):
                                        subscriber=kwargs.pop('subscriber'),
                                        ttl=kwargs.pop('ttl'),
                                        id=kwargs.pop('id'),
+                                       age=kwargs.pop('age'),
+                                       confirmed=kwargs.pop('confirmed'),
                                        auto_create=False,
                                        **kwargs)

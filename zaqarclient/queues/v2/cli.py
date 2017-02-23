@@ -348,7 +348,7 @@ class ListSubscriptions(command.Lister):
             kwargs["limit"] = parsed_args.limit
 
         data = client.subscriptions(**kwargs)
-        columns = ('ID', 'Subscriber', 'TTL', 'Options')
+        columns = ('ID', 'Subscriber', 'TTL', 'Age', 'Confirmed', 'Options')
         return (columns,
                 (utils.get_item_properties(s, columns) for s in data))
 
