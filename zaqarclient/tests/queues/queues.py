@@ -600,7 +600,7 @@ class QueuesV2QueueFunctionalTest(QueuesV1_1QueueFunctionalTest):
             'expires': signature['expires'],
             'methods': signature['methods'],
             'signature': signature['signature'],
-            'os_project_id': signature['project'],
+            'project_id': signature['project'],
         }
         auth_opts = {'backend': 'signed-url',
                      'options': opts}

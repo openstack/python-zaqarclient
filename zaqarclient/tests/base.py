@@ -37,7 +37,7 @@ class TestBase(testtools.TestCase):
             'auth_opts': {
                 'backend': 'noauth',
                 'options': {
-                    'os_project_id': 'my-project'
+                    'project_id': 'my-project'
                 }
             }
         }
@@ -90,7 +90,7 @@ class TestBase(testtools.TestCase):
         options = {'os_username': self.creds['username'],
                    'os_password': self.creds['password'],
                    'os_project_name': self.creds['project_name'],
-                   'os_project_id': '',
+                   'project_id': '',
                    'os_auth_url': auth_url}
 
         self.conf['auth_opts'].setdefault('options', {}).update(options)

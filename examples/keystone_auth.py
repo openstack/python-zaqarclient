@@ -33,7 +33,7 @@ def create_post_delete(queue_name, messages):
             {'backend': 'keystone',
              'options': {'os_username': 'zaqar',
                          'os_password': 'zaqar',
-                         'os_project_id': 'ccad479c402f43a2994f6e372ab3f8fe',
+                         'project_id': 'ccad479c402f43a2994f6e372ab3f8fe',
                          'os_project_name': '',
                          'os_auth_url': 'http://127.0.0.1:5000/v2.0/',
                          'insecure': ''}

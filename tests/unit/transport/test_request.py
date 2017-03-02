@@ -27,7 +27,7 @@ class TestRequest(base.TestBase):
     def test_request_project_id(self):
         auth_opts = {
             'options': {
-                'os_project_id': 'my-project'
+                'project_id': 'my-project'
             }
         }
         auth_opts.update({'backend': 'noauth'})
