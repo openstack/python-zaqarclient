@@ -327,12 +327,6 @@ class ListSubscriptions(command.Lister):
             "--limit",
             metavar="<limit>",
             help="Page size limit, default value is 20")
-        parser.add_argument(
-            "--detailed",
-            type=bool,
-            default=False,
-            metavar="<detailed>",
-            help="Whether to show subscription metadata")
         return parser
 
     def take_action(self, parsed_args):
@@ -340,8 +334,7 @@ class ListSubscriptions(command.Lister):
 
         client = self.app.client_manager.messaging
 
-        kwargs = {'queue_name': parsed_args.queue_name,
-                  'detailed': parsed_args.detailed}
+        kwargs = {'queue_name': parsed_args.queue_name}
         if parsed_args.marker is not None:
             kwargs["marker"] = parsed_args.marker
         if parsed_args.limit is not None:
