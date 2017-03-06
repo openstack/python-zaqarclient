@@ -579,7 +579,7 @@ class QueuesV2QueueUnitTest(QueuesV1_1QueueUnitTest):
             send_method.return_value = resp
 
             self.queue.purge(resource_types=['messages'])
-            self.assertEqual({"resource_types": [["messages"]]},
+            self.assertEqual({"resource_types": ["messages"]},
                              json.loads(send_method.call_args[0][0].content))
 
 
