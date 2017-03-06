@@ -142,11 +142,15 @@ class QueuesV2SubscriptionUnitTest(base.QueuesTestBase):
                                'id': '568afabb508f153573f6a56f',
                                'subscriber': 'http://trigger.me',
                                'ttl': 3600,
+                               'age': 1800,
+                               'confirmed': False,
                                'options': {}},
                               {'source': 'beijing',
                                'id': '568afabb508f153573f6a56x',
                                'subscriber': 'http://trigger.you',
                                'ttl': 7200,
+                               'age': 2309,
+                               'confirmed': True,
                                'options': {'oh stop': 'triggering'}}]}
 
         with mock.patch.object(self.transport, 'send',

@@ -499,12 +499,16 @@ class QueuesV2QueueUnitTest(QueuesV1_1QueueUnitTest):
                 "id": "1",
                 "subscriber": 'http://trigger.me',
                 "ttl": 3600,
+                "age": 1800,
+                "confirmed": False,
                 "options": {}},
                 {
                 "source": 'test',
                 "id": "2",
                 "subscriber": 'http://trigger.you',
                 "ttl": 7200,
+                "age": 1800,
+                "confirmed": False,
                 "options": {}}]
         }
 
