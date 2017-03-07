@@ -25,7 +25,7 @@ class TestWsTransport(base.TestBase):
         os_opts = {
             'os_auth_token': 'FAKE_TOKEN',
             'os_auth_url': 'http://127.0.0.0:5000/v3',
-            'project_id': 'admin',
+            'os_project_id': 'admin',
             'os_service_type': 'messaging-websocket',
         }
         auth_opts = {'backend': 'keystone',

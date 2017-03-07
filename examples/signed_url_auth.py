@@ -34,7 +34,7 @@ def create_post_delete(queue_name, messages):
                          'expires': '',
                          'methods': ['GET', 'PATCH', 'POST', 'PUT'],
                          'paths': ['/v2/queues/beijing/claims'],
-                         'project_id': '2887aabf368046a3bb0070f1c0413470'}
+                         'os_project_id': '2887aabf368046a3bb0070f1c0413470'}
              }
             }
     cli = client.Client(URL, conf=conf)
