@@ -57,7 +57,11 @@ class WebsocketTransport(base.Transport):
     """
     def __init__(self, options):
         super(WebsocketTransport, self).__init__(options)
-        self._project_id = options['auth_opts']['options']['os_project_id']
+        option = options['auth_opts']['options']
+        # TODO(wangxiyuan): To keep backwards compatibility, we leave
+        # "os_project_id" here. Remove it in the next release.
+        self._project_id = option.get('os_project_id',
+                                      option.get('project_id'))
         self._token = options['auth_opts']['options']['os_auth_token']
         self._websocket_client_id = None
         self._ws = None

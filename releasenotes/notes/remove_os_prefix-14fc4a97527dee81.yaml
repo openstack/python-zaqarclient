@@ -1,0 +1,5 @@
+---
+fixes:
+  - The "os" prefix for project id has been dropped to keep the same with
+    OpenStack and Keystone Client. To keep the backwards compatibility, the "os"
+    prefix still can be used. And it'll be removed in the next release.
