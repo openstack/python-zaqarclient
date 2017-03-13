@@ -177,3 +177,29 @@ Get queue stats.
 
 ``<queue_name>``
   Name of the queue.
+
+
+.. _openstack_queue_purge:
+
+openstack queue purge
+---------------------
+
+.. code-block:: console
+
+   usage: openstack queue purge [-h] [--resource_types <resource_types>]
+                                <queue_name>
+
+Purge a queue. All the metadata of the queue will be kept. Use
+``--resource_types`` to specify which resource should be pured. If
+``--resource_types`` is not specified, all the messages and subscriptions in
+the queue will be purged by default.
+
+**Positional arguments:**
+
+``<queue_name>``
+  Name of the queue.
+
+**Optional arguments:**
+
+``--resource_types <resource_types>`
+  Resource types want to be purged. Support ``messages`` and ``subscriptions``.

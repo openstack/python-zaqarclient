@@ -95,4 +95,4 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
-.. _`Release Page`: https://releases.openstack.org
+.. _`Release Page`: https://docs.openstack.org/releasenotes/python-zaqarclient
