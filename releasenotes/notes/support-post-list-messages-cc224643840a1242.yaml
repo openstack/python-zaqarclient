@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Allow post and list messages with CLI so that user can easily verify
+    Zaqar's messaging functions with command line.

@@ -389,8 +389,7 @@ class ListPools(command.Lister):
             help="Page size limit")
         parser.add_argument(
             "--detailed",
-            type=bool,
-            metavar="<detailed>",
+            action="store_true",
             help="Detailed output")
 
         return parser
@@ -558,9 +557,7 @@ class ListFlavors(command.Lister):
             help="Page size limit")
         parser.add_argument(
             "--detailed",
-            type=bool,
-            default=False,
-            metavar="<detailed>",
+            action="store_true",
             help="If show detailed capabilities of flavor")
         return parser
 
