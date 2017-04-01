@@ -76,7 +76,7 @@ openstack subscription list
                                       [--noindent]
                                       [--quote {all,minimal,none,nonnumeric}]
                                       [--marker <subscription_id>]
-                                      [--limit <limit>] [--detailed <detailed>]
+                                      [--limit <limit>]
                                       <queue_name>
 
 Get list of subscriptions.
