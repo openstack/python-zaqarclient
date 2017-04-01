@@ -497,9 +497,9 @@ class CreateFlavor(command.ShowOne):
 
 
 class DeleteFlavor(command.Command):
-    """Delete a flavor"""
+    """Delete a pool flavor"""
 
-    _description = _("Delete a flavor")
+    _description = _("Delete a pool flavor")
     log = logging.getLogger(__name__ + ".DeleteFlavor")
 
     def get_parser(self, prog_name):
@@ -517,9 +517,9 @@ class DeleteFlavor(command.Command):
 
 
 class ShowFlavor(command.ShowOne):
-    """Display flavor details"""
+    """Display pool flavor details"""
 
-    _description = _("Display flavor details")
+    _description = _("Display pool flavor details")
     log = logging.getLogger(__name__ + ".ShowFlavor")
 
     def get_parser(self, prog_name):
@@ -541,9 +541,9 @@ class ShowFlavor(command.ShowOne):
 
 
 class ListFlavors(command.Lister):
-    """List available flavors"""
+    """List available pool flavors"""
 
-    _description = _("List available flavors")
+    _description = _("List available pool flavors")
     log = logging.getLogger(__name__ + ".ListFlavors")
 
     def get_parser(self, prog_name):

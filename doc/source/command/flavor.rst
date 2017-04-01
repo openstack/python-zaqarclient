@@ -56,7 +56,7 @@ openstack messaging flavor delete
 
    usage: openstack messaging flavor delete [-h] <flavor_name>
 
-Delete a flavor.
+Delete a pool flavor.
 
 **Positional arguments:**
 
@@ -78,7 +78,7 @@ openstack messaging flavor list
                                           [--limit <limit>]
                                           [--detailed <detailed>]
 
-List available flavors.
+List available pool flavors.
 
 **Optional arguments:**
 
@@ -125,7 +125,7 @@ openstack messaging flavor update
                                             [--capabilities <capabilities>]
                                             <flavor_name>
 
-Update a flavor's attributes.
+Update a pool flavor's attributes.
 
 **Positional arguments:**
 
