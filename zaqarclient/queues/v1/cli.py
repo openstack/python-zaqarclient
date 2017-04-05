@@ -482,16 +482,12 @@ class CreateFlavor(command.ShowOne):
 
         client = self.app.client_manager.messaging
 
-        # FIXME(flwang): For now, we still use `pool` though it's not really
-        # correct since it's representing `pool_group` actually. But given we
-        # will remove pool group soon and get a 1:n mapping for flavor:pool,
-        # so let's keep it as it's, just for now.
         kwargs = {'capabilities': parsed_args.capabilities}
         data = client.flavor(parsed_args.flavor_name,
-                             pool=parsed_args.pool_group,
+                             pool_group=parsed_args.pool_group,
                              **kwargs)
 
-        columns = ('Name', 'Pool', 'Capabilities')
+        columns = ('Name', 'Pool Group', 'Capabilities')
         return columns, utils.get_item_properties(data, columns)
 
 
@@ -535,7 +531,7 @@ class ShowFlavor(command.ShowOne):
         client = self.app.client_manager.messaging
         flavor_data = client.flavor(parsed_args.flavor_name,
                                     auto_create=False).get()
-        columns = ('Name', 'Pool', 'Capabilities')
+        columns = ('Name', 'Pool Group', 'Capabilities')
         return columns, utils.get_dict_properties(flavor_data, columns)
 
 
@@ -574,10 +570,8 @@ class ListFlavors(command.Lister):
 
         data = client.flavors(**kwargs)
         columns = ("Name", 'Pool')
-
         if parsed_args.detailed:
             columns = ("Name", 'Pool', 'Capabilities')
-
         return (columns,
                 (utils.get_item_properties(s, columns) for s in data))
 
