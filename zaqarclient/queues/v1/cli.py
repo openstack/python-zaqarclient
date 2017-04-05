@@ -573,7 +573,11 @@ class ListFlavors(command.Lister):
             kwargs["limit"] = parsed_args.limit
 
         data = client.flavors(**kwargs)
-        columns = ("Name", 'Pool', 'Capabilities')
+        columns = ("Name", 'Pool')
+
+        if parsed_args.detailed:
+            columns = ("Name", 'Pool', 'Capabilities')
+
         return (columns,
                 (utils.get_item_properties(s, columns) for s in data))
 
