@@ -85,21 +85,28 @@ class ListQueues(command.Lister):
             "--limit",
             metavar="<limit>",
             help="Page size limit")
+        parser.add_argument(
+            "--detailed",
+            action="store_true",
+            help="If show detailed information of queue")
 
         return parser
 
     def take_action(self, parsed_args):
         client = _get_client(self, parsed_args)
         kwargs = {}
+        columns = ["Name"]
         if parsed_args.marker is not None:
             kwargs["marker"] = parsed_args.marker
         if parsed_args.limit is not None:
             kwargs["limit"] = parsed_args.limit
+        if parsed_args.detailed is not None and parsed_args.detailed:
+            kwargs["detailed"] = parsed_args.detailed
+            columns.extend(["Metadata_Dict", "Href"])
 
         data = client.queues(**kwargs)
-        columns = ("Name", )
-        return (columns,
-                (utils.get_item_properties(s, columns) for s in data))
+        columns = tuple(columns)
+        return (columns, (utils.get_item_properties(s, columns) for s in data))
 
 
 class CheckQueueExistence(command.ShowOne):

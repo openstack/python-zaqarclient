@@ -90,4 +90,5 @@ class Queue(queues.Queue):
 
 
 def create_object(parent):
-    return lambda args: Queue(parent, args["name"], auto_create=False)
+    return lambda args: Queue(parent, args["name"], href=args.get("href"),
+                              metadata=args.get("metadata"), auto_create=False)

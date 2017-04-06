@@ -25,7 +25,8 @@ class Queue(object):
 
     message_module = message
 
-    def __init__(self, client, name, auto_create=True, force_create=False):
+    def __init__(self, client, name, href=None, metadata=None,
+                 auto_create=True, force_create=False):
         """Initialize queue object
 
         :param client: The client object of Zaqar.
@@ -46,7 +47,8 @@ class Queue(object):
 
         # NOTE(flaper87) Queue Info
         self._name = name
-        self._metadata = None
+        self._metadata = metadata
+        self._href = href
 
         # NOTE(flwang): If force_create is True, then even though auto_create
         # is not True, the queue should be created anyway.
@@ -56,6 +58,14 @@ class Queue(object):
     @property
     def name(self):
         return self._name
+
+    @property
+    def href(self):
+        return self._href
+
+    @property
+    def metadata_dict(self):
+        return dict(self.metadata())
 
     def exists(self):
         """Checks if the queue exists."""
