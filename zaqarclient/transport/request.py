@@ -45,7 +45,10 @@ def prepare_request(auth_opts=None, data=None, **kwargs):
     auth_backend = auth.get_backend(**(auth_opts or {}))
     req = auth_backend.authenticate(kwargs.get('api'), req)
 
-    project_id = auth_opts.get('options', {}).get('os_project_id', {})
+    option = auth_opts.get('options', {})
+    # TODO(wangxiyuan): To keep backwards compatibility, we leave
+    # "os_project_id" here. Remove it in the next release.
+    project_id = option.get('os_project_id', option.get('project_id'))
 
     # Let's add project id header, only if it will have non-empty value.
     if project_id:
