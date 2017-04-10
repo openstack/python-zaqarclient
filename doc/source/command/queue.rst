@@ -87,6 +87,7 @@ openstack queue list
                             [--max-width <integer>] [--noindent]
                             [--quote {all,minimal,none,nonnumeric}]
                             [--marker <queue_id>] [--limit <limit>]
+                            [--detailed]
 
 List available queues.
 
@@ -97,6 +98,9 @@ List available queues.
 
 ``--limit <limit>``
   Page size limit.
+
+``--detailed``
+  If show detailed information of queue.
 
 
 .. _openstack_queue_set_metadata:

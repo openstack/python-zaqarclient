@@ -1,0 +1,5 @@
+---
+features:
+  - Support 'openstack queue list --detailed' in openstackclient to query the
+    detailed queue list from Zaqar server. The detailed information includes
+    queue's Name, Metadata and Href.
