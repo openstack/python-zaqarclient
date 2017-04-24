@@ -92,4 +92,9 @@ V2.schema.update({
         'ref': 'health',
         'method': 'GET',
     },
+
+    'homedoc': {
+        'ref': '',
+        'method': 'GET',
+    },
 })

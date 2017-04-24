@@ -305,3 +305,21 @@ def health(transport, request, callback=None):
     request.operation = 'health'
     resp = transport.send(request)
     return resp.deserialized_content
+
+
+def homedoc(transport, request, callback=None):
+    """Get the detailed resource doc of Zaqar server
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param callback: Optional callable to use as callback.
+        If specified, this request will be sent asynchronously.
+        (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
+    :type callback: Callable object.
+    """
+
+    request.operation = 'homedoc'
+    resp = transport.send(request)
+    return resp.deserialized_content
