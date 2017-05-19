@@ -559,3 +559,15 @@ class Health(command.Command):
         client = _get_client(self, parsed_args)
         health = client.health()
         print(json.dumps(health, indent=4, sort_keys=True))
+
+
+class HomeDoc(command.Command):
+    """Display the resource doc of Zaqar server"""
+
+    _description = _("Display detailed resource doc of Zaqar server")
+    log = logging.getLogger(__name__ + ".HomeDoc")
+
+    def take_action(self, parsed_args):
+        client = _get_client(self, parsed_args)
+        homedoc = client.homedoc()
+        print(json.dumps(homedoc, indent=4, sort_keys=True))

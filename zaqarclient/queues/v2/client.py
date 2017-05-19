@@ -104,3 +104,9 @@ class Client(client.Client):
         """Gets the detailed health status of Zaqar server."""
         req, trans = self._request_and_transport()
         return core.health(trans, req)
+
+    @decorators.version(min_version=1.1)
+    def homedoc(self):
+        """Get the detailed resource doc of Zaqar server"""
+        req, trans = self._request_and_transport()
+        return core.homedoc(trans, req)
