@@ -33,7 +33,17 @@ class CreateQueue(cli.CreateQueue):
     pass
 
 
+class OldCreateQueue(cli.OldCreateQueue):
+    """Create a queue"""
+    pass
+
+
 class DeleteQueue(cli.DeleteQueue):
+    """Delete a queue"""
+    pass
+
+
+class OldDeleteQueue(cli.OldDeleteQueue):
     """Delete a queue"""
     pass
 
@@ -43,7 +53,17 @@ class ListQueues(cli.ListQueues):
     pass
 
 
+class OldListQueues(cli.OldListQueues):
+    """List available queues"""
+    pass
+
+
 class GetQueueStats(cli.GetQueueStats):
+    """Get queue stats"""
+    pass
+
+
+class OldGetQueueStats(cli.OldGetQueueStats):
     """Get queue stats"""
     pass
 
@@ -85,7 +105,17 @@ class SetQueueMetadata(command.Command):
             metadata(new_meta=valid_metadata)
 
 
+class OldSetQueueMetadata(cli.OldSetQueueMetadata):
+    """Set queue metadata"""
+    pass
+
+
 class GetQueueMetadata(cli.GetQueueMetadata):
+    """Get queue metadata"""
+    pass
+
+
+class OldGetQueueMetadata(cli.OldGetQueueMetadata):
     """Get queue metadata"""
     pass
 
@@ -128,6 +158,25 @@ class PostMessages(command.Command):
 
         queue = client.queue(parsed_args.queue_name)
         queue.post(parsed_args.messages)
+
+
+class OldPostMessages(PostMessages):
+    """Post messages for a given queue"""
+
+    _description = _("Post messages for a given queue")
+    # TODO(wanghao): Remove this class and ``message post`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging message post" '
+                           'instead.'))
+        return super(OldPostMessages, self).take_action(parsed_args)
 
 
 class ListMessages(command.Lister):
@@ -199,6 +248,25 @@ class ListMessages(command.Lister):
                 (utils.get_item_properties(s, columns) for s in messages))
 
 
+class OldListMessages(ListMessages):
+    """List all messages for a given queue"""
+
+    _description = _("List all messages for a given queue")
+    # TODO(wanghao): Remove this class and ``message list`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging message list" '
+                           'instead.'))
+        return super(OldListMessages, self).take_action(parsed_args)
+
+
 class PurgeQueue(command.Command):
     """Purge a queue"""
 
@@ -226,7 +294,31 @@ class PurgeQueue(command.Command):
             resource_types=parsed_args.resource_types)
 
 
+class OldPurgeQueue(PurgeQueue):
+    """Purge a queue"""
+
+    _description = _("Purge a queue")
+    # TODO(wanghao): Remove this class and ``queue purge`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging queue purge" '
+                           'instead.'))
+        return super(OldPurgeQueue, self).take_action(parsed_args)
+
+
 class CreatePool(cli.CreatePool):
+    """Create a pool"""
+    pass
+
+
+class OldCreatePool(cli.OldCreatePool):
     """Create a pool"""
     pass
 
@@ -236,7 +328,17 @@ class ShowPool(cli.ShowPool):
     pass
 
 
+class OldShowPool(cli.OldShowPool):
+    """Display pool details"""
+    pass
+
+
 class UpdatePool(cli.UpdatePool):
+    """Update a pool attribute"""
+    pass
+
+
+class OldUpdatePool(cli.OldUpdatePool):
     """Update a pool attribute"""
     pass
 
@@ -246,7 +348,17 @@ class DeletePool(cli.DeletePool):
     pass
 
 
+class OldDeletePool(cli.OldDeletePool):
+    """Delete a pool"""
+    pass
+
+
 class ListPools(cli.ListPools):
+    """List available Pools"""
+    pass
+
+
+class OldListPools(cli.OldListPools):
     """List available Pools"""
     pass
 
@@ -339,6 +451,25 @@ class CreateSubscription(command.ShowOne):
         return columns, utils.get_item_properties(data, columns)
 
 
+class OldCreateSubscription(CreateSubscription):
+    """Create a subscription for queue"""
+
+    _description = _("Create a subscription for queue")
+    # TODO(wanghao): Remove this class and ``subscription create`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging subscription create" '
+                           'instead.'))
+        return super(OldCreateSubscription, self).take_action(parsed_args)
+
+
 class UpdateSubscription(command.ShowOne):
     """Update a subscription"""
 
@@ -390,6 +521,25 @@ class UpdateSubscription(command.ShowOne):
         return columns, utils.get_item_properties(data, columns)
 
 
+class OldUpdateSubscription(UpdateSubscription):
+    """Update a subscription"""
+
+    _description = _("Update a subscription")
+    # TODO(wanghao): Remove this class and ``subscription update`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging subscription update" '
+                           'instead.'))
+        return super(OldUpdateSubscription, self).take_action(parsed_args)
+
+
 class DeleteSubscription(command.Command):
     """Delete a subscription"""
 
@@ -414,6 +564,25 @@ class DeleteSubscription(command.Command):
         client.subscription(parsed_args.queue_name,
                             id=parsed_args.subscription_id,
                             auto_create=False).delete()
+
+
+class OldDeleteSubscription(DeleteSubscription):
+    """Delete a subscription"""
+
+    _description = _("Delete a subscription")
+    # TODO(wanghao): Remove this class and ``subscription delete`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging subscription delete" '
+                           'instead.'))
+        return super(OldDeleteSubscription, self).take_action(parsed_args)
 
 
 class ShowSubscription(command.ShowOne):
@@ -443,6 +612,25 @@ class ShowSubscription(command.ShowOne):
                                         **kwargs)
         columns = ('ID', 'Subscriber', 'TTL', 'Age', 'Confirmed', 'Options')
         return columns, utils.get_dict_properties(pool_data.__dict__, columns)
+
+
+class OldShowSubscription(ShowSubscription):
+    """Display subscription details"""
+
+    _description = _("Display subscription details")
+    # TODO(wanghao): Remove this class and ``subscription show`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging subscription show" '
+                           'instead.'))
+        return super(OldShowSubscription, self).take_action(parsed_args)
 
 
 class ListSubscriptions(command.Lister):
@@ -485,7 +673,31 @@ class ListSubscriptions(command.Lister):
                 (utils.get_item_properties(s, columns) for s in data))
 
 
+class OldListSubscriptions(ListSubscriptions):
+    """List available subscriptions"""
+
+    _description = _("List available subscriptions")
+    # TODO(wanghao): Remove this class and ``subscription list`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging subscription list" '
+                           'instead.'))
+        return super(OldListSubscriptions, self).take_action(parsed_args)
+
+
 class CreateClaim(cli.CreateClaim):
+    """Create claim and return a list of claimed messages"""
+    pass
+
+
+class OldCreateClaim(cli.OldCreateClaim):
     """Create claim and return a list of claimed messages"""
     pass
 
@@ -495,12 +707,27 @@ class QueryClaim(cli.QueryClaim):
     pass
 
 
+class OldQueryClaim(cli.OldQueryClaim):
+    """Display claim details"""
+    pass
+
+
 class RenewClaim(cli.RenewClaim):
     """Renew a claim"""
     pass
 
 
+class OldRenewClaim(cli.OldRenewClaim):
+    """Renew a claim"""
+    pass
+
+
 class ReleaseClaim(cli.ReleaseClaim):
+    """Delete a claim"""
+    pass
+
+
+class OldReleaseClaim(cli.OldReleaseClaim):
     """Delete a claim"""
     pass
 
@@ -566,6 +793,25 @@ class CreateSignedUrl(command.ShowOne):
             data['signature'],
             data['project']
         )
+
+
+class OldCreateSignedUrl(CreateSignedUrl):
+    """Create a pre-signed url"""
+
+    _description = _("Create a pre-signed url")
+    # TODO(wanghao): Remove this class and ``queue signed url`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging queue signed url" '
+                           'instead.'))
+        return super(OldCreateSignedUrl, self).take_action(parsed_args)
 
 
 class Ping(command.ShowOne):

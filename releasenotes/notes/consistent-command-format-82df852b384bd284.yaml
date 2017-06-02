@@ -1,0 +1,5 @@
+---
+fixes:
+  - Change zaqarclient command to keep the same format like other project does.
+    the consistent command format is 'openstack messaging XXX'. Marks those
+    old commands as deprecated and will remove them after Queen release.

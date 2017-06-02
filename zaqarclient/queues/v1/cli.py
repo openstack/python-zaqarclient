@@ -49,6 +49,24 @@ class CreateQueue(command.ShowOne):
         return columns, utils.get_item_properties(data, columns)
 
 
+class OldCreateQueue(CreateQueue):
+    """Create a queue"""
+
+    _description = _("Create a queue")
+    # TODO(wanghao): Remove this class and ``queue create`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging queue create" instead.'))
+        return super(OldCreateQueue, self).take_action(parsed_args)
+
+
 class DeleteQueue(command.Command):
     """Delete a queue"""
 
@@ -67,6 +85,24 @@ class DeleteQueue(command.Command):
         client = _get_client(self, parsed_args)
         queue_name = parsed_args.queue_name
         client.queue(queue_name).delete()
+
+
+class OldDeleteQueue(DeleteQueue):
+    """Delete a queue"""
+
+    _description = _("Delete a queue")
+    # TODO(wanghao): Remove this class and ``queue delete`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging queue delete" instead.'))
+        return super(OldDeleteQueue, self).take_action(parsed_args)
 
 
 class ListQueues(command.Lister):
@@ -109,6 +145,24 @@ class ListQueues(command.Lister):
         return (columns, (utils.get_item_properties(s, columns) for s in data))
 
 
+class OldListQueues(ListQueues):
+    """List available queues"""
+
+    _description = _("List available queues")
+    # TODO(wanghao): Remove this class and ``queue list`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging queue list" instead.'))
+        return super(OldListQueues, self).take_action(parsed_args)
+
+
 class CheckQueueExistence(command.ShowOne):
     """Check queue existence"""
 
@@ -131,6 +185,24 @@ class CheckQueueExistence(command.ShowOne):
         columns = ('Exists',)
         data = dict(exists=queue.exists())
         return columns, utils.get_dict_properties(data, columns)
+
+
+class OldQueueExistence(CheckQueueExistence):
+    """Check queue existence"""
+
+    _description = _("Check queue existence")
+    # TODO(wanghao): Remove this class and ``queue exists`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging queue exists" instead.'))
+        return super(OldQueueExistence, self).take_action(parsed_args)
 
 
 class SetQueueMetadata(command.Command):
@@ -169,6 +241,25 @@ class SetQueueMetadata(command.Command):
             metadata(new_meta=valid_metadata)
 
 
+class OldSetQueueMetadata(SetQueueMetadata):
+    """Set queue metadata"""
+
+    _description = _("Set queue metadata")
+    # TODO(wanghao): Remove this class and ``queue set metadata`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging queue set metadata" '
+                           'instead.'))
+        return super(OldSetQueueMetadata, self).take_action(parsed_args)
+
+
 class GetQueueMetadata(command.ShowOne):
     """Get queue metadata"""
 
@@ -194,6 +285,25 @@ class GetQueueMetadata(command.ShowOne):
         columns = ("Metadata",)
         data = dict(metadata=queue.metadata())
         return columns, utils.get_dict_properties(data, columns)
+
+
+class OldGetQueueMetadata(GetQueueMetadata):
+    """Get queue metadata"""
+
+    _description = _("Get queue metadata")
+    # TODO(wanghao): Remove this class and ``queue get metadata`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging queue get metadata" '
+                           'instead.'))
+        return super(OldGetQueueMetadata, self).take_action(parsed_args)
 
 
 class GetQueueStats(command.ShowOne):
@@ -223,6 +333,25 @@ class GetQueueStats(command.ShowOne):
         columns = ("Stats",)
         data = dict(stats=stats)
         return columns, utils.get_dict_properties(data, columns)
+
+
+class OldGetQueueStats(GetQueueStats):
+    """Get queue stats"""
+
+    _description = _("Get queue stats")
+    # TODO(wanghao): Remove this class and ``queue stats`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging queue stats" '
+                           'instead.'))
+        return super(OldGetQueueStats, self).take_action(parsed_args)
 
 
 class CreatePool(command.ShowOne):
@@ -281,6 +410,25 @@ class CreatePool(command.ShowOne):
         return columns, utils.get_item_properties(data, columns)
 
 
+class OldCreatePool(CreatePool):
+    """Create a pool"""
+
+    _description = _("Create a pool")
+    # TODO(wanghao): Remove this class and ``pool create`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging pool create" '
+                           'instead.'))
+        return super(OldCreatePool, self).take_action(parsed_args)
+
+
 class ShowPool(command.ShowOne):
     """Display pool details"""
 
@@ -303,6 +451,25 @@ class ShowPool(command.ShowOne):
                                 auto_create=False).get()
         columns = ('Name', 'Weight', 'URI', 'Group', 'Options')
         return columns, utils.get_dict_properties(pool_data, columns)
+
+
+class OldShowPool(ShowPool):
+    """Display pool details"""
+
+    _description = _("Display pool details")
+    # TODO(wanghao): Remove this class and ``pool show`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging pool show" '
+                           'instead.'))
+        return super(OldShowPool, self).take_action(parsed_args)
 
 
 class UpdatePool(command.ShowOne):
@@ -358,6 +525,25 @@ class UpdatePool(command.ShowOne):
         return columns, utils.get_dict_properties(pool_data, columns)
 
 
+class OldUpdatePool(UpdatePool):
+    """Update a pool attribute"""
+
+    _description = _("Update a pool attribute")
+    # TODO(wanghao): Remove this class and ``pool update`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging pool update" '
+                           'instead.'))
+        return super(OldUpdatePool, self).take_action(parsed_args)
+
+
 class DeletePool(command.Command):
     """Delete a pool"""
 
@@ -376,6 +562,25 @@ class DeletePool(command.Command):
         client = _get_client(self, parsed_args)
         pool_name = parsed_args.pool_name
         client.pool(pool_name, auto_create=False).delete()
+
+
+class OldDeletePool(DeletePool):
+    """Delete a pool"""
+
+    _description = _("Delete a pool")
+    # TODO(wanghao): Remove this class and ``pool delete`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging pool delete" '
+                           'instead.'))
+        return super(OldDeletePool, self).take_action(parsed_args)
 
 
 class ListPools(command.Lister):
@@ -418,6 +623,25 @@ class ListPools(command.Lister):
         columns = tuple(columns)
         return (columns,
                 (utils.get_item_properties(s, columns) for s in data))
+
+
+class OldListPools(ListPools):
+    """List available Pools"""
+
+    _description = _("List available Pools")
+    # TODO(wanghao): Remove this class and ``pool list`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging pool list" '
+                           'instead.'))
+        return super(OldListPools, self).take_action(parsed_args)
 
 
 class UpdateFlavor(command.ShowOne):
@@ -635,6 +859,25 @@ class CreateClaim(command.Lister):
                 (utils.get_item_properties(s, keys) for s in data))
 
 
+class OldCreateClaim(CreateClaim):
+    """Create claim and return a list of claimed messages"""
+
+    _description = _("Create claim and return a list of claimed messages")
+    # TODO(wanghao): Remove this class and ``claim create`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging claim create" '
+                           'instead.'))
+        return super(OldCreateClaim, self).take_action(parsed_args)
+
+
 class QueryClaim(command.Lister):
     """Display claim details"""
 
@@ -664,6 +907,25 @@ class QueryClaim(command.Lister):
 
         return (columns,
                 (utils.get_item_properties(s, keys) for s in data))
+
+
+class OldQueryClaim(QueryClaim):
+    """Display claim details"""
+
+    _description = _("Display claim details")
+    # TODO(wanghao): Remove this class and ``claim query`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging claim query" '
+                           'instead.'))
+        return super(OldQueryClaim, self).take_action(parsed_args)
 
 
 class RenewClaim(command.Lister):
@@ -715,6 +977,25 @@ class RenewClaim(command.Lister):
                 (utils.get_item_properties(s, keys) for s in data))
 
 
+class OldRenewClaim(RenewClaim):
+    """Renew a claim"""
+
+    _description = _("Renew a claim")
+    # TODO(wanghao): Remove this class and ``claim renew`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging claim renew" '
+                           'instead.'))
+        return super(OldRenewClaim, self).take_action(parsed_args)
+
+
 class ReleaseClaim(command.Command):
     """Delete a claim"""
 
@@ -739,3 +1020,22 @@ class ReleaseClaim(command.Command):
 
         queue = client.queue(parsed_args.queue_name, auto_create=False)
         queue.claim(id=parsed_args.claim_id).delete()
+
+
+class OldReleaseClaim(ReleaseClaim):
+    """Delete a claim"""
+
+    _description = _("Delete a claim")
+    # TODO(wanghao): Remove this class and ``claim release`` command
+    #                after Queen.
+
+    # This notifies cliff to not display the help for this command
+    deprecated = True
+
+    log = logging.getLogger('deprecated')
+
+    def take_action(self, parsed_args):
+        self.log.warning(_('This command has been deprecated. '
+                           'Please use "messaging claim release" '
+                           'instead.'))
+        return super(OldReleaseClaim, self).take_action(parsed_args)
