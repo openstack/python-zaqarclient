@@ -409,7 +409,7 @@ class ShowSubscription(command.ShowOne):
         kwargs = {'id': parsed_args.subscription_id}
         pool_data = client.subscription(parsed_args.queue_name,
                                         **kwargs)
-        columns = ('ID', 'Subscriber', 'TTL', 'Options')
+        columns = ('ID', 'Subscriber', 'TTL', 'Age', 'Confirmed', 'Options')
         return columns, utils.get_dict_properties(pool_data.__dict__, columns)
 
 
