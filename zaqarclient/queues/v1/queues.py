@@ -13,12 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import re
+
 from zaqarclient._i18n import _  # noqa
 from zaqarclient import errors
 from zaqarclient.queues.v1 import claim as claim_api
 from zaqarclient.queues.v1 import core
 from zaqarclient.queues.v1 import iterator
 from zaqarclient.queues.v1 import message
+
+# NOTE(wanghao): This is copied from Zaqar server side, so if server have
+# updated it someday, we should update it here to keep consistent.
+QUEUE_NAME_REGEX = re.compile('^[a-zA-Z0-9_\-]+$')
 
 
 class Queue(object):
@@ -44,6 +50,10 @@ class Queue(object):
 
         if name == "":
             raise ValueError(_('Queue name does not have a value'))
+
+        if not QUEUE_NAME_REGEX.match(str(name)):
+            raise ValueError(_('The queue name may only contain ASCII '
+                               'letters, digits, underscores and dashes.'))
 
         # NOTE(flaper87) Queue Info
         self._name = name

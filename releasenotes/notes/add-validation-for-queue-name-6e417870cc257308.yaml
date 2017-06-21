@@ -1,0 +1,9 @@
+---
+fixes:
+  - Fix the creation issue when special meanings words in queue name.
+    When using zaqarclient to create a queue with some special
+    meanings words like "#" and "%", then cli will return the queue
+    with the name has created successfully, but in zaqar server side,
+    the name is not as same as the client side.
+    Add the check for some special meanings words, it will raise error message
+    when using those words in queue name.

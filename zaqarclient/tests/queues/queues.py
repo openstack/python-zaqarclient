@@ -71,6 +71,12 @@ class QueuesV1QueueUnitTest(base.QueuesTestBase):
     def test_queue_valid_name(self):
         self.assertRaises(ValueError, self.client.queue, "")
 
+    def test_queue_valid_name_with_pound(self):
+        self.assertRaises(ValueError, self.client.queue, "123#456")
+
+    def test_queue_valid_name_with_percent(self):
+        self.assertRaises(ValueError, self.client.queue, "123%456")
+
     def test_queue_delete(self):
         with mock.patch.object(self.transport, 'send',
                                autospec=True) as send_method:
