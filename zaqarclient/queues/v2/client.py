@@ -13,8 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import uuid
-
+from oslo_utils import uuidutils
 from zaqarclient.common import decorators
 from zaqarclient.queues.v1 import client
 from zaqarclient.queues.v1 import iterator
@@ -48,7 +47,7 @@ class Client(client.Client):
         self.api_version = version
         self.auth_opts = self.conf.get('auth_opts', {})
         self.client_uuid = self.conf.get('client_uuid',
-                                         uuid.uuid4().hex)
+                                         uuidutils.generate_uuid(dashed=False))
         self.session = session
 
     def queue(self, ref, **kwargs):
