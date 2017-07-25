@@ -13,10 +13,10 @@
 #   under the License.
 #
 import json
-import uuid
 
 from oslo_log import log as logging
 from oslo_utils import importutils
+from oslo_utils import uuidutils
 
 from zaqarclient.transport import base
 from zaqarclient.transport import request
@@ -73,7 +73,7 @@ class WebsocketTransport(base.Transport):
                          Required.
         :type endpoint: string
         """
-        self._websocket_client_id = str(uuid.uuid4())
+        self._websocket_client_id = uuidutils.generate_uuid()
 
         LOG.debug('Instantiating messaging websocket client: %s', endpoint)
         self._ws = self._create_connection(endpoint)
