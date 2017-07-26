@@ -25,8 +25,6 @@
 
 import sys
 import os
-import subprocess
-import warnings
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -46,7 +44,7 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.ifconfig',
               'sphinx.ext.intersphinx',
               'sphinx.ext.graphviz',
-              'oslosphinx',
+              'openstackdocstheme',
               ]
 
 # autodoc generation is a bit aggressive and a nuisance
@@ -59,11 +57,7 @@ todo_include_todos = True
 # Changing the path so that the Hudson build output contains GA code
 # and the source docs do not contain the code so local, offline sphinx builds
 # are "clean."
-templates_path = []
-if os.getenv('HUDSON_PUBLISH_DOCS'):
-    templates_path = ['_ga', '_templates']
-else:
-    templates_path = ['_templates']
+#templates_path = []
 
 # The suffix of source filenames.
 source_suffix = '.rst'
@@ -137,7 +131,7 @@ modindex_common_prefix = ['zaqarclient.']
 # The theme to use for HTML and HTML Help pages.  Major themes that come with
 # Sphinx are currently 'default' and 'sphinxdoc'.
 # html_theme_path = ["."]
-# html_theme = '_theme'
+html_theme = 'openstackdocs'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -170,15 +164,8 @@ html_static_path = []
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
-#html_last_updated_fmt = '%b %d, %Y'
-git_cmd = ["git", "log", "--pretty=format:'%ad, commit %h'",
-           "--date=local", "-n1"]
-try:
-    html_last_updated_fmt = subprocess.Popen(
-        git_cmd, stdout=subprocess.PIPE).communicate()[0]
-except Exception:
-    warnings.warn('Cannot get last updated time from git repository. '
-                  'Not setting "html_last_updated_fmt".')
+# Must set this variable to include year, month, day, hours, and minutes.
+html_last_updated_fmt = '%Y-%m-%d %H:%M'
 
 # If true, SmartyPants will be used to convert quotes and dashes to
 # typographically correct entities.
@@ -247,3 +234,8 @@ latex_documents = [
 
 # If false, no module index is generated.
 #latex_use_modindex = True
+
+# -- Options for openstackdocstheme -------------------------------------------
+repository_name = 'openstack/python-zaqarclient'
+bug_project = 'python-zaqarclient'
+bug_tag = ''
