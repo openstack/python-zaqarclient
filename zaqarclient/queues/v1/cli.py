@@ -903,7 +903,7 @@ class QueryClaim(command.Lister):
         queue = client.queue(parsed_args.queue_name, auto_create=False)
         keys = ("_id", "age", "ttl", "body")
         columns = ("Message_ID", "Age", "TTL", "Message")
-        data = queue.claim(id=parsed_args.claim_id)._get()
+        data = queue.claim(id=parsed_args.claim_id)
 
         return (columns,
                 (utils.get_item_properties(s, keys) for s in data))
