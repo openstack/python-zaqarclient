@@ -13,6 +13,7 @@ Contents
    :maxdepth: 1
 
    unreleased
+   pike
    ocata
 
 OpenStack Releases
