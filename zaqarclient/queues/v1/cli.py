@@ -969,7 +969,7 @@ class RenewClaim(command.Lister):
 
         claim_obj = queue.claim(id=parsed_args.claim_id)
         claim_obj.update(**kwargs)
-        data = claim_obj._get()
+        data = claim_obj
         keys = ("_id", "age", "ttl", "body")
         columns = ("Message_ID", "Age", "TTL", "Message")
 
