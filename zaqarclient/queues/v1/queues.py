@@ -39,6 +39,10 @@ class Queue(object):
         :type client: `object`
         :param name: Name of the queue.
         :type name: `six.string_type`
+        :param href : Hypertext Reference.
+        :type href:  `six.string_type`
+        :param metadata : A metadata object of the queue.
+        :type metadata: `dict`
         :param auto_create: If create the queue automatically in database.
         :type auto_create: `boolean`
         :param force_create: If create the queue and skip the API version
