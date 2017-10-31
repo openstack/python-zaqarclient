@@ -12,8 +12,8 @@ testrepository>=0.0.18 # Apache-2.0/BSD
 testtools>=1.4.0 # MIT
 
 # Test runner
-nose # LGPL
-nose-exclude # LGPL
+nose>=1.3.7 # LGPL
+nose-exclude>=0.3.0 # LGPL
 openstack.nose-plugin>=0.7 # Apache-2.0
 
 # Metrics and style
@@ -24,6 +24,6 @@ ddt>=1.0.1 # MIT
 # Documentation
 sphinx>=1.6.2 # BSD
 os-client-config>=1.28.0 # Apache-2.0
-openstackdocstheme>=1.16.0 # Apache-2.0
+openstackdocstheme>=1.17.0 # Apache-2.0
 reno>=2.5.0 # Apache-2.0
 requests-mock>=1.1.0 # Apache-2.0
