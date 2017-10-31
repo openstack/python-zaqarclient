@@ -75,22 +75,20 @@ class TestBase(testtools.TestCase):
     def _setup_auth_params(self):
         self.creds = self._credentials().get_auth_args()
 
-        # FIXME(flwang): Now we're hardcode the keystone auth version, since
-        # there is a 'bug' with the osc-config which is returning the auth_url
-        # without version. This should be fixed as long as the bug is fixed.
         parsed_url = urllib_parse.urlparse(self.creds['auth_url'])
         auth_url = self.creds['auth_url']
         if not parsed_url.path or parsed_url.path == '/':
-            auth_url = urllib_parse.urljoin(self.creds['auth_url'], 'v2.0')
-        if (parsed_url.path == '/identity_v2_admin' or
-                parsed_url.path == '/identity'):
-            auth_url = '%s/v2.0' % auth_url
+            auth_url = urllib_parse.urljoin(self.creds['auth_url'], 'v3')
+        if parsed_url.path == '/identity':
+            auth_url = '%s/v3' % auth_url
 
         self.conf['auth_opts']['backend'] = 'keystone'
         options = {'os_username': self.creds['username'],
+                   'os_user_domain_id': self.creds['user_domain_id'],
                    'os_password': self.creds['password'],
                    'os_project_name': self.creds['project_name'],
                    'os_project_id': '',
+                   'os_project_domain_id': self.creds['project_domain_id'],
                    'os_auth_url': auth_url}
 
         self.conf['auth_opts'].setdefault('options', {}).update(options)
