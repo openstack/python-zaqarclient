@@ -62,7 +62,7 @@ class Queue(queues.Queue):
             changes = []
             for key, value in new_meta.items():
                 # If key exists, replace it's value.
-                if self._metadata.get(key, None):
+                if self._metadata.get(key, None) is not None:
                     changes.append({'op': 'replace',
                                     'path': '/metadata/%s' % key,
                                     'value': value})
