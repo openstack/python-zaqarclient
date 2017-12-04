@@ -23,12 +23,13 @@ class Message(object):
     Attributes are only downloaded once - at creation time.
     """
     def __init__(self, queue, ttl, age, body, href=None, id=None,
-                 claim_id=None):
+                 claim_id=None, claim_count=0):
         self.queue = queue
         self.href = href
         self.ttl = ttl
         self.age = age
         self.body = body
+        self.claim_count = claim_count
 
         # NOTE(flaper87): Is this really
         # necessary? Should this be returned
