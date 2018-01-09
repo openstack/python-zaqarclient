@@ -642,7 +642,8 @@ class QueuesV2QueueFunctionalTest(QueuesV1_1QueueFunctionalTest):
         queue._metadata = 'test'
         expect_metadata = {'type': 'Bank Accounts', 'name': 'test1',
                            '_max_messages_post_size': 262144,
-                           '_default_message_ttl': 3600}
+                           '_default_message_ttl': 3600,
+                           '_default_message_delay': 0}
         metadata = queue.metadata(force_reload=True)
         self.assertEqual(expect_metadata, metadata)
 
@@ -657,7 +658,8 @@ class QueuesV2QueueFunctionalTest(QueuesV1_1QueueFunctionalTest):
         metadata = queue.metadata()
         expect_metadata = {'type': 'Bank Accounts', 'name': 'test1',
                            '_max_messages_post_size': 262144,
-                           '_default_message_ttl': 3600}
+                           '_default_message_ttl': 3600,
+                           '_default_message_delay': 0}
         self.assertEqual(expect_metadata, metadata)
 
         # replace 'type', '_default_message_ttl' and add a new one 'age'
@@ -668,7 +670,8 @@ class QueuesV2QueueFunctionalTest(QueuesV1_1QueueFunctionalTest):
         metadata = queue.metadata()
         expect_metadata = {'type': 'test', 'name': 'test1', 'age': 13,
                            '_max_messages_post_size': 262144,
-                           '_default_message_ttl': 1000}
+                           '_default_message_ttl': 1000,
+                           '_default_message_delay': 0}
         self.assertEqual(expect_metadata, metadata)
 
         # replace 'name', remove 'type', '_default_message_ttl' and add a new
@@ -682,7 +685,8 @@ class QueuesV2QueueFunctionalTest(QueuesV1_1QueueFunctionalTest):
         metadata = queue.metadata()
         expect_metadata = {'name': 'test2', 'age': 13, 'fake': 'test_fake',
                            '_max_messages_post_size': 262144,
-                           '_default_message_ttl': 3600}
+                           '_default_message_ttl': 3600,
+                           '_default_message_delay': 0}
         self.assertEqual(expect_metadata, metadata)
 
         # replace 'name' to empty string and add a new empty dict 'empty_dict'.
@@ -696,6 +700,7 @@ class QueuesV2QueueFunctionalTest(QueuesV1_1QueueFunctionalTest):
         metadata = queue.metadata()
         expect_metadata = {'name': '', 'age': 13, 'fake': 'test_fake',
                            '_max_messages_post_size': 262144,
+                           '_default_message_delay': 0,
                            '_default_message_ttl': 3600, 'empty_dict': {}}
         self.assertEqual(expect_metadata, metadata)
 
@@ -705,5 +710,6 @@ class QueuesV2QueueFunctionalTest(QueuesV1_1QueueFunctionalTest):
         queue._metadata = None
         metadata = queue.metadata()
         expect_metadata = {'_max_messages_post_size': 262144,
-                           '_default_message_ttl': 3600}
+                           '_default_message_ttl': 3600,
+                           '_default_message_delay': 0}
         self.assertEqual(expect_metadata, metadata)
