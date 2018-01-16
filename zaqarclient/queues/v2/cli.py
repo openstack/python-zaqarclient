@@ -209,6 +209,10 @@ class ListMessages(command.Lister):
             action="store_true",
             help="Whether to include claimed messages")
         parser.add_argument(
+            "--include-delayed",
+            action="store_true",
+            help="Whether to include delayed messages")
+        parser.add_argument(
             "--client-id",
             metavar="<client_id>",
             default=os.environ.get("OS_MESSAGE_CLIENT_ID"),
@@ -234,6 +238,8 @@ class ListMessages(command.Lister):
             kwargs["echo"] = parsed_args.echo
         if parsed_args.include_claimed is not None:
             kwargs["include_claimed"] = parsed_args.include_claimed
+        if parsed_args.include_delayed is not None:
+            kwargs["include_delayed"] = parsed_args.include_delayed
 
         queue = client.queue(parsed_args.queue_name)
 
