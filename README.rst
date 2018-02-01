@@ -7,9 +7,8 @@ Team and repository tags
 
 .. Change things from this point on
 
-*******************
 Python Zaqar Client
-*******************
+===================
 
 .. image:: https://img.shields.io/pypi/v/python-zaqarclient.svg
     :target: https://pypi.python.org/pypi/python-zaqarclient/
@@ -27,16 +26,8 @@ Python Zaqar Client
 
 Welcome to the `Zaqar`_ Python Client project!
 
-**Table of Contents**
-
-.. contents::
-    :local:
-    :depth: 2
-    :backlinks: none
-
-============
 Installation
-============
+------------
 
 The latest stable release can be installed from PyPI::
 
@@ -47,19 +38,16 @@ For the adventurous, you may also install the latest code directly from git
 
     pip install git+https://git.openstack.org/openstack/python-zaqarclient.git
 
-=================
 What's in the box
-=================
+-----------------
 
 By installing python-zaqarclient you get programmatic access to the Zaqar v1.0
 API library. Plus, it installs a plugin to python-openstackclient that allows
 you to perform simple queue operations.
 
-==========
 How to use
 ==========
 
--------------
 Python client
 -------------
 
@@ -68,7 +56,6 @@ Details about design, features, usage and workflow can be found in the
 
 .. _Python Client Wiki: https://wiki.openstack.org/wiki/Zaqar/PythonClient
 
-----------------------
 Command line interface
 ----------------------
 
@@ -86,7 +73,6 @@ are::
 .. _`OpenStack Client`: https://git.openstack.org/cgit/openstack/python-openstackclient
 .. _`OpenStack Client Readme`: https://git.openstack.org/cgit/openstack/python-openstackclient/tree/README.rst
 
-============
 Contributing
 ============
 
