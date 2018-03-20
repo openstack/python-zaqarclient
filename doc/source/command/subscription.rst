@@ -51,7 +51,7 @@ Create a subscription.
 .. _openstack_messaging_subscription_create:
 
 openstack messaging subscription create
------------------------------
+---------------------------------------
 
 .. code-block:: console
 
@@ -96,7 +96,7 @@ Delete a subscription.
 .. _openstack_messaging_subscription_delete:
 
 openstack messaging subscription delete
------------------------------
+---------------------------------------
 
 .. code-block:: console
 
@@ -137,7 +137,7 @@ Get list of subscriptions.
 .. _openstack_messaging_subscription_list:
 
 openstack messaging subscription list
----------------------------
+-------------------------------------
 
 .. code-block:: console
 
@@ -181,7 +181,7 @@ Query a subscription details.
 .. _openstack_messaging_subscription_show:
 
 openstack messaging subscription show
----------------------------
+-------------------------------------
 
 .. code-block:: console
 
@@ -238,7 +238,7 @@ Update a subscription.
 .. _openstack_messaging_subscription_update:
 
 openstack messaging subscription update
------------------------------
+---------------------------------------
 
 .. code-block:: console
 

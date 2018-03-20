@@ -55,7 +55,7 @@ Create claim and return a list of claimed messages.
 .. _openstack_messaging_claim_create:
 
 openstack messaging claim create
-----------------------
+--------------------------------
 
 .. code-block:: console
 
@@ -109,7 +109,7 @@ Display claim details.
 .. _openstack_messaging_claim_query:
 
 openstack messaging claim query
----------------------
+-------------------------------
 
 .. code-block:: console
 
@@ -151,7 +151,7 @@ Delete a claim.
 .. _openstack_messaging_claim_release:
 
 openstack messaging claim release
------------------------
+---------------------------------
 
 .. code-block:: console
 
@@ -184,7 +184,7 @@ Renew a claim.
 
 **Positional arguments:**
 
-``<queue_name> ``
+``<queue_name>``
   Name of the claimed queue.
 
 ``<claim_id>``
@@ -201,7 +201,7 @@ Renew a claim.
 .. _openstack_messaging_claim_renew:
 
 openstack messaging claim renew
----------------------
+-------------------------------
 
 .. code-block:: console
 
@@ -215,7 +215,7 @@ Renew a claim.
 
 **Positional arguments:**
 
-``<queue_name> ``
+``<queue_name>``
   Name of the claimed queue.
 
 ``<claim_id>``

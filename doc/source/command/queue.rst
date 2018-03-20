@@ -48,7 +48,7 @@ Create a queue.
 .. _openstack_messaging_queue_create:
 
 openstack messaging queue create
-----------------------
+--------------------------------
 
 .. code-block:: console
 
@@ -83,7 +83,7 @@ Delete a queue.
 .. _openstack_messaging_queue_delete:
 
 openstack messaging queue delete
-----------------------
+--------------------------------
 
 .. code-block:: console
 
@@ -118,7 +118,7 @@ Get queue metadata.
 .. _openstack_messaging_queue_get_metadata:
 
 openstack messaging queue get metadata
-----------------------------
+--------------------------------------
 
 .. code-block:: console
 
@@ -163,7 +163,7 @@ List available queues.
 .. _openstack_messaging_queue_list:
 
 openstack messaging queue list
---------------------
+------------------------------
 
 .. code-block:: console
 
@@ -208,7 +208,7 @@ Set queue metadata.
 .. _openstack_messaging_queue_set_metadata:
 
 openstack messaging queue set metadata
-----------------------------
+--------------------------------------
 
 .. code-block:: console
 
@@ -264,7 +264,7 @@ Create a pre-signed url for the queue.
 .. _openstack_messaging_queue_signed_url:
 
 openstack messaging queue signed url
---------------------------
+------------------------------------
 
 .. code-block:: console
 
@@ -319,7 +319,7 @@ Get queue stats.
 .. _openstack_messaging_queue_stats:
 
 openstack messaging queue stats
----------------------
+-------------------------------
 
 .. code-block:: console
 
@@ -357,13 +357,13 @@ the queue will be purged by default.
 
 **Optional arguments:**
 
-``--resource_types <resource_types>`
+``--resource_types <resource_types>``
   Resource types want to be purged. Support ``messages`` and ``subscriptions``.
 
 .. _openstack_messaging_queue_purge:
 
 openstack messaging queue purge
----------------------
+-------------------------------
 
 .. code-block:: console
 
@@ -382,5 +382,5 @@ the queue will be purged by default.
 
 **Optional arguments:**
 
-``--resource_types <resource_types>`
+``--resource_types <resource_types>``
   Resource types want to be purged. Support ``messages`` and ``subscriptions``.

@@ -60,7 +60,7 @@ Create a pool.
 .. _openstack_messaging_pool_create:
 
 openstack messaging pool create
----------------------
+-------------------------------
 
 .. code-block:: console
 
@@ -111,7 +111,7 @@ Delete a pool.
 .. _openstack_messaging_pool_delete:
 
 openstack messaging pool delete
----------------------
+-------------------------------
 
 .. code-block:: console
 
@@ -153,7 +153,7 @@ List available Pools.
 .. _openstack_messaging_pool_list:
 
 openstack messaging pool list
--------------------
+-----------------------------
 
 .. code-block:: console
 
@@ -198,7 +198,7 @@ Display pool details.
 .. _openstack_messaging_pool_show:
 
 openstack messaging pool show
--------------------
+-----------------------------
 
 .. code-block:: console
 
@@ -254,7 +254,7 @@ Update a pool attribute.
 .. _openstack_messaging_pool_update:
 
 openstack messaging pool update
----------------------
+-------------------------------
 
 .. code-block:: console
 
