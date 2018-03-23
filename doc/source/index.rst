@@ -32,8 +32,8 @@ end users and to communicate with guest agents that run in the
    be found on the `OpenStack Wiki`_, as well as in the user guides found on `docs.openstack.org`_.
 
 .. _`Zaqar`: https://wiki.openstack.org/wiki/Zaqar
-.. _`OpenStack Wiki`: http://wiki.openstack.org
-.. _`docs.openstack.org`: http://docs.openstack.org
+.. _`OpenStack Wiki`: https://wiki.openstack.org/wiki/Main_Page
+.. _`docs.openstack.org`: https://docs.openstack.org
 
 
 Contents
