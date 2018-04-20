@@ -11,11 +11,11 @@ Python Zaqar Client
 ===================
 
 .. image:: https://img.shields.io/pypi/v/python-zaqarclient.svg
-    :target: https://pypi.python.org/pypi/python-zaqarclient/
+    :target: https://pypi.org/project/python-zaqarclient/
     :alt: Latest Version
 
 .. image:: https://img.shields.io/pypi/dm/python-zaqarclient.svg
-    :target: https://pypi.python.org/pypi/python-zaqarclient/
+    :target: https://pypi.org/project/python-zaqarclient/
     :alt: Downloads
 
 :Wiki: `Zaqar Wiki`_
@@ -94,7 +94,7 @@ first patch.
 * `Bugs`_ - issue tracking
 * `Source`_
 
-.. _PyPi: https://pypi.python.org/pypi/python-zaqarclient
+.. _PyPi: https://pypi.org/project/python-zaqarclient
 .. _Bugs: https://bugs.launchpad.net/python-zaqarclient
 .. _Source: https://git.openstack.org/cgit/openstack/python-zaqarclient
 
