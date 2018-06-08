@@ -32,15 +32,10 @@ class Client(object):
     :type url: `six.text_type`
     :param version: API Version pointing to.
     :type version: `int`
-    :param options: Extra options:
-        - client_uuid: Custom client uuid. A new one
-        will be generated, if not passed.
-        - auth_opts: Authentication options:
-            - backend
-            - options
+    :param conf: CONF object.
+    :type conf: `oslo_config.cfg.CONF`
     :param session: keystone session. But it's just place holder, we wont'
         support it in v1.
-    :type options: `dict`
     """
 
     queues_module = queues
@@ -148,7 +143,7 @@ class Client(object):
         """Gets a list of pools from the server
 
         :param params: Filters to use for getting pools
-        :type params: **kwargs dict.
+        :type params: dict.
 
         :returns: A list of pools
         :rtype: `list`
@@ -179,7 +174,7 @@ class Client(object):
         """Gets a list of flavors from the server
 
         :param params: Filters to use for getting flavors
-        :type params: **kwargs dict.
+        :type params: dict.
 
         :returns: A list of flavors
         :rtype: `list`

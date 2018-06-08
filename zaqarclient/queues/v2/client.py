@@ -29,13 +29,8 @@ class Client(client.Client):
     :type url: `six.text_type`
     :param version: API Version pointing to.
     :type version: `int`
-    :param options: Extra options:
-        - client_uuid: Custom client uuid. A new one
-        will be generated, if not passed.
-        - auth_opts: Authentication options:
-            - backend
-            - options
-    :type options: `dict`
+    :param conf: CONF object.
+    :type conf: `oslo_config.cfg.CONF`
     """
 
     queues_module = queues
@@ -78,7 +73,7 @@ class Client(client.Client):
         """Gets a list of subscriptions from the server
 
         :param params: Filters to use for getting subscriptions
-        :type params: **kwargs dict.
+        :type params: dict.
 
         :returns: A list of subscriptions
         :rtype: `list`
