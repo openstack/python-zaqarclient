@@ -1,13 +1,6 @@
-.. Zaqar-Client documentation master file, created by
-   sphinx-quickstart on Tue Dec 20 11:53:00 2016.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to Zaqar-Client's documentation!
-========================================
-
-Contents
---------
+===========================
+ Zaqar Client Release Notes
+===========================
 
 .. toctree::
    :maxdepth: 1
@@ -26,6 +19,9 @@ OpenStack release was made is shown below:
 =================   ===================
 OpenStack Release   ZaqarClient Release
 =================   ===================
+Rocky               1.10.0
+Queens              1.9.0
+Pike                1.7.0
 Ocata               1.4.0
 Newton              1.2.0
 =================   ===================
