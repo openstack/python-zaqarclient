@@ -16,7 +16,7 @@
 import os
 
 import fixtures
-import os_client_config
+import openstack.config
 from six.moves import urllib_parse
 import testtools
 
@@ -65,7 +65,7 @@ class TestBase(testtools.TestCase):
         has admin privs. This function will default to getting the
         devstack-admin cloud as that is the current expected behavior.
         """
-        os_cfg = os_client_config.OpenStackConfig()
+        os_cfg = openstack.config.OpenStackConfig()
         try:
             found = os_cfg.get_one_cloud(cloud=cloud)
         except Exception:
