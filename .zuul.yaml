@@ -1,7 +1,16 @@
 - project:
+    templates:
+      - openstack-python-jobs
+      - openstack-python35-jobs
+      - check-requirements
+      - openstackclient-plugin-jobs
+      - publish-openstack-sphinx-docs
+      - release-notes-jobs
     check:
       jobs:
         - openstack-tox-lower-constraints
+        - legacy-zaqarclient-dsvm-functional
     gate:
       jobs:
         - openstack-tox-lower-constraints
+        - legacy-zaqarclient-dsvm-functional
