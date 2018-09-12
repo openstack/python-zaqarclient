@@ -15,6 +15,7 @@ venv
 .*.swp
 .DS_Store
 .testrepository
+.stestr/*
 versioninfo
 var/*
 ChangeLog
