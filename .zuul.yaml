@@ -1,16 +1,28 @@
+- job:
+    name: python-zaqarclient-functional
+    parent: legacy-dsvm-base
+    run: playbooks/zaqarclient-dsvm-functional/run.yaml
+    post-run: playbooks/zaqarclient-dsvm-functional/post.yaml
+    timeout: 6000
+    required-projects:
+      - openstack-infra/devstack-gate
+      - openstack/python-zaqarclient
+      - openstack/zaqar
+      - openstack/zaqar-tempest-plugin
+      - openstack/zaqar-ui
+
 - project:
     templates:
+      - check-requirements
+      - openstack-lower-constraints-jobs
       - openstack-python-jobs
       - openstack-python35-jobs
-      - check-requirements
       - openstackclient-plugin-jobs
       - publish-openstack-sphinx-docs
       - release-notes-jobs
     check:
       jobs:
-        - openstack-tox-lower-constraints
-        - legacy-zaqarclient-dsvm-functional
+        - python-zaqarclient-functional
     gate:
       jobs:
-        - openstack-tox-lower-constraints
-        - legacy-zaqarclient-dsvm-functional
+        - python-zaqarclient-functional
