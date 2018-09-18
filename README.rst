@@ -14,10 +14,6 @@ Python Zaqar Client
     :target: https://pypi.org/project/python-zaqarclient/
     :alt: Latest Version
 
-.. image:: https://img.shields.io/pypi/dm/python-zaqarclient.svg
-    :target: https://pypi.org/project/python-zaqarclient/
-    :alt: Downloads
-
 :Wiki: `Zaqar Wiki`_
 :Launchpad: `Zaqar Launchpad`_
 :Review: `Code Review`_
