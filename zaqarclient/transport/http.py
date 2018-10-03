@@ -89,13 +89,19 @@ class HttpTransport(base.Transport):
         if osprofiler_web:
             headers.update(osprofiler_web.get_trace_id_headers())
 
+        if request.verify:
+            if request.cert:
+                verify = request.cert
+            else:
+                verify = True
+        else:
+            verify = False
         resp = self.client.request(method,
                                    url=url,
                                    params=request.params,
                                    headers=headers,
                                    data=request.content,
-                                   verify=request.verify,
-                                   cert=request.cert)
+                                   verify=verify)
 
         if resp.status_code in self.http_to_zaqar:
             kwargs = {}
