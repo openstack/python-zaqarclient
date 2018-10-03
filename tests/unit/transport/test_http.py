@@ -63,8 +63,7 @@ class TestHttpTransport(base.TestBase):
                                               params=final_params,
                                               headers=final_headers,
                                               data=None,
-                                              verify=True,
-                                              cert=None)
+                                              verify=True)
 
     @mock.patch.object(prequest.packages.urllib3.response.HTTPResponse,
                        'stream')
@@ -91,8 +90,7 @@ class TestHttpTransport(base.TestBase):
                                               params=params,
                                               headers=final_headers,
                                               data=None,
-                                              verify=True,
-                                              cert=None)
+                                              verify=True)
 
     @mock.patch.object(prequest.packages.urllib3.response.HTTPResponse,
                        'stream')
