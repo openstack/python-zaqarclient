@@ -376,9 +376,9 @@ class CreatePool(command.ShowOne):
             metavar="<pool_weight>",
             help="weight of the pool")
         parser.add_argument(
-            "--pool_group",
-            metavar="<pool_group>",
-            help="Group of the pool")
+            "--flavor",
+            metavar="<flavor>",
+            help="Flavor of the pool")
         parser.add_argument(
             "--pool_options",
             type=json.loads,
@@ -397,8 +397,8 @@ class CreatePool(command.ShowOne):
             'options': parsed_args.pool_options
         }
 
-        if parsed_args.pool_group:
-            kw_arg.update({'group': parsed_args.pool_group})
+        if parsed_args.flavor:
+            kw_arg.update({'flavor': parsed_args.flavor})
 
         data = client.pool(parsed_args.pool_name, **kw_arg)
 
@@ -406,7 +406,7 @@ class CreatePool(command.ShowOne):
             raise RuntimeError('Failed to create pool(%s).' %
                                parsed_args.pool_name)
 
-        columns = ('Name', 'Weight', 'URI', 'Group', 'Options')
+        columns = ('Name', 'Weight', 'URI', 'Flavor', 'Options')
         return columns, utils.get_item_properties(data, columns)
 
 
@@ -449,7 +449,7 @@ class ShowPool(command.ShowOne):
 
         pool_data = client.pool(parsed_args.pool_name,
                                 auto_create=False).get()
-        columns = ('Name', 'Weight', 'URI', 'Group', 'Options')
+        columns = ('Name', 'Weight', 'URI', 'Flavor', 'Options')
         return columns, utils.get_dict_properties(pool_data, columns)
 
 
@@ -494,9 +494,9 @@ class UpdatePool(command.ShowOne):
             metavar="<pool_weight>",
             help="Weight of the pool")
         parser.add_argument(
-            "--pool_group",
-            metavar="<pool_group>",
-            help="Group of the pool")
+            "--flavor",
+            metavar="<flavor>",
+            help="Flavor of the pool")
         parser.add_argument(
             "--pool_options",
             type=json.loads,
@@ -513,15 +513,15 @@ class UpdatePool(command.ShowOne):
             kw_arg["uri"] = parsed_args.pool_uri
         if parsed_args.pool_weight:
             kw_arg["weight"] = parsed_args.pool_weight
-        if parsed_args.pool_group:
-            kw_arg["group"] = parsed_args.pool_group
+        if parsed_args.flavor:
+            kw_arg["flavor"] = parsed_args.flavor
         if parsed_args.pool_options:
             kw_arg["options"] = parsed_args.pool_options
 
         pool_obj = client.pool(parsed_args.pool_name, auto_create=False)
         pool_obj.update(kw_arg)
         pool_data = pool_obj.get()
-        columns = ('Name', 'Weight', 'URI', 'Group', 'Options')
+        columns = ('Name', 'Weight', 'URI', 'Flavor', 'Options')
         return columns, utils.get_dict_properties(pool_data, columns)
 
 
@@ -610,7 +610,7 @@ class ListPools(command.Lister):
         client = _get_client(self, parsed_args)
 
         kwargs = {}
-        columns = ["Name", "Weight", "URI", "Group"]
+        columns = ["Name", "Weight", "URI", "Flavor"]
         if parsed_args.marker is not None:
             kwargs["marker"] = parsed_args.marker
         if parsed_args.limit is not None:
@@ -657,9 +657,9 @@ class UpdateFlavor(command.ShowOne):
             metavar="<flavor_name>",
             help="Name of the flavor")
         parser.add_argument(
-            "--pool_group",
-            metavar="<pool_group>",
-            help="Pool group the flavor sits on")
+            "--pool_list",
+            metavar="<pool_list>",
+            help="Pool list the flavor sits on")
         parser.add_argument(
             "--capabilities",
             metavar="<capabilities>",
@@ -671,13 +671,14 @@ class UpdateFlavor(command.ShowOne):
         self.log.debug("take_action(%s)" % parsed_args)
         client = self.app.client_manager.messaging
         kwargs = {}
-        if parsed_args.pool_group:
-            kwargs['pool'] = parsed_args.pool_group
+        if parsed_args.pool_list:
+            pool_list = parsed_args.pool_list.split(',')
+            kwargs['pool_list'] = pool_list
         if parsed_args.capabilities:
             kwargs['capabilities'] = json.loads(parsed_args.capabilities)
 
         flavor = client.flavor(parsed_args.flavor_name, auto_create=False)
-        columns = ('Name', 'Pool', 'Capabilities')
+        columns = ('Name', 'Pool_list', 'Capabilities')
         flavor.update(kwargs)
         flavor_data = flavor.get()
         return columns, utils.get_dict_properties(flavor_data, columns)
@@ -696,9 +697,9 @@ class CreateFlavor(command.ShowOne):
             metavar="<flavor_name>",
             help="Name of the flavor")
         parser.add_argument(
-            "pool_group",
-            metavar="<pool_group>",
-            help="Pool group for flavor")
+            "--pool_list",
+            metavar="<pool_list>",
+            help="Pool list for flavor")
         parser.add_argument(
             "--capabilities",
             metavar="<capabilities>",
@@ -712,13 +713,12 @@ class CreateFlavor(command.ShowOne):
         self.log.debug("take_action(%s)" % parsed_args)
 
         client = self.app.client_manager.messaging
-
         kwargs = {'capabilities': parsed_args.capabilities}
         data = client.flavor(parsed_args.flavor_name,
-                             pool_group=parsed_args.pool_group,
+                             pool_list=parsed_args.pool_list,
                              **kwargs)
 
-        columns = ('Name', 'Pool Group', 'Capabilities')
+        columns = ('Name', 'Pool list', 'Capabilities')
         return columns, utils.get_item_properties(data, columns)
 
 
@@ -739,7 +739,7 @@ class DeleteFlavor(command.Command):
     def take_action(self, parsed_args):
         client = _get_client(self, parsed_args)
         flavor_name = parsed_args.flavor_name
-        client.flavor(flavor_name).delete()
+        client.flavor(flavor_name, auto_create=False).delete()
 
 
 class ShowFlavor(command.ShowOne):
@@ -762,7 +762,7 @@ class ShowFlavor(command.ShowOne):
         client = self.app.client_manager.messaging
         flavor_data = client.flavor(parsed_args.flavor_name,
                                     auto_create=False).get()
-        columns = ('Name', 'Pool Group', 'Capabilities')
+        columns = ('Name', 'Pool list', 'Capabilities')
         return columns, utils.get_dict_properties(flavor_data, columns)
 
 
@@ -798,11 +798,10 @@ class ListFlavors(command.Lister):
             kwargs["marker"] = parsed_args.marker
         if parsed_args.limit is not None:
             kwargs["limit"] = parsed_args.limit
-
         data = client.flavors(**kwargs)
-        columns = ("Name", 'Pool')
+        columns = ("Name", 'Pool list')
         if parsed_args.detailed:
-            columns = ("Name", 'Pool', 'Capabilities')
+            columns = ("Name", 'Pool list', 'Capabilities')
         return (columns,
                 (utils.get_item_properties(s, columns) for s in data))
 

@@ -19,12 +19,12 @@ from zaqarclient.queues.v1 import core
 class Flavor(object):
 
     def __init__(self, client, name,
-                 pool_group=None, auto_create=True,
+                 pool_list=None, auto_create=True,
                  **kwargs):
         self.client = client
 
         self.name = name
-        self.pool_group = pool_group
+        self.pool_list = pool_list
         self.capabilities = kwargs.get('capabilities', {})
 
         if auto_create:
@@ -44,7 +44,7 @@ class Flavor(object):
         # TBD(mdnadeem): Have to change this code when zaqar server
         # behaviour change for PUT operation.
 
-        data = {'pool_group': self.pool_group}
+        data = {'pool_list': self.pool_list}
         if self.client.api_version <= 1.1:
             data['capabilities'] = self.capabilities
 

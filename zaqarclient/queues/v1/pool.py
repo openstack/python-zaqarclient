@@ -20,13 +20,13 @@ class Pool(object):
 
     def __init__(self, client, name,
                  weight=None, uri=None,
-                 group=None, auto_create=True,
+                 flavor=None, auto_create=True,
                  **kwargs):
         self.client = client
         self.uri = uri
         self.name = name
         self.weight = weight
-        self.group = group
+        self.flavor = flavor
         self.options = kwargs.get("options", {})
 
         if auto_create:
@@ -50,8 +50,8 @@ class Pool(object):
                 'weight': self.weight,
                 'options': self.options}
 
-        if self.client.api_version >= 1.1 and self.group:
-            data['group'] = self.group
+        if self.client.api_version >= 1.1 and self.flavor:
+            data['flavor'] = self.flavor
 
         req, trans = self.client._request_and_transport()
         core.pool_create(trans, req, self.name, data)

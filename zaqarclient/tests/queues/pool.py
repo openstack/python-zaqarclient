@@ -129,7 +129,6 @@ class QueuesV1_1PoolFunctionalTest(base.QueuesTestBase):
 
     def test_pool_get(self):
         pool_data = {'weight': 10,
-                     'group': 'us',
                      'uri': 'mongodb://127.0.0.1:27017'}
 
         pool = self.client.pool('FuncTestPool', **pool_data)
@@ -142,7 +141,6 @@ class QueuesV1_1PoolFunctionalTest(base.QueuesTestBase):
 
     def test_pool_create(self):
         pool_data = {'weight': 10,
-                     'group': 'us',
                      'uri': 'mongodb://127.0.0.1:27017'}
 
         pool = self.client.pool('FuncTestPool', **pool_data)
@@ -152,7 +150,6 @@ class QueuesV1_1PoolFunctionalTest(base.QueuesTestBase):
 
     def test_pool_update(self):
         pool_data = {'weight': 10,
-                     'group': 'us',
                      'uri': 'mongodb://127.0.0.1:27017'}
 
         pool = self.client.pool('FuncTestPool', **pool_data)
@@ -162,7 +159,6 @@ class QueuesV1_1PoolFunctionalTest(base.QueuesTestBase):
 
     def test_pool_list(self):
         pool_data = {'weight': 10,
-                     'group': 'us',
                      'uri': 'mongodb://127.0.0.1:27017'}
         pool = self.client.pool('FuncTestPool', **pool_data)
         self.addCleanup(pool.delete)
@@ -173,7 +169,6 @@ class QueuesV1_1PoolFunctionalTest(base.QueuesTestBase):
 
     def test_pool_delete(self):
         pool_data = {'weight': 10,
-                     'group': 'us',
                      'uri': 'mongodb://127.0.0.1:27017'}
 
         pool = self.client.pool('FuncTestPool', **pool_data)

@@ -396,11 +396,14 @@ class CreateFlavor(cli.CreateFlavor):
         if parsed_args.capabilities != {}:
             raise AttributeError("<--capabilities> option is only\
              available in client api version < 2")
+        pool_list = None
+        if parsed_args.pool_list:
+            pool_list = parsed_args.pool_list.split(',')
         data = client.flavor(parsed_args.flavor_name,
-                             pool_group=parsed_args.pool_group,
+                             pool_list=pool_list,
                              **kwargs)
 
-        columns = ('Name', 'Pool Group', 'Capabilities')
+        columns = ('Name', 'Pool list', 'Capabilities')
         return columns, utils.get_item_properties(data, columns)
 
 
