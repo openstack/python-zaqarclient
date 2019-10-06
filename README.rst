@@ -32,7 +32,7 @@ The latest stable release can be installed from PyPI::
 For the adventurous, you may also install the latest code directly from git
 .openstack.org::
 
-    pip install git+https://git.openstack.org/openstack/python-zaqarclient.git
+    pip install git+https://opendev.org/openstack/python-zaqarclient.git
 
 What's in the box
 -----------------
@@ -66,8 +66,8 @@ are::
     $  openstack queue create myqueue
     $  openstack queue delete myqueue
 
-.. _`OpenStack Client`: https://git.openstack.org/cgit/openstack/python-openstackclient
-.. _`OpenStack Client Readme`: https://git.openstack.org/cgit/openstack/python-openstackclient/tree/README.rst
+.. _`OpenStack Client`: https://opendev.org/openstack/python-openstackclient
+.. _`OpenStack Client Readme`: https://opendev.org/openstack/python-openstackclient/src/branch/master/README.rst
 
 Contributing
 ============
@@ -76,8 +76,8 @@ Be sure to reference the `HACKING`_ file for details on coding style. You may
 also wish to read through Zaqar's `Contributor Guide`_ before contributing your
 first patch.
 
-.. _Zaqar: https://git.openstack.org/cgit/openstack/zaqar
-.. _HACKING: https://git.openstack.org/cgit/openstack/python-zaqarclient/tree/HACKING.rst
+.. _Zaqar: https://opendev.org/openstack/zaqar
+.. _HACKING: https://opendev.org/openstack/python-zaqarclient/src/branch/master/HACKING.rst
 .. _Zaqar Wiki: https://wiki.openstack.org/wiki/Zaqar
 .. _Contributor Guide: https://wiki.openstack.org/wiki/Zaqar#Contributor_Guide
 .. _Zaqar Launchpad: https://launchpad.net/zaqar
@@ -92,5 +92,5 @@ first patch.
 
 .. _PyPi: https://pypi.org/project/python-zaqarclient
 .. _Bugs: https://bugs.launchpad.net/python-zaqarclient
-.. _Source: https://git.openstack.org/cgit/openstack/python-zaqarclient
+.. _Source: https://opendev.org/openstack/python-zaqarclient/
 
