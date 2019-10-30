@@ -63,7 +63,6 @@
           export ZAQARCLIENT_TEST_FUNCTIONAL=1
           function post_test_hook {
               cd /opt/stack/new/python-zaqarclient
-              nosetests tests.functional
           }
 
           export -f post_test_hook
