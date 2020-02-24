@@ -56,6 +56,24 @@ class Client(client.Client):
         """
         return queues.Queue(self, ref, **kwargs)
 
+    def queues(self, **params):
+        """Gets a list of queues from the server
+
+        :returns: A list of queues
+        :rtype: `list`
+        """
+        req, trans = self._request_and_transport()
+
+        queue_list = core.queue_list(trans, req, **params)
+
+        count = None
+        if params.get("with_count"):
+            count = queue_list.get("count", None)
+
+        return iterator._Iterator(self, queue_list, 'queues',
+                                  self.queues_module.create_object(self)),\
+            count
+
     @decorators.version(min_version=2)
     def subscription(self, queue_name, **kwargs):
         """Returns a subscription instance

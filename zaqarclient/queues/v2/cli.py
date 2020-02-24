@@ -88,9 +88,10 @@ class ListQueues(command.Lister):
             columns.extend(["Metadata_Dict", "Href"])
         if parsed_args.with_count is not None and parsed_args.with_count:
             kwargs["with_count"] = parsed_args.with_count
-            columns.extend(["Count"])
 
-        data = client.queues(**kwargs)
+        data, count = client.queues(**kwargs)
+        if count:
+            print("Queues in total: %s" % count)
         columns = tuple(columns)
         return (columns, (utils.get_item_properties(s, columns) for s in data))
 
