@@ -15,7 +15,7 @@
 
 from oslo_i18n import *  # noqa
 
-_translators = TranslatorFactory(domain='zaqarclient')
+_translators = TranslatorFactory(domain='zaqarclient')  # noqa: F405
 
 # The primary translation function using the well-known name "_"
 _ = _translators.primary
