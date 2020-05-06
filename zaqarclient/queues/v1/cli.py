@@ -476,7 +476,7 @@ class UpdatePool(command.ShowOne):
     """Update a pool attribute"""
 
     _description = _("Update a pool attribute")
-    log = logging.getLogger(__name__+".UpdatePool")
+    log = logging.getLogger(__name__ + ".UpdatePool")
 
     def get_parser(self, prog_name):
         parser = super(UpdatePool, self).get_parser(prog_name)
@@ -648,7 +648,7 @@ class UpdateFlavor(command.ShowOne):
     """Update a flavor's attributes"""
 
     _description = _("Update a flavor's attributes")
-    log = logging.getLogger(__name__+".UpdateFlavor")
+    log = logging.getLogger(__name__ + ".UpdateFlavor")
 
     def get_parser(self, prog_name):
         parser = super(UpdateFlavor, self).get_parser(prog_name)

@@ -102,6 +102,6 @@ class TestBase(testtools.TestCase):
         If a group argument is supplied, the overrides are applied to
         the specified configuration option group.
         """
-        parent = (group and self.conf.setdefault(group, {})
-                  or self.conf)
+        parent = (group and self.conf.setdefault(group, {}) or
+                  self.conf)
         parent.update(kw)

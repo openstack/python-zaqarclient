@@ -25,5 +25,6 @@ def healthy():
     cli = client.Client(url=URL, version=2)
     return True if cli.health() else False
 
+
 if __name__ == '__main__':
     healthy()
