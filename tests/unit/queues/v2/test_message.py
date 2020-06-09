@@ -14,7 +14,7 @@
 # limitations under the License.
 
 import json
-import mock
+from unittest import mock
 
 from zaqarclient.queues.v1 import iterator as iterate
 from zaqarclient.queues.v2 import message

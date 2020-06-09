@@ -14,7 +14,8 @@
 # limitations under the License.
 
 
-import mock
+from unittest import mock
+
 from osc_lib.tests import utils
 
 

@@ -15,7 +15,7 @@
 
 import json
 
-import mock
+from unittest import mock
 
 from zaqarclient.common import http
 from zaqarclient.tests import base

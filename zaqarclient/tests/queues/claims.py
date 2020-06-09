@@ -14,8 +14,8 @@
 # limitations under the License.
 
 import json
-import mock
 import time
+from unittest import mock
 
 from zaqarclient.queues.v1 import claim
 from zaqarclient.tests.queues import base

@@ -14,7 +14,7 @@
 # limitations under the License.
 
 
-import mock
+from unittest import mock
 
 from keystoneauth1 import session
 

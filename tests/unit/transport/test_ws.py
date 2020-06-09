@@ -11,7 +11,7 @@
 # under the License.
 
 import json
-import mock
+from unittest import mock
 
 from zaqarclient.tests import base
 from zaqarclient.transport import request
