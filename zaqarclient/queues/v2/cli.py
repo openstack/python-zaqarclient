@@ -564,8 +564,8 @@ class UpdateSubscription(command.ShowOne):
                 'options': parsed_args.options}
 
         kwargs = {'id': parsed_args.subscription_id}
-        subscription = client.subscription(parsed_args.queue_name, kwargs,
-                                           auto_create=False)
+        subscription = client.subscription(parsed_args.queue_name,
+                                           auto_create=False, **kwargs)
 
         subscription.update(data)
 
