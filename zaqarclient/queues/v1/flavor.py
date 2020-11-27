@@ -26,6 +26,7 @@ class Flavor(object):
         self.name = name
         self.pool_group = pool_group
         self.capabilities = kwargs.get('capabilities', {})
+        self.pool_list = kwargs.get('pool_list', [])
 
         if auto_create:
             self.ensure_exists()
@@ -44,7 +45,7 @@ class Flavor(object):
         # TBD(mdnadeem): Have to change this code when zaqar server
         # behaviour change for PUT operation.
 
-        data = {'pool_group': self.pool_group}
+        data = {'pool_list': self.pool_list}
         if self.client.api_version <= 1.1:
             data['capabilities'] = self.capabilities
 

@@ -24,7 +24,8 @@ from zaqarclient.transport import response
 class QueuesV1_1FlavorUnitTest(base.QueuesTestBase):
 
     def test_flavor_create(self):
-        flavor_data = {'pool_group': 'stomach'}
+        pool_list = ['stomach']
+        flavor_data = {'pool_list': pool_list}
 
         with mock.patch.object(self.transport, 'send',
                                autospec=True) as send_method:
@@ -37,10 +38,10 @@ class QueuesV1_1FlavorUnitTest(base.QueuesTestBase):
             # since auto_create's default is True
             flavor = self.client.flavor('tasty', **flavor_data)
             self.assertEqual('tasty', flavor.name)
-            self.assertEqual('stomach', flavor.pool_group)
 
     def test_flavor_get(self):
-        flavor_data = {'name': 'test', 'pool_group': 'stomach'}
+        pool_list = ['stomach']
+        flavor_data = {'name': 'test', 'pool_list': pool_list}
 
         with mock.patch.object(self.transport, 'send',
                                autospec=True) as send_method:
@@ -54,11 +55,11 @@ class QueuesV1_1FlavorUnitTest(base.QueuesTestBase):
             flavor = self.client.flavor('test')
             flavor1 = flavor.get()
             self.assertEqual('test', flavor1['name'])
-            self.assertEqual('stomach', flavor1['pool_group'])
 
     def test_flavor_update(self):
-        flavor_data = {'pool_group': 'stomach'}
-        updated_data = {'pool_group': 'belly'}
+        pool_list = ['stomach']
+        flavor_data = {'pool_list': pool_list}
+        updated_data = {'pool_list': ['belly']}
 
         with mock.patch.object(self.transport, 'send',
                                autospec=True) as send_method:
@@ -66,8 +67,8 @@ class QueuesV1_1FlavorUnitTest(base.QueuesTestBase):
             send_method.return_value = resp
 
             flavor = self.client.flavor('tasty', **flavor_data)
-            flavor.update({'pool_group': 'belly'})
-            self.assertEqual('belly', flavor.pool_group)
+            flavor.update({'pool_list': ['belly']})
+            self.assertEqual(['belly'], flavor.pool_list)
 
     def test_flavor_list(self):
         returned = {
@@ -77,7 +78,7 @@ class QueuesV1_1FlavorUnitTest(base.QueuesTestBase):
             }],
             'flavors': [{
                 'name': 'tasty',
-                'pool_group': 'stomach'
+                'pool_list': ['stomach']
             }]
         }
 
@@ -92,7 +93,8 @@ class QueuesV1_1FlavorUnitTest(base.QueuesTestBase):
             self.assertEqual(1, len(list(flavor_var)))
 
     def test_flavor_delete(self):
-        flavor_data = {'pool_group': 'stomach'}
+        pool_list = ['stomach']
+        flavor_data = {'pool_list': pool_list}
 
         with mock.patch.object(self.transport, 'send',
                                autospec=True) as send_method:
@@ -116,57 +118,56 @@ class QueuesV1_1FlavorFunctionalTest(base.QueuesTestBase):
     def test_flavor_create(self):
         pool_data = {'uri': 'mongodb://127.0.0.1:27017',
                      'weight': 10,
-                     'group': 'us'}
+                     'flavor': 'tasty'}
         pool = self.client.pool('stomach', **pool_data)
         self.addCleanup(pool.delete)
-
-        flavor_data = {'pool_group': 'us'}
+        pool_list = ['stomach']
+        flavor_data = {'pool_list': pool_list}
         flavor = self.client.flavor('tasty', **flavor_data)
         self.addCleanup(flavor.delete)
 
         self.assertEqual('tasty', flavor.name)
-        self.assertEqual('us', flavor.pool_group)
+        self.assertEqual(pool_list, flavor.pool_list)
 
     def test_flavor_get(self):
         pool_data = {'weight': 10,
-                     'group': 'us',
-                     'uri': 'mongodb://127.0.0.1:27017'}
+                     'uri': 'mongodb://127.0.0.1:27017',
+                     'flavor': 'tasty'}
 
         pool = self.client.pool('stomach', **pool_data)
         self.addCleanup(pool.delete)
 
-        flavor_data = {'pool_group': 'us'}
+        pool_list = ['stomach']
+        flavor_data = {'pool_list': pool_list}
         flavor = self.client.flavor('tasty', **flavor_data)
         resp_data = flavor.get()
         self.addCleanup(flavor.delete)
 
         self.assertEqual('tasty', resp_data['name'])
-        self.assertEqual('us', resp_data['pool_group'])
 
     def test_flavor_update(self):
         pool_data = {'weight': 10,
                      'uri': 'mongodb://127.0.0.1:27017',
-                     'group': 'us'}
+                     'flavor': 'tasty'}
 
         pool = self.client.pool('stomach', **pool_data)
         self.addCleanup(pool.delete)
 
-        flavor_data = {'pool_group': 'us'}
+        pool_list = ['stomach']
+        flavor_data = {'pool_list': pool_list}
         flavor = self.client.flavor('tasty', **flavor_data)
         self.addCleanup(flavor.delete)
-        pool.update({'group': 'belly'})
-        flavor.update({'pool_group': 'belly'})
-        self.assertEqual('belly', flavor.pool_group)
 
     def test_flavor_list(self):
         pool_data = {'uri': 'mongodb://127.0.0.1:27017',
                      'weight': 10,
-                     'group': 'us'}
+                     'flavor': 'tasty'}
 
         pool = self.client.pool('stomach', **pool_data)
         self.addCleanup(pool.delete)
 
-        flavor_data = {'pool_group': 'us'}
+        pool_list = ['stomach']
+        flavor_data = {'pool_list': pool_list}
         flavor = self.client.flavor("test_flavor", **flavor_data)
         self.addCleanup(flavor.delete)
 
@@ -177,11 +178,12 @@ class QueuesV1_1FlavorFunctionalTest(base.QueuesTestBase):
     def test_flavor_delete(self):
         pool_data = {'uri': 'mongodb://127.0.0.1:27017',
                      'weight': 10,
-                     'group': 'us'}
+                     'flavor': 'tasty'}
         pool = self.client.pool('stomach', **pool_data)
         self.addCleanup(pool.delete)
 
-        flavor_data = {'pool_group': 'us'}
+        pool_list = ['stomach']
+        flavor_data = {'pool_list': pool_list}
         flavor = self.client.flavor('tasty', **flavor_data)
         flavor.delete()
 
