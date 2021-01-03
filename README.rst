@@ -89,8 +89,10 @@ first patch.
 * `PyPi`_ - package installation
 * `Bugs`_ - issue tracking
 * `Source`_
+* `Release Notes`_
 
 .. _PyPi: https://pypi.org/project/python-zaqarclient
 .. _Bugs: https://bugs.launchpad.net/python-zaqarclient
 .. _Source: https://opendev.org/openstack/python-zaqarclient/
+.. _Release Notes: https://docs.openstack.org/releasenotes/python-zaqarclient
 
