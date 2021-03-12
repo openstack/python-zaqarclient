@@ -11,6 +11,7 @@
    2023.2
    2023.1
    zed
+   wallaby
    ussuri
    stein
    rocky
