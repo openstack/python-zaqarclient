@@ -29,7 +29,7 @@ class Client(object):
     """Client base class
 
     :param url: Zaqar's instance base url.
-    :type url: `six.text_type`
+    :type url: str
     :param version: API Version pointing to.
     :type version: `int`
     :param conf: CONF object.
@@ -90,7 +90,7 @@ class Client(object):
         """Returns a queue instance
 
         :param ref: Queue's reference id.
-        :type ref: `six.text_type`
+        :type ref: str
 
         :returns: A queue instance
         :rtype: `queues.Queue`
@@ -120,7 +120,7 @@ class Client(object):
         gotten from `links` sections in responses like queues' lists.
 
         :params ref: The reference path.
-        :type ref: `six.text_type`
+        :type ref: str
         """
         req, trans = self._request_and_transport()
         req.ref = ref
@@ -132,7 +132,7 @@ class Client(object):
         """Returns a pool instance
 
         :param ref: Pool's reference name.
-        :type ref: `six.text_type`
+        :type ref: str
 
         :returns: A pool instance
         :rtype: `pool.Pool`
@@ -162,7 +162,7 @@ class Client(object):
         """Returns a flavor instance
 
         :param ref: Flavor's reference name.
-        :type ref: `six.text_type`
+        :type ref: str
 
         :returns: A flavor instance
         :rtype: `flavor.Flavor`

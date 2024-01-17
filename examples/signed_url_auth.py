@@ -24,7 +24,7 @@ def create_post_delete(queue_name, messages):
     ``signed-url`` auth strategy enabled on Zaqar server side.
 
     :params queue_name: The name of the queue
-    :type queue_name: `six.text_type`
+    :type queue_name: str
     :params messages: Messages to post.
     :type messages: list
     """

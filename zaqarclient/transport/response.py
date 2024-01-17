@@ -26,7 +26,7 @@ class Response(object):
     :param request: The request sent to the server.
     :type: `zaqarclient.transport.request.Request`
     :param content: Response's content
-    :type: `six.string_types`
+    :type: str
     :param headers: Optional headers returned in the response.
     :type: dict
     :param status_code: Optional status_code returned in the response.

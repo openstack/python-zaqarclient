@@ -86,11 +86,11 @@ class Request(object):
     :param headers: Request headers. Default: None
     :type headers: dict
     :param api: Api entry point. i.e: 'queues.v1'
-    :type api: `six.text_type`.
+    :type api: str.
     :param verify: If verify the SSL cert
     :type verify: bool
     :param cert: certificate of SSL
-    :type cert: `six.text_type`
+    :type cert: str
     :param session: Keystone session
     :type session: keystone session object
     """

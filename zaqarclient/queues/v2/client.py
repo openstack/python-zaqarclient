@@ -26,7 +26,7 @@ class Client(client.Client):
     """Client base class
 
     :param url: Zaqar's instance base url.
-    :type url: `six.text_type`
+    :type url: str
     :param version: API Version pointing to.
     :type version: `int`
     :param conf: CONF object.
@@ -49,7 +49,7 @@ class Client(client.Client):
         """Returns a queue instance
 
         :param ref: Queue's reference id.
-        :type ref: `six.text_type`
+        :type ref: str
 
         :returns: A queue instance
         :rtype: `queues.Queue`
@@ -79,7 +79,7 @@ class Client(client.Client):
         """Returns a subscription instance
 
         :param queue_name: Name of the queue to subscribe to.
-        :type queue_name: `six.text_type`
+        :type queue_name: str
 
         :returns: A subscription instance
         :rtype: `subscription.Subscription`

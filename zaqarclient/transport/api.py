@@ -29,7 +29,7 @@ class Api(object):
         """Returns `True` if `operation` is supported
 
         :param operation: The operation to check on.
-        :type operation: `six.text_type`
+        :type operation: str
 
         :rtype: bool
         """
@@ -40,7 +40,7 @@ class Api(object):
 
         :param operation: Operation for which params need
             to be validated.
-        :type operation: `six.text_type`
+        :type operation: str
 
         :returns: Operation's schema
         :rtype: dict
@@ -65,7 +65,7 @@ class Api(object):
 
         :param operation: Operation's for which params need
             to be validated.
-        :type operation: `six.text_type`
+        :type operation: str
         :param params: Params to validate
         :type params: dict
 

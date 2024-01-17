@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import six.moves.urllib.parse as urlparse
+import urllib.parse
 
 from keystoneauth1 import discover
 from keystoneauth1 import exceptions as ka_exc
@@ -145,7 +145,7 @@ class KeystoneAuth(base.AuthBackend):
         except ka_exc.ClientException:
             # Identity service may not support discovery. In that case,
             # try to determine version from auth_url
-            url_parts = urlparse.urlparse(auth_url)
+            url_parts = urllib.parse.urlparse(auth_url)
             (scheme, netloc, path, params, query, fragment) = url_parts
             path = path.lower()
             if path.startswith('/v3'):

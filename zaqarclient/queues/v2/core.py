@@ -71,7 +71,7 @@ def queue_update(transport, request, name, metadata, callback=None):
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param name: Queue reference name.
-    :type name: `six.text_type`
+    :type name: str
     :param metadata: Queue's metadata object.
     :type metadata: `list`
     :param callback: Optional callable to use as callback.
@@ -96,7 +96,7 @@ def queue_purge(transport, request, name, resource_types=None):
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param name: Queue reference name.
-    :type name: `six.text_type`
+    :type name: str
     :param resource_types: Resource types will be purged
     :type resource_types: `list`
     """
@@ -118,13 +118,13 @@ def signed_url_create(transport, request, queue_name, paths=None,
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param queue_name: name of Queue for the URL to access
-    :type name: `six.text_type`
+    :type name: str
     :param paths: Allowed actions. Options: messages, subscriptions, claims
     :type name: list
     :param ttl_seconds: Seconds the URL will be valid for, default 86400
     :type name: int
     :param project_id: defaults to None
-    :type name: `six.text_type`
+    :type name: str
     :param methods: HTTP methods to allow, defaults to ["GET"]
     :type name: `list`
     """
@@ -161,7 +161,7 @@ def subscription_create(transport, request, queue_name, subscription_data):
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param queue_name: Queue reference name.
-    :type queue_name: `six.text_type`
+    :type queue_name: str
     :param subscription_data: Subscription's properties, i.e: subscriber,
         ttl, options.
     :type subscription_data: `dict`
@@ -183,9 +183,9 @@ def subscription_get(transport, request, queue_name, subscription_id):
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param queue_name: Queue reference name.
-    :type queue_name: `six.text_type`
+    :type queue_name: str
     :param subscription_id: ID of subscription.
-    :type subscription_id: `six.text_type`
+    :type subscription_id: str
 
     """
 
@@ -206,9 +206,9 @@ def subscription_update(transport, request, queue_name, subscription_id,
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param queue_name: Queue reference name.
-    :type queue_name: `six.text_type`
+    :type queue_name: str
     :param subscription_id: ID of subscription.
-    :type subscription_id: `six.text_type`
+    :type subscription_id: str
     :param subscription_data: Subscription's properties, i.e: subscriber,
         ttl, options.
     :type subscription_data: `dict`
@@ -231,9 +231,9 @@ def subscription_delete(transport, request, queue_name, subscription_id):
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param queue_name: Queue reference name.
-    :type queue_name: `six.text_type`
+    :type queue_name: str
     :param subscription_id: ID of subscription.
-    :type subscription_id: `six.text_type`
+    :type subscription_id: str
     """
 
     request.operation = 'subscription_delete'
@@ -250,7 +250,7 @@ def subscription_list(transport, request, queue_name, **kwargs):
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param queue_name: Queue reference name.
-    :type queue_name: `six.text_type`
+    :type queue_name: str
     :param kwargs: Optional arguments for this operation.
         - marker: Where to start getting subscriptions from.
         - limit: Maximum number of subscriptions to get.

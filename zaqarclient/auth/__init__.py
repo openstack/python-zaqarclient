@@ -30,7 +30,7 @@ def get_backend(backend='keystone', options=None):
 
     :params backend: The backend name to load.
         Default: `keystone`
-    :type backend: `six.string_types`
+    :type backend: str
     :param options: Options to pass to the Auth
         backend. Refer to the backend for more info.
     :type options: `dict`
