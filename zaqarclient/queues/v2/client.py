@@ -70,9 +70,9 @@ class Client(client.Client):
         if params.get("with_count"):
             count = queue_list.get("count", None)
 
-        return iterator._Iterator(self, queue_list, 'queues',
-                                  self.queues_module.create_object(self)),\
-            count
+        list_iter = iterator._Iterator(self, queue_list, 'queues',
+                                       self.queues_module.create_object(self))
+        return (list_iter, count)
 
     @decorators.version(min_version=2)
     def subscription(self, queue_name, **kwargs):
