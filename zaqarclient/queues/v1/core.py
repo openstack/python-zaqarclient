@@ -42,7 +42,7 @@ def _common_queue_ops(operation, transport, request, name, callback=None):
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param name: Queue reference name.
-    :type name: `six.text_type`
+    :type name: str
     :param callback: Optional callable to use as callback.
         If specified, this request will be sent asynchronously.
         (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
@@ -63,7 +63,7 @@ def queue_create(transport, request, name,
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param name: Queue reference name.
-    :type name: `six.text_type`
+    :type name: str
     :param metadata: Queue's metadata object. (>=v1.1)
     :type metadata: `dict`
     :param callback: Optional callable to use as callback.
@@ -88,7 +88,7 @@ def queue_update(transport, request, name, metadata, callback=None):
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param name: Queue reference name.
-    :type name: `six.text_type`
+    :type name: str
     :param metadata: Queue's metadata object. (>=v1.1)
     :type metadata: `dict`
     :param callback: Optional callable to use as callback.
@@ -184,7 +184,7 @@ def message_list(transport, request, queue_name, callback=None, **kwargs):
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param queue_name: Queue reference name.
-    :type queue_name: `six.text_type`
+    :type queue_name: str
     :param callback: Optional callable to use as callback.
         If specified, this request will be sent asynchronously.
         (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
@@ -226,7 +226,7 @@ def message_post(transport, request, queue_name, messages, callback=None):
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param queue_name: Queue reference name.
-    :type queue_name: `six.text_type`
+    :type queue_name: str
     :param messages: One or more messages to post.
     :param messages: `list`
     :param callback: Optional callable to use as callback.
@@ -251,9 +251,9 @@ def message_get(transport, request, queue_name, message_id, callback=None):
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param queue_name: Queue reference name.
-    :type queue_name: `six.text_type`
+    :type queue_name: str
     :param message_id: Message reference.
-    :param message_id: `six.text_type`
+    :param message_id: str
     :param callback: Optional callable to use as callback.
         If specified, this request will be sent asynchronously.
         (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
@@ -276,9 +276,9 @@ def message_get_many(transport, request, queue_name, messages, callback=None):
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param queue_name: Queue reference name.
-    :type queue_name: `six.text_type`
+    :type queue_name: str
     :param messages: Messages references.
-    :param messages: list of `six.text_type`
+    :param messages: list of str
     :param callback: Optional callable to use as callback.
         If specified, this request will be sent asynchronously.
         (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
@@ -302,9 +302,9 @@ def message_delete(transport, request, queue_name, message_id,
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param queue_name: Queue reference name.
-    :type queue_name: `six.text_type`
+    :type queue_name: str
     :param message_id: Message reference.
-    :param message_id: `six.text_type`
+    :param message_id: str
     :param callback: Optional callable to use as callback.
         If specified, this request will be sent asynchronously.
         (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
@@ -329,9 +329,9 @@ def message_delete_many(transport, request, queue_name,
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param queue_name: Queue reference name.
-    :type queue_name: `six.text_type`
+    :type queue_name: str
     :param ids: Ids of the messages to delete
-    :type ids: List of `six.text_type`
+    :type ids: List of str
     :param callback: Optional callable to use as callback.
         If specified, this request will be sent asynchronously.
         (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
@@ -353,7 +353,7 @@ def message_pop(transport, request, queue_name,
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param queue_name: Queue reference name.
-    :type queue_name: `six.text_type`
+    :type queue_name: str
     :param count: Number of messages to pop.
     :type count: int
     :param callback: Optional callable to use as callback.
@@ -449,7 +449,7 @@ def pool_get(transport, request, pool_name, callback=None):
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param pool_name: Pool reference name.
-    :type pool_name: `six.text_type`
+    :type pool_name: str
 
     """
 
@@ -469,7 +469,7 @@ def pool_create(transport, request, pool_name, pool_data):
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param pool_name: Pool reference name.
-    :type pool_name: `six.text_type`
+    :type pool_name: str
     :param pool_data: Pool's properties, i.e: weight, uri, options.
     :type pool_data: `dict`
     """
@@ -488,7 +488,7 @@ def pool_update(transport, request, pool_name, pool_data):
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param pool_name: Pool reference name.
-    :type pool_name: `six.text_type`
+    :type pool_name: str
     :param pool_data: Pool's properties, i.e: weight, uri, options.
     :type pool_data: `dict`
     """
@@ -532,7 +532,7 @@ def pool_delete(transport, request, pool_name):
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param pool_name: Pool reference name.
-    :type pool_name: `six.text_type`
+    :type pool_name: str
     """
 
     request.operation = 'pool_delete'
@@ -548,7 +548,7 @@ def flavor_create(transport, request, name, flavor_data):
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param name: Flavor reference name.
-    :type name: `six.text_type`
+    :type name: str
     :param flavor_data: Flavor's properties, i.e: pool, capabilities.
     :type flavor_data: `dict`
     """
@@ -567,7 +567,7 @@ def flavor_get(transport, request, flavor_name, callback=None):
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param flavor_name: Flavor reference name.
-    :type flavor_name: `six.text_type`
+    :type flavor_name: str
 
     """
 
@@ -586,7 +586,7 @@ def flavor_update(transport, request, flavor_name, flavor_data):
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param flavor_name: Flavor reference name.
-    :type flavor_name: `six.text_type`
+    :type flavor_name: str
     :param flavor_data: Flavor's properties, i.e: pool, capabilities.
     :type flavor_data: `dict`
     """
@@ -630,7 +630,7 @@ def flavor_delete(transport, request, name):
     :param request: Request instance ready to be sent.
     :type request: `transport.request.Request`
     :param name: Flavor reference name.
-    :type name: `six.text_type`
+    :type name: str
     """
 
     request.operation = 'flavor_delete'

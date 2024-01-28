@@ -13,8 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import six
-from six.moves.urllib import parse
+import urllib.parse
+
 from stevedore import driver
 
 from zaqarclient import errors as _errors
@@ -25,7 +25,7 @@ def get_transport(transport='http', version=1, options=None):
 
     :param transport: Transport name.
         Default: http
-    :type transport: `six.string_types`
+    :type transport: str
     :param version: Version of the target transport.
         Default: 1
     :type version: int
@@ -56,7 +56,7 @@ def get_transport_for(url_or_request, version=1, options=None):
         zmq://example.org:8888/v1/
 
     :param url_or_request: a transport URL
-    :type url_or_request: `six.string_types` or
+    :type url_or_request: str or
         `zaqarclient.transport.request.Request`
     :param version: Version of the target transport.
     :type version: int
@@ -66,8 +66,8 @@ def get_transport_for(url_or_request, version=1, options=None):
     """
 
     url = url_or_request
-    if not isinstance(url_or_request, six.string_types):
+    if not isinstance(url_or_request, str):
         url = url_or_request.endpoint
 
-    parsed = parse.urlparse(url)
+    parsed = urllib.parse.urlparse(url)
     return get_transport(parsed.scheme, version, options)

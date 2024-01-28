@@ -15,13 +15,10 @@
 
 import abc
 
-import six
-
 from zaqarclient.transport import errors
 
 
-@six.add_metaclass(abc.ABCMeta)
-class Transport(object):
+class Transport(object, metaclass=abc.ABCMeta):
 
     # common HTTP codes used by multiple transports
     http_to_zaqar = {

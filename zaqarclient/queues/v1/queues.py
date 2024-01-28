@@ -38,9 +38,9 @@ class Queue(object):
         :param client: The client object of Zaqar.
         :type client: `object`
         :param name: Name of the queue.
-        :type name: `six.string_type`
+        :type name: str
         :param href : Hypertext Reference.
-        :type href:  `six.string_type`
+        :type href:  str
         :param metadata : A metadata object of the queue.
         :type metadata: `dict`
         :param auto_create: If create the queue automatically in database.
@@ -173,7 +173,7 @@ class Queue(object):
         """Gets a message by id
 
         :param message_id: Message's reference
-        :type message_id: `six.text_type`
+        :type message_id: str
 
         :returns: A message
         :rtype: `dict`
@@ -195,7 +195,7 @@ class Queue(object):
         and the former has the priority.
 
         :param messages: List of messages' ids to retrieve.
-        :type messages: *args of `six.string_type`
+        :type messages: *args of str
 
         :param params: Filters to use for getting messages
         :type params: **kwargs dict.
@@ -229,7 +229,7 @@ class Queue(object):
         """Deletes a set of messages from the server
 
         :param messages: List of messages' ids to delete.
-        :type messages: *args of `six.string_type`
+        :type messages: *args of str
         """
 
         req, trans = self.client._request_and_transport()

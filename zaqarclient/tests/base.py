@@ -14,10 +14,10 @@
 # limitations under the License.
 
 import os
+import urllib.parse
 
 import fixtures
 import openstack.config
-from six.moves import urllib_parse
 import testtools
 
 _USE_AUTHENTICATION = os.environ.get('ZAQARCLIENT_AUTH_FUNCTIONAL', False)
@@ -75,10 +75,10 @@ class TestBase(testtools.TestCase):
     def _setup_auth_params(self):
         self.creds = self._credentials().get_auth_args()
 
-        parsed_url = urllib_parse.urlparse(self.creds['auth_url'])
+        parsed_url = urllib.parse.urlparse(self.creds['auth_url'])
         auth_url = self.creds['auth_url']
         if not parsed_url.path or parsed_url.path == '/':
-            auth_url = urllib_parse.urljoin(self.creds['auth_url'], 'v3')
+            auth_url = urllib.parse.urljoin(self.creds['auth_url'], 'v3')
         if parsed_url.path == '/identity':
             auth_url = '%s/v3' % auth_url
 
