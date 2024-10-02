@@ -14,18 +14,7 @@
 # under the License.
 
 import pbr.version
-import pkg_resources
 
 version_info = pbr.version.VersionInfo('python-zaqarclient')
 
-try:
-    # First, try to get our version out of PKG-INFO. If we're installed,
-    # this'll let us find our version without pulling in pbr. After all, if
-    # we're installed on a system, we're not in a Git-managed source tree, so
-    # pbr doesn't really buy us anything.
-    version_string = pkg_resources.get_provider(
-        pkg_resources.Requirement.parse('python-zaqarclient')).version
-except pkg_resources.DistributionNotFound:
-    # No PKG-INFO? We're probably running from a checkout, then. Let pbr do
-    # its thing to figure out a version number.
-    version_string = str(version_info)
+version_string = version_info.version_string
