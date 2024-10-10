@@ -13,10 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from distutils import version
 import json
 
 from oslo_utils import importutils
+from oslo_utils import versionutils
 
 from zaqarclient.common import http
 from zaqarclient.transport import base
@@ -79,8 +79,7 @@ class HttpTransport(base.Transport):
         # request's headers directly.
         headers = request.headers.copy()
         if (request.operation == 'queue_update' and
-                (version.LooseVersion(request.api.label) >=
-                    version.LooseVersion('v2'))):
+                versionutils.is_compatible(request.api.label, 'v2')):
             headers['content-type'] = \
                 'application/openstack-messaging-v2.0-json-patch'
         else:
