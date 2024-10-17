@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import subprocess
+import os
 from unittest import mock
 
 from oslo_utils import netutils
@@ -22,18 +22,14 @@ from zaqarclient.queues import client
 from zaqarclient.tests import base
 from zaqarclient.tests.transport import dummy
 
-cmd = 'cat /etc/zaqar/uwsgi.conf | grep http'
-MY_HOST_IP = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-if len(MY_HOST_IP.stdout.split("= ")) < 2:
-    MY_IP = netutils.get_my_ipv4() + ':8888'
-else:
-    MY_IP = MY_HOST_IP.stdout.split("= ")[1]
+
+MY_IP = os.environ.get('ZAQAR_SERVICE_HOST', netutils.get_my_ipv4())
 
 
 class QueuesTestBase(base.TestBase):
 
     transport_cls = dummy.DummyTransport
-    url = 'http://%s' % MY_IP
+    url = 'http://%s:8888' % netutils.escape_ipv6(MY_IP)
     version = 1
 
     def setUp(self):
