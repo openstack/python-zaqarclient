@@ -18,7 +18,7 @@ Python Zaqar Client
 :Launchpad: `Zaqar Launchpad`_
 :Review: `Code Review`_
 :Design: `Client Wiki`_
-:IRC: #openstack-zaqar @ freenode
+:IRC: #openstack-zaqar @ OFTC
 
 Welcome to the `Zaqar`_ Python Client project!
 
