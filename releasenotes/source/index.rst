@@ -12,6 +12,7 @@
    2023.1
    zed
    wallaby
+   victoria
    ussuri
    stein
    rocky
