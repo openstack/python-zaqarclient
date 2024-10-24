@@ -13,11 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import urllib.parse
-
-from keystoneauth1 import discover
-from keystoneauth1 import exceptions as ka_exc
-from keystoneauth1.identity import v2 as v2_auth
 from keystoneauth1.identity import v3 as v3_auth
 from keystoneauth1 import session
 
@@ -67,10 +62,9 @@ class KeystoneAuth(base.AuthBackend):
 
         # create the keystone client session
         ks_session = session.Session(verify=verify, cert=cert)
-        v2_auth_url, v3_auth_url = self._discover_auth_versions(ks_session,
-                                                                auth_url)
 
         username = kwargs.pop('username', None)
+        password = kwargs.pop('password', None)
         user_id = kwargs.pop('user_id', None)
         user_domain_name = kwargs.pop('user_domain_name', None)
         user_domain_id = kwargs.pop('user_domain_id', None)
@@ -78,33 +72,24 @@ class KeystoneAuth(base.AuthBackend):
         project_domain_id = kwargs.pop('project_domain_id', None)
         auth = None
 
-        use_domain = (user_domain_id or user_domain_name or
-                      project_domain_id or project_domain_name)
-        use_v3 = v3_auth_url and (use_domain or (not v2_auth_url))
-        use_v2 = v2_auth_url and not use_domain
+        if auth_url is None:
+            raise errors.ZaqarError(
+                'Unable to determine the Keystone endpoint because auth_url '
+                'is not given.')
 
-        if use_v3 and token:
+        if token:
             auth = v3_auth.Token(
-                v3_auth_url,
+                auth_url,
                 token=token,
                 project_name=project_name,
                 project_id=project_id,
                 project_domain_name=project_domain_name,
                 project_domain_id=project_domain_id)
-        elif use_v2 and token:
-            auth = v2_auth.Token(
-                v2_auth_url,
-                token=token,
-                tenant_id=project_id,
-                tenant_name=project_name)
-        elif use_v3:
-            # The auth_url as v3 specified
-            # e.g. http://no.where:5000/v3
-            # Keystone will return only v3 as viable option
+        else:
             auth = v3_auth.Password(
-                v3_auth_url,
+                auth_url,
                 username=username,
-                password=kwargs.pop('password', None),
+                password=password,
                 user_id=user_id,
                 user_domain_name=user_domain_name,
                 user_domain_id=user_domain_id,
@@ -112,51 +97,9 @@ class KeystoneAuth(base.AuthBackend):
                 project_id=project_id,
                 project_domain_name=project_domain_name,
                 project_domain_id=project_domain_id)
-        elif use_v2:
-            # The auth_url as v2 specified
-            # e.g. http://no.where:5000/v2.0
-            # Keystone will return only v2 as viable option
-            auth = v2_auth.Password(
-                v2_auth_url,
-                username,
-                kwargs.pop('password', None),
-                tenant_id=project_id,
-                tenant_name=project_name)
-
-        else:
-            raise errors.ZaqarError('Unable to determine the Keystone version '
-                                    'to authenticate with using the given '
-                                    'auth_url.')
 
         ks_session.auth = auth
         return ks_session
-
-    def _discover_auth_versions(self, session, auth_url):
-        # Discover the API versions the server is supporting based on the
-        # given URL
-        v2_auth_url = None
-        v3_auth_url = None
-        try:
-            ks_discover = discover.Discover(session=session, url=auth_url)
-            v2_auth_url = ks_discover.url_for('2.0')
-            v3_auth_url = ks_discover.url_for('3.0')
-        except ka_exc.DiscoveryFailure:
-            raise
-        except ka_exc.ClientException:
-            # Identity service may not support discovery. In that case,
-            # try to determine version from auth_url
-            url_parts = urllib.parse.urlparse(auth_url)
-            (scheme, netloc, path, params, query, fragment) = url_parts
-            path = path.lower()
-            if path.startswith('/v3'):
-                v3_auth_url = auth_url
-            elif path.startswith('/v2'):
-                v2_auth_url = auth_url
-            else:
-                raise errors.ZaqarError('Unable to determine the Keystone '
-                                        'version to authenticate with '
-                                        'using the given auth_url.')
-        return v2_auth_url, v3_auth_url
 
     def _get_endpoint(self, ks_session, **kwargs):
         """Get an endpoint using the provided keystone session."""
