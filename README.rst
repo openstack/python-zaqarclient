@@ -81,7 +81,7 @@ first patch.
 .. _Zaqar Wiki: https://wiki.openstack.org/wiki/Zaqar
 .. _Contributor Guide: https://wiki.openstack.org/wiki/Zaqar#Contributor_Guide
 .. _Zaqar Launchpad: https://launchpad.net/zaqar
-.. _Code Review: https://review.openstack.org/#/q/status:open+project:openstack/python-zaqarclient,n,z
+.. _Code Review: https://review.opendev.org/q/status:open+project:openstack/python-zaqarclient
 .. _Client Wiki: https://wiki.openstack.org/wiki/Python_Zaqar_Client
 
 
