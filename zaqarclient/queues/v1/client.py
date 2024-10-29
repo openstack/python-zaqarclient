@@ -63,9 +63,9 @@ class Client(object):
         :type request: :class:`zaqarclient.transport.request.Request`
         """
 
-        trans = transport.get_transport_for(request,
-                                            options=self.conf)
-        return (trans or self.transport)
+        return transport.get_transport_for(request,
+                                           version=self.api_version,
+                                           options=self.conf)
 
     def _request_and_transport(self):
         req = request.prepare_request(self.auth_opts,
@@ -84,7 +84,7 @@ class Client(object):
         :rtype: :class:`zaqarclient.transport.base.Transport`
         """
         return transport.get_transport_for(self.api_url,
-                                           self.api_version)
+                                           version=self.api_version)
 
     def queue(self, ref, **kwargs):
         """Returns a queue instance
