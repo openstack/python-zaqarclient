@@ -59,6 +59,7 @@ def get_transport_for(url_or_request, version=1, options=None):
     :type url_or_request: str or
         `zaqarclient.transport.request.Request`
     :param version: Version of the target transport.
+        Default: 1
     :type version: int
 
     :returns: A `Transport` instance.

@@ -20,7 +20,7 @@ from osc_lib import utils
 from oslo_log import log as logging
 
 from zaqarclient._i18n import _
-from zaqarclient.queues.v1 import cli
+from zaqarclient.transport import errors
 
 
 def _get_client(obj, parsed_args):
@@ -28,24 +28,46 @@ def _get_client(obj, parsed_args):
     return obj.app.client_manager.messaging
 
 
-class CreateQueue(cli.CreateQueue):
+class CreateQueue(command.ShowOne):
     """Create a queue"""
-    pass
+
+    _description = _("Create a queue")
+    log = logging.getLogger(__name__ + ".CreateQueue")
+
+    def get_parser(self, prog_name):
+        parser = super(CreateQueue, self).get_parser(prog_name)
+        parser.add_argument(
+            "queue_name",
+            metavar="<queue_name>",
+            help="Name of the queue")
+        return parser
+
+    def take_action(self, parsed_args):
+        client = _get_client(self, parsed_args)
+        queue_name = parsed_args.queue_name
+        data = client.queue(queue_name, force_create=True)
+        columns = ('Name',)
+        return columns, utils.get_item_properties(data, columns)
 
 
-class OldCreateQueue(cli.OldCreateQueue):
-    """Create a queue"""
-    pass
-
-
-class DeleteQueue(cli.DeleteQueue):
+class DeleteQueue(command.Command):
     """Delete a queue"""
-    pass
 
+    _description = _("Delete a queue")
+    log = logging.getLogger(__name__ + ".DeleteQueue")
 
-class OldDeleteQueue(cli.OldDeleteQueue):
-    """Delete a queue"""
-    pass
+    def get_parser(self, prog_name):
+        parser = super(DeleteQueue, self).get_parser(prog_name)
+        parser.add_argument(
+            "queue_name",
+            metavar="<queue_name>",
+            help="Name of the queue")
+        return parser
+
+    def take_action(self, parsed_args):
+        client = _get_client(self, parsed_args)
+        queue_name = parsed_args.queue_name
+        client.queue(queue_name).delete()
 
 
 class ListQueues(command.Lister):
@@ -96,19 +118,33 @@ class ListQueues(command.Lister):
         return (columns, (utils.get_item_properties(s, columns) for s in data))
 
 
-class OldListQueues(cli.OldListQueues):
-    """List available queues"""
-    pass
-
-
-class GetQueueStats(cli.GetQueueStats):
+class GetQueueStats(command.ShowOne):
     """Get queue stats"""
-    pass
 
+    _description = _("Get queue stats")
+    log = logging.getLogger(__name__ + ".GetQueueStats")
 
-class OldGetQueueStats(cli.OldGetQueueStats):
-    """Get queue stats"""
-    pass
+    def get_parser(self, prog_name):
+        parser = super(GetQueueStats, self).get_parser(prog_name)
+        parser.add_argument(
+            "queue_name",
+            metavar="<queue_name>",
+            help="Name of the queue")
+        return parser
+
+    def take_action(self, parsed_args):
+        client = _get_client(self, parsed_args)
+        queue_name = parsed_args.queue_name
+        queue = client.queue(queue_name, auto_create=False)
+
+        try:
+            stats = queue.stats
+        except errors.ResourceNotFound:
+            raise RuntimeError('Queue(%s) does not exist.' % queue_name)
+
+        columns = ("Stats",)
+        data = dict(stats=stats)
+        return columns, utils.get_dict_properties(data, columns)
 
 
 class SetQueueMetadata(command.Command):
@@ -148,19 +184,31 @@ class SetQueueMetadata(command.Command):
             metadata(new_meta=valid_metadata)
 
 
-class OldSetQueueMetadata(cli.OldSetQueueMetadata):
-    """Set queue metadata"""
-    pass
-
-
-class GetQueueMetadata(cli.GetQueueMetadata):
+class GetQueueMetadata(command.ShowOne):
     """Get queue metadata"""
-    pass
 
+    _description = _("Get queue metadata")
+    log = logging.getLogger(__name__ + ".GetQueueMetadata")
 
-class OldGetQueueMetadata(cli.OldGetQueueMetadata):
-    """Get queue metadata"""
-    pass
+    def get_parser(self, prog_name):
+        parser = super(GetQueueMetadata, self).get_parser(prog_name)
+        parser.add_argument(
+            "queue_name",
+            metavar="<queue_name>",
+            help="Name of the queue")
+        return parser
+
+    def take_action(self, parsed_args):
+        client = _get_client(self, parsed_args)
+        queue_name = parsed_args.queue_name
+        queue = client.queue(queue_name, auto_create=False)
+
+        if client.api_version == 1 and not queue.exists():
+            raise RuntimeError("Queue(%s) does not exist." % queue_name)
+
+        columns = ("Metadata",)
+        data = dict(metadata=queue.metadata())
+        return columns, utils.get_dict_properties(data, columns)
 
 
 class PostMessages(command.Command):
@@ -201,25 +249,6 @@ class PostMessages(command.Command):
 
         queue = client.queue(parsed_args.queue_name)
         queue.post(parsed_args.messages)
-
-
-class OldPostMessages(PostMessages):
-    """Post messages for a given queue"""
-
-    _description = _("Post messages for a given queue")
-    # TODO(wanghao): Remove this class and ``message post`` command
-    #                after Queen.
-
-    # This notifies cliff to not display the help for this command
-    deprecated = True
-
-    log = logging.getLogger('deprecated')
-
-    def take_action(self, parsed_args):
-        self.log.warning(_('This command has been deprecated. '
-                           'Please use "messaging message post" '
-                           'instead.'))
-        return super(OldPostMessages, self).take_action(parsed_args)
 
 
 class ListMessages(command.Lister):
@@ -297,25 +326,6 @@ class ListMessages(command.Lister):
                 (utils.get_item_properties(s, columns) for s in messages))
 
 
-class OldListMessages(ListMessages):
-    """List all messages for a given queue"""
-
-    _description = _("List all messages for a given queue")
-    # TODO(wanghao): Remove this class and ``message list`` command
-    #                after Queen.
-
-    # This notifies cliff to not display the help for this command
-    deprecated = True
-
-    log = logging.getLogger('deprecated')
-
-    def take_action(self, parsed_args):
-        self.log.warning(_('This command has been deprecated. '
-                           'Please use "messaging message list" '
-                           'instead.'))
-        return super(OldListMessages, self).take_action(parsed_args)
-
-
 class PurgeQueue(command.Command):
     """Purge a queue"""
 
@@ -343,116 +353,356 @@ class PurgeQueue(command.Command):
             resource_types=parsed_args.resource_types)
 
 
-class OldPurgeQueue(PurgeQueue):
-    """Purge a queue"""
+class CreatePool(command.ShowOne):
+    """Create a pool"""
 
-    _description = _("Purge a queue")
-    # TODO(wanghao): Remove this class and ``queue purge`` command
-    #                after Queen.
+    _description = _("Create a pool")
+    log = logging.getLogger(__name__ + ".CreatePool")
 
-    # This notifies cliff to not display the help for this command
-    deprecated = True
+    def get_parser(self, prog_name):
+        parser = super(CreatePool, self).get_parser(prog_name)
+        parser.add_argument(
+            "pool_name",
+            metavar="<pool_name>",
+            help="Name of the pool")
+        parser.add_argument(
+            "pool_uri",
+            metavar="<pool_uri>",
+            help="Storage engine URI")
+        parser.add_argument(
+            "pool_weight",
+            type=int,
+            metavar="<pool_weight>",
+            help="weight of the pool")
+        parser.add_argument(
+            "--flavor",
+            metavar="<flavor>",
+            help="Flavor of the pool")
+        parser.add_argument(
+            "--pool_options",
+            type=json.loads,
+            default={},
+            metavar="<pool_options>",
+            help="An optional request component "
+                 "related to storage-specific options")
 
-    log = logging.getLogger('deprecated')
+        return parser
 
     def take_action(self, parsed_args):
-        self.log.warning(_('This command has been deprecated. '
-                           'Please use "messaging queue purge" '
-                           'instead.'))
-        return super(OldPurgeQueue, self).take_action(parsed_args)
+        client = _get_client(self, parsed_args)
+        kw_arg = {
+            'uri': parsed_args.pool_uri,
+            'weight': parsed_args.pool_weight,
+            'options': parsed_args.pool_options
+        }
+
+        if parsed_args.flavor:
+            kw_arg.update({'flavor': parsed_args.flavor})
+
+        data = client.pool(parsed_args.pool_name, **kw_arg)
+
+        if not data:
+            raise RuntimeError('Failed to create pool(%s).' %
+                               parsed_args.pool_name)
+
+        columns = ('Name', 'Weight', 'URI', 'Flavor', 'Options')
+        return columns, utils.get_item_properties(data, columns)
 
 
-class CreatePool(cli.CreatePool):
-    """Create a pool"""
-    pass
-
-
-class OldCreatePool(cli.OldCreatePool):
-    """Create a pool"""
-    pass
-
-
-class ShowPool(cli.ShowPool):
+class ShowPool(command.ShowOne):
     """Display pool details"""
-    pass
+
+    _description = _("Display pool details")
+    log = logging.getLogger(__name__ + ".ShowPool")
+
+    def get_parser(self, prog_name):
+        parser = super(ShowPool, self).get_parser(prog_name)
+        parser.add_argument(
+            "pool_name",
+            metavar="<pool_name>",
+            help="Pool to display (name)",
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        client = _get_client(self, parsed_args)
+
+        pool_data = client.pool(parsed_args.pool_name,
+                                auto_create=False).get()
+        columns = ('Name', 'Weight', 'URI', 'Flavor', 'Options')
+        return columns, utils.get_dict_properties(pool_data, columns)
 
 
-class OldShowPool(cli.OldShowPool):
-    """Display pool details"""
-    pass
-
-
-class UpdatePool(cli.UpdatePool):
+class UpdatePool(command.ShowOne):
     """Update a pool attribute"""
-    pass
+
+    _description = _("Update a pool attribute")
+    log = logging.getLogger(__name__ + ".UpdatePool")
+
+    def get_parser(self, prog_name):
+        parser = super(UpdatePool, self).get_parser(prog_name)
+        parser.add_argument(
+            "pool_name",
+            metavar="<pool_name>",
+            help="Name of the pool")
+        parser.add_argument(
+            "--pool_uri",
+            metavar="<pool_uri>",
+            help="Storage engine URI")
+        parser.add_argument(
+            "--pool_weight",
+            type=int,
+            metavar="<pool_weight>",
+            help="Weight of the pool")
+        parser.add_argument(
+            "--flavor",
+            metavar="<flavor>",
+            help="Flavor of the pool")
+        parser.add_argument(
+            "--pool_options",
+            type=json.loads,
+            metavar="<pool_options>",
+            help="An optional request component "
+                 "related to storage-specific options")
+        return parser
+
+    def take_action(self, parsed_args):
+        client = _get_client(self, parsed_args)
+        kw_arg = {}
+
+        if parsed_args.pool_uri:
+            kw_arg["uri"] = parsed_args.pool_uri
+        if parsed_args.pool_weight:
+            kw_arg["weight"] = parsed_args.pool_weight
+        if parsed_args.flavor:
+            kw_arg["flavor"] = parsed_args.flavor
+        if parsed_args.pool_options:
+            kw_arg["options"] = parsed_args.pool_options
+
+        pool_obj = client.pool(parsed_args.pool_name, auto_create=False)
+        pool_obj.update(kw_arg)
+        pool_data = pool_obj.get()
+        columns = ('Name', 'Weight', 'URI', 'Flavor', 'Options')
+        return columns, utils.get_dict_properties(pool_data, columns)
 
 
-class OldUpdatePool(cli.OldUpdatePool):
-    """Update a pool attribute"""
-    pass
-
-
-class DeletePool(cli.DeletePool):
+class DeletePool(command.Command):
     """Delete a pool"""
-    pass
+
+    _description = _("Delete a pool")
+    log = logging.getLogger(__name__ + ".DeletePool")
+
+    def get_parser(self, prog_name):
+        parser = super(DeletePool, self).get_parser(prog_name)
+        parser.add_argument(
+            "pool_name",
+            metavar="<pool_name>",
+            help="Name of the pool")
+        return parser
+
+    def take_action(self, parsed_args):
+        client = _get_client(self, parsed_args)
+        pool_name = parsed_args.pool_name
+        client.pool(pool_name, auto_create=False).delete()
 
 
-class OldDeletePool(cli.OldDeletePool):
-    """Delete a pool"""
-    pass
-
-
-class ListPools(cli.ListPools):
+class ListPools(command.Lister):
     """List available Pools"""
-    pass
+
+    _description = _("List available Pools")
+    log = logging.getLogger(__name__ + ".ListPools")
+
+    def get_parser(self, prog_name):
+        parser = super(ListPools, self).get_parser(prog_name)
+        parser.add_argument(
+            "--marker",
+            metavar="<pool_name>",
+            help="Pool's paging marker")
+        parser.add_argument(
+            "--limit",
+            metavar="<limit>",
+            help="Page size limit")
+        parser.add_argument(
+            "--detailed",
+            action="store_true",
+            help="Detailed output")
+
+        return parser
+
+    def take_action(self, parsed_args):
+        client = _get_client(self, parsed_args)
+
+        kwargs = {}
+        columns = ["Name", "Weight", "URI", "Flavor"]
+        if parsed_args.marker is not None:
+            kwargs["marker"] = parsed_args.marker
+        if parsed_args.limit is not None:
+            kwargs["limit"] = parsed_args.limit
+        if parsed_args.detailed is not None and parsed_args.detailed:
+            kwargs["detailed"] = parsed_args.detailed
+            columns.append("Options")
+
+        data = client.pools(**kwargs)
+        columns = tuple(columns)
+        return (columns,
+                (utils.get_item_properties(s, columns) for s in data))
 
 
-class OldListPools(cli.OldListPools):
-    """List available Pools"""
-    pass
+class DeleteFlavor(command.Command):
+    """Delete a pool flavor"""
+
+    _description = _("Delete a pool flavor")
+    log = logging.getLogger(__name__ + ".DeleteFlavor")
+
+    def get_parser(self, prog_name):
+        parser = super(DeleteFlavor, self).get_parser(prog_name)
+        parser.add_argument(
+            "flavor_name",
+            metavar="<flavor_name>",
+            help="Name of the flavor")
+        return parser
+
+    def take_action(self, parsed_args):
+        client = _get_client(self, parsed_args)
+        flavor_name = parsed_args.flavor_name
+        client.flavor(flavor_name, auto_create=False).delete()
 
 
-class DeleteFlavor(cli.DeleteFlavor):
-    """Delete a flavor"""
-    pass
+class ShowFlavor(command.ShowOne):
+    """Display pool flavor details"""
+
+    _description = _("Display pool flavor details")
+    log = logging.getLogger(__name__ + ".ShowFlavor")
+
+    def get_parser(self, prog_name):
+        parser = super(ShowFlavor, self).get_parser(prog_name)
+        parser.add_argument(
+            "flavor_name",
+            metavar="<flavor_name>",
+            help="Flavor to display (name)",
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug("take_action(%s)", parsed_args)
+        client = self.app.client_manager.messaging
+        flavor_data = client.flavor(parsed_args.flavor_name,
+                                    auto_create=False).get()
+        columns = ('Name', 'Pool list', 'Capabilities')
+        return columns, utils.get_dict_properties(flavor_data, columns)
 
 
-class ShowFlavor(cli.ShowFlavor):
-    """Display flavor details"""
-    pass
+class ListFlavors(command.Lister):
+    """List available pool flavors"""
 
+    _description = _("List available pool flavors")
+    log = logging.getLogger(__name__ + ".ListFlavors")
 
-class UpdateFlavor(cli.UpdateFlavor):
-    """Update a flavor's attributes"""
-    pass
-
-
-class CreateFlavor(cli.CreateFlavor):
-    """Create a pool flavor"""
+    def get_parser(self, prog_name):
+        parser = super(ListFlavors, self).get_parser(prog_name)
+        parser.add_argument(
+            "--marker",
+            metavar="<flavor_name>",
+            help="Flavor's paging marker")
+        parser.add_argument(
+            "--limit",
+            metavar="<limit>",
+            help="Page size limit")
+        parser.add_argument(
+            "--detailed",
+            action="store_true",
+            help="If show detailed capabilities of flavor")
+        return parser
 
     def take_action(self, parsed_args):
         self.log.debug("take_action(%s)" % parsed_args)
 
         client = self.app.client_manager.messaging
 
+        kwargs = {'detailed': parsed_args.detailed}
+        if parsed_args.marker is not None:
+            kwargs["marker"] = parsed_args.marker
+        if parsed_args.limit is not None:
+            kwargs["limit"] = parsed_args.limit
+        data = client.flavors(**kwargs)
+        columns = ("Name", 'Pool list')
+        if parsed_args.detailed:
+            columns = ("Name", 'Pool list', 'Capabilities')
+        return (columns,
+                (utils.get_item_properties(s, columns) for s in data))
+
+
+class UpdateFlavor(command.ShowOne):
+    """Update a flavor's attributes"""
+
+    _description = _("Update a flavor's attributes")
+    log = logging.getLogger(__name__ + ".UpdateFlavor")
+
+    def get_parser(self, prog_name):
+        parser = super(UpdateFlavor, self).get_parser(prog_name)
+        parser.add_argument(
+            "flavor_name",
+            metavar="<flavor_name>",
+            help="Name of the flavor")
+        parser.add_argument(
+            "--pool_list",
+            metavar="<pool_list>",
+            help="Pool list the flavor sits on")
+        parser.add_argument(
+            "--capabilities",
+            metavar="<capabilities>",
+            type=json.loads,
+            help="Describes flavor-specific capabilities.")
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug("take_action(%s)" % parsed_args)
+        client = self.app.client_manager.messaging
         kwargs = {}
-        if parsed_args.capabilities != {}:
-            raise AttributeError("<--capabilities> option is only\
-             available in client api version < 2")
+        if parsed_args.pool_list:
+            pool_list = parsed_args.pool_list.split(',')
+            kwargs['pool_list'] = pool_list
+        if parsed_args.capabilities:
+            kwargs['capabilities'] = json.loads(parsed_args.capabilities)
+
+        flavor = client.flavor(parsed_args.flavor_name, auto_create=False)
+        columns = ('Name', 'Pool_list', 'Capabilities')
+        flavor.update(kwargs)
+        flavor_data = flavor.get()
+        return columns, utils.get_dict_properties(flavor_data, columns)
+
+
+class CreateFlavor(command.ShowOne):
+    """Create a pool flavor"""
+
+    _description = _("Create a pool flavor")
+    log = logging.getLogger(__name__ + ".CreateFlavor")
+
+    def get_parser(self, prog_name):
+        parser = super(CreateFlavor, self).get_parser(prog_name)
+        parser.add_argument(
+            "flavor_name",
+            metavar="<flavor_name>",
+            help="Name of the flavor")
+        parser.add_argument(
+            "--pool_list",
+            metavar="<pool_list>",
+            help="Pool list for flavor")
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug("take_action(%s)" % parsed_args)
+
+        client = self.app.client_manager.messaging
+
         pool_list = None
         if parsed_args.pool_list:
             pool_list = parsed_args.pool_list.split(',')
         data = client.flavor(parsed_args.flavor_name,
-                             pool_list=pool_list,
-                             **kwargs)
+                             pool_list=pool_list)
 
         columns = ('Name', 'Pool list', 'Capabilities')
         return columns, utils.get_item_properties(data, columns)
-
-
-class ListFlavors(cli.ListFlavors):
-    """List available flavors"""
-    pass
 
 
 class CreateSubscription(command.ShowOne):
@@ -501,25 +751,6 @@ class CreateSubscription(command.ShowOne):
 
         columns = ('ID', 'Subscriber', 'TTL', 'Options')
         return columns, utils.get_item_properties(data, columns)
-
-
-class OldCreateSubscription(CreateSubscription):
-    """Create a subscription for queue"""
-
-    _description = _("Create a subscription for queue")
-    # TODO(wanghao): Remove this class and ``subscription create`` command
-    #                after Queen.
-
-    # This notifies cliff to not display the help for this command
-    deprecated = True
-
-    log = logging.getLogger('deprecated')
-
-    def take_action(self, parsed_args):
-        self.log.warning(_('This command has been deprecated. '
-                           'Please use "messaging subscription create" '
-                           'instead.'))
-        return super(OldCreateSubscription, self).take_action(parsed_args)
 
 
 class UpdateSubscription(command.ShowOne):
@@ -573,25 +804,6 @@ class UpdateSubscription(command.ShowOne):
         return columns, utils.get_item_properties(data, columns)
 
 
-class OldUpdateSubscription(UpdateSubscription):
-    """Update a subscription"""
-
-    _description = _("Update a subscription")
-    # TODO(wanghao): Remove this class and ``subscription update`` command
-    #                after Queen.
-
-    # This notifies cliff to not display the help for this command
-    deprecated = True
-
-    log = logging.getLogger('deprecated')
-
-    def take_action(self, parsed_args):
-        self.log.warning(_('This command has been deprecated. '
-                           'Please use "messaging subscription update" '
-                           'instead.'))
-        return super(OldUpdateSubscription, self).take_action(parsed_args)
-
-
 class DeleteSubscription(command.Command):
     """Delete a subscription"""
 
@@ -616,25 +828,6 @@ class DeleteSubscription(command.Command):
         client.subscription(parsed_args.queue_name,
                             id=parsed_args.subscription_id,
                             auto_create=False).delete()
-
-
-class OldDeleteSubscription(DeleteSubscription):
-    """Delete a subscription"""
-
-    _description = _("Delete a subscription")
-    # TODO(wanghao): Remove this class and ``subscription delete`` command
-    #                after Queen.
-
-    # This notifies cliff to not display the help for this command
-    deprecated = True
-
-    log = logging.getLogger('deprecated')
-
-    def take_action(self, parsed_args):
-        self.log.warning(_('This command has been deprecated. '
-                           'Please use "messaging subscription delete" '
-                           'instead.'))
-        return super(OldDeleteSubscription, self).take_action(parsed_args)
 
 
 class ShowSubscription(command.ShowOne):
@@ -664,25 +857,6 @@ class ShowSubscription(command.ShowOne):
                                         **kwargs)
         columns = ('ID', 'Subscriber', 'TTL', 'Age', 'Confirmed', 'Options')
         return columns, utils.get_dict_properties(pool_data.__dict__, columns)
-
-
-class OldShowSubscription(ShowSubscription):
-    """Display subscription details"""
-
-    _description = _("Display subscription details")
-    # TODO(wanghao): Remove this class and ``subscription show`` command
-    #                after Queen.
-
-    # This notifies cliff to not display the help for this command
-    deprecated = True
-
-    log = logging.getLogger('deprecated')
-
-    def take_action(self, parsed_args):
-        self.log.warning(_('This command has been deprecated. '
-                           'Please use "messaging subscription show" '
-                           'instead.'))
-        return super(OldShowSubscription, self).take_action(parsed_args)
 
 
 class ListSubscriptions(command.Lister):
@@ -725,27 +899,38 @@ class ListSubscriptions(command.Lister):
                 (utils.get_item_properties(s, columns) for s in data))
 
 
-class OldListSubscriptions(ListSubscriptions):
-    """List available subscriptions"""
-
-    _description = _("List available subscriptions")
-    # TODO(wanghao): Remove this class and ``subscription list`` command
-    #                after Queen.
-
-    # This notifies cliff to not display the help for this command
-    deprecated = True
-
-    log = logging.getLogger('deprecated')
-
-    def take_action(self, parsed_args):
-        self.log.warning(_('This command has been deprecated. '
-                           'Please use "messaging subscription list" '
-                           'instead.'))
-        return super(OldListSubscriptions, self).take_action(parsed_args)
-
-
-class CreateClaim(cli.CreateClaim):
+class CreateClaim(command.Lister):
     """Create claim and return a list of claimed messages"""
+
+    _description = _("Create claim and return a list of claimed messages")
+    log = logging.getLogger(__name__ + ".CreateClaim")
+
+    def get_parser(self, prog_name):
+        parser = super(CreateClaim, self).get_parser(prog_name)
+        parser.add_argument(
+            "queue_name",
+            metavar="<queue_name>",
+            help="Name of the queue to be claim")
+        parser.add_argument(
+            "--ttl",
+            metavar="<ttl>",
+            type=int,
+            default=300,
+            help="Time to live in seconds for claim")
+        parser.add_argument(
+            "--grace",
+            metavar="<grace>",
+            type=int,
+            default=60,
+            help="The message grace period in seconds")
+        parser.add_argument(
+            "--limit",
+            metavar="<limit>",
+            type=int,
+            default=10,
+            help="Claims a set of messages, up to limit")
+
+        return parser
 
     def take_action(self, parsed_args):
         client = _get_client(self, parsed_args)
@@ -767,39 +952,110 @@ class CreateClaim(cli.CreateClaim):
                 (utils.get_item_properties(s, keys) for s in data))
 
 
-class OldCreateClaim(cli.OldCreateClaim):
-    """Create claim and return a list of claimed messages"""
-    pass
-
-
-class QueryClaim(cli.QueryClaim):
+class QueryClaim(command.Lister):
     """Display claim details"""
-    pass
+
+    _description = _("Display claim details")
+    log = logging.getLogger(__name__ + ".QueryClaim")
+
+    def get_parser(self, prog_name):
+        parser = super(QueryClaim, self).get_parser(prog_name)
+        parser.add_argument(
+            "queue_name",
+            metavar="<queue_name>",
+            help="Name of the claimed queue")
+        parser.add_argument(
+            "claim_id",
+            metavar="<claim_id>",
+            help="ID of the claim")
+
+        return parser
+
+    def take_action(self, parsed_args):
+        client = _get_client(self, parsed_args)
+
+        queue = client.queue(parsed_args.queue_name, auto_create=False)
+        keys = ("_id", "age", "ttl", "body")
+        columns = ("Message_ID", "Age", "TTL", "Message")
+        data = queue.claim(id=parsed_args.claim_id)
+
+        return (columns,
+                (utils.get_item_properties(s, keys) for s in data))
 
 
-class OldQueryClaim(cli.OldQueryClaim):
-    """Display claim details"""
-    pass
-
-
-class RenewClaim(cli.RenewClaim):
+class RenewClaim(command.Lister):
     """Renew a claim"""
-    pass
+
+    _description = _("Renew a claim")
+    log = logging.getLogger(__name__ + ".RenewClaim")
+
+    def get_parser(self, prog_name):
+        parser = super(RenewClaim, self).get_parser(prog_name)
+        parser.add_argument(
+            "queue_name",
+            metavar="<queue_name>",
+            help="Name of the claimed queue")
+        parser.add_argument(
+            "claim_id",
+            metavar="<claim_id>",
+            help="Claim ID")
+        parser.add_argument(
+            "--ttl",
+            metavar="<ttl>",
+            type=int,
+            help="Time to live in seconds for claim")
+        parser.add_argument(
+            "--grace",
+            metavar="<grace>",
+            type=int,
+            help="The message grace period in seconds")
+
+        return parser
+
+    def take_action(self, parsed_args):
+        client = _get_client(self, parsed_args)
+
+        queue = client.queue(parsed_args.queue_name, auto_create=False)
+        kwargs = {}
+        if parsed_args.ttl is not None:
+            kwargs["ttl"] = parsed_args.ttl
+        if parsed_args.grace is not None:
+            kwargs["grace"] = parsed_args.grace
+
+        claim_obj = queue.claim(id=parsed_args.claim_id)
+        claim_obj.update(**kwargs)
+        data = claim_obj
+        keys = ("_id", "age", "ttl", "body")
+        columns = ("Message_ID", "Age", "TTL", "Message")
+
+        return (columns,
+                (utils.get_item_properties(s, keys) for s in data))
 
 
-class OldRenewClaim(cli.OldRenewClaim):
-    """Renew a claim"""
-    pass
-
-
-class ReleaseClaim(cli.ReleaseClaim):
+class ReleaseClaim(command.Command):
     """Delete a claim"""
-    pass
 
+    _description = _("Delete a claim")
+    log = logging.getLogger(__name__ + ".ReleaseClaim")
 
-class OldReleaseClaim(cli.OldReleaseClaim):
-    """Delete a claim"""
-    pass
+    def get_parser(self, prog_name):
+        parser = super(ReleaseClaim, self).get_parser(prog_name)
+        parser.add_argument(
+            "queue_name",
+            metavar="<queue_name>",
+            help="Name of the claimed queue")
+        parser.add_argument(
+            "claim_id",
+            metavar="<claim_id>",
+            help="Claim ID to delete")
+
+        return parser
+
+    def take_action(self, parsed_args):
+        client = _get_client(self, parsed_args)
+
+        queue = client.queue(parsed_args.queue_name, auto_create=False)
+        queue.claim(id=parsed_args.claim_id).delete()
 
 
 class CreateSignedUrl(command.ShowOne):
@@ -863,25 +1119,6 @@ class CreateSignedUrl(command.ShowOne):
             data['signature'],
             data['project']
         )
-
-
-class OldCreateSignedUrl(CreateSignedUrl):
-    """Create a pre-signed url"""
-
-    _description = _("Create a pre-signed url")
-    # TODO(wanghao): Remove this class and ``queue signed url`` command
-    #                after Queen.
-
-    # This notifies cliff to not display the help for this command
-    deprecated = True
-
-    log = logging.getLogger('deprecated')
-
-    def take_action(self, parsed_args):
-        self.log.warning(_('This command has been deprecated. '
-                           'Please use "messaging queue signed url" '
-                           'instead.'))
-        return super(OldCreateSignedUrl, self).take_action(parsed_args)
 
 
 class Ping(command.ShowOne):
