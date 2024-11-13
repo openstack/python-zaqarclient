@@ -187,7 +187,7 @@ class CheckQueueExistence(command.ShowOne):
         return columns, utils.get_dict_properties(data, columns)
 
 
-class OldQueueExistence(CheckQueueExistence):
+class OldCheckQueueExistence(CheckQueueExistence):
     """Check queue existence"""
 
     _description = _("Check queue existence")
@@ -202,7 +202,7 @@ class OldQueueExistence(CheckQueueExistence):
     def take_action(self, parsed_args):
         self.log.warning(_('This command has been deprecated. '
                            'Please use "messaging queue exists" instead.'))
-        return super(OldQueueExistence, self).take_action(parsed_args)
+        return super(OldCheckQueueExistence, self).take_action(parsed_args)
 
 
 class SetQueueMetadata(command.Command):
