@@ -24,12 +24,15 @@ from zaqarclient.tests.transport import dummy
 
 
 MY_IP = os.environ.get('ZAQAR_SERVICE_HOST', netutils.get_my_ipv4())
+ZAQAR_ENDPOINT = os.environ.get(
+    'ZAQAR_ENDPOINT',
+    'http://%s:8888' % netutils.escape_ipv6(MY_IP))
 
 
 class QueuesTestBase(base.TestBase):
 
     transport_cls = dummy.DummyTransport
-    url = 'http://%s:8888' % netutils.escape_ipv6(MY_IP)
+    url = ZAQAR_ENDPOINT
     version = 1
 
     def setUp(self):

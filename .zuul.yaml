@@ -7,8 +7,6 @@
       - opendev.org/openstack/zaqar
       - opendev.org/openstack/zaqar-tempest-plugin
     vars:
-      devstack_localrc:
-        ZAQAR_SERVICE_HOST: localhost
       devstack_plugins:
         zaqar: https://opendev.org/openstack/zaqar
       devstack_services:
@@ -27,7 +25,7 @@
       # The failing job can be checked by removing this filter.
       tox_extra_args: -vv -- tests.functional.queues.v2.test_health
       tox_environment:
-        ZAQAR_SERVICE_HOST: localhost
+        ZAQAR_ENDPOINT: "http://localhost/messaging"
 
 - project:
     templates:
