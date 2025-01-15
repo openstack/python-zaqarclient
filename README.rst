@@ -37,7 +37,7 @@ For the adventurous, you may also install the latest code directly from git
 What's in the box
 -----------------
 
-By installing python-zaqarclient you get programmatic access to the Zaqar v1.0
+By installing python-zaqarclient you get programmatic access to the Zaqar v2.0
 API library. Plus, it installs a plugin to python-openstackclient that allows
 you to perform simple queue operations.
 
