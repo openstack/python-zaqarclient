@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    Fallback to identity v2 API was removed.
