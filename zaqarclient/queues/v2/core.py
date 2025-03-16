@@ -32,39 +32,60 @@ import json
 
 from oslo_utils import timeutils
 
-from zaqarclient.queues.v1 import core
+import zaqarclient.transport.errors as errors
 
-queue_create = core.queue_create
-queue_exists = core.queue_exists
-queue_get = core.queue_get
-queue_get_metadata = core.queue_get_metadata
-queue_set_metadata = core.queue_set_metadata
-queue_get_stats = core.queue_get_stats
-queue_delete = core.queue_delete
-queue_list = core.queue_list
-message_get = core.message_get
-message_list = core.message_list
-message_post = core.message_post
-message_delete = core.message_delete
-message_delete_many = core.message_delete_many
-pool_get = core.pool_get
-pool_create = core.pool_create
-pool_delete = core.pool_delete
-pool_update = core.pool_update
-pool_list = core.pool_list
-flavor_get = core.flavor_get
-flavor_create = core.flavor_create
-flavor_delete = core.flavor_delete
-flavor_update = core.flavor_update
-flavor_list = core.flavor_list
-claim_create = core.claim_create
-claim_get = core.claim_get
-claim_update = core.claim_update
-claim_delete = core.claim_delete
+
+def _common_queue_ops(operation, transport, request, name, callback=None):
+    """Function for common operation
+
+    This is a lower level call to get a single
+    instance of queue.
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param name: Queue reference name.
+    :type name: str
+    :param callback: Optional callable to use as callback.
+        If specified, this request will be sent asynchronously.
+        (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
+    :type callback: Callable object.
+    """
+    request.operation = operation
+    request.params['queue_name'] = name
+    resp = transport.send(request)
+    return resp.deserialized_content
+
+
+def queue_create(transport, request, name,
+                 metadata=None, callback=None):
+    """Creates a queue
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param name: Queue reference name.
+    :type name: str
+    :param metadata: Queue's metadata object. (>=v1.1)
+    :type metadata: `dict`
+    :param callback: Optional callable to use as callback.
+        If specified, this request will be sent asynchronously.
+        (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
+    :type callback: Callable object.
+    """
+
+    request.operation = 'queue_create'
+    request.params['queue_name'] = name
+    request.content = metadata and json.dumps(metadata)
+
+    resp = transport.send(request)
+    return resp.deserialized_content
 
 
 def queue_update(transport, request, name, metadata, callback=None):
-    """Updates a queue's metadata using PATCH for API v2
+    """Updates a queue's metadata using PATCH
 
     :param transport: Transport instance to use
     :type transport: `transport.base.Transport`
@@ -88,6 +109,77 @@ def queue_update(transport, request, name, metadata, callback=None):
     return resp.deserialized_content
 
 
+def queue_exists(transport, request, name, callback=None):
+    """Checks if the queue exists."""
+    try:
+        _common_queue_ops('queue_exists', transport,
+                          request, name, callback=callback)
+        return True
+    except errors.ResourceNotFound:
+        return False
+
+
+def queue_get(transport, request, name, callback=None):
+    """Retrieve a queue."""
+    return _common_queue_ops('queue_get', transport,
+                             request, name, callback=callback)
+
+
+def queue_get_metadata(transport, request, name, callback=None):
+    """Gets queue metadata."""
+    return _common_queue_ops('queue_get_metadata', transport,
+                             request, name, callback=callback)
+
+
+def queue_set_metadata(transport, request, name, metadata, callback=None):
+    """Sets queue metadata."""
+
+    request.operation = 'queue_set_metadata'
+    request.params['queue_name'] = name
+    request.content = json.dumps(metadata)
+
+    transport.send(request)
+
+
+def queue_get_stats(transport, request, name):
+    return _common_queue_ops('queue_get_stats', transport,
+                             request, name)
+
+
+def queue_delete(transport, request, name, callback=None):
+    """Deletes queue."""
+    return _common_queue_ops('queue_delete', transport,
+                             request, name, callback=callback)
+
+
+def queue_list(transport, request, callback=None, **kwargs):
+    """Gets a list of queues
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param callback: Optional callable to use as callback.
+        If specified, this request will be sent asynchronously.
+        (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
+    :type callback: Callable object.
+    :param kwargs: Optional arguments for this operation.
+        - marker: Where to start getting queues from.
+        - limit: Maximum number of queues to get.
+    """
+
+    request.operation = 'queue_list'
+
+    request.params.update(kwargs)
+
+    resp = transport.send(request)
+
+    if not resp.content:
+        return {'links': [], 'queues': []}
+
+    return resp.deserialized_content
+
+
 def queue_purge(transport, request, name, resource_types=None):
     """Purge resources under a queue
 
@@ -107,6 +199,468 @@ def queue_purge(transport, request, name, resource_types=None):
 
     resp = transport.send(request)
     return resp.deserialized_content
+
+
+def message_list(transport, request, queue_name, callback=None, **kwargs):
+    """Gets a list of messages in queue `queue_name`
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param queue_name: Queue reference name.
+    :type queue_name: str
+    :param callback: Optional callable to use as callback.
+        If specified, this request will be sent asynchronously.
+        (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
+    :type callback: Callable object.
+    :param kwargs: Optional arguments for this operation.
+        - marker: Where to start getting messages from.
+        - limit: Maximum number of messages to get.
+        - echo: Whether to get our own messages.
+        - include_claimed: Whether to include claimed
+            messages.
+    """
+
+    request.operation = 'message_list'
+    request.params['queue_name'] = queue_name
+
+    # NOTE(flaper87): Assume passed params
+    # are accepted by the API, if not, the
+    # API itself will raise an error.
+    request.params.update(kwargs)
+
+    resp = transport.send(request)
+
+    if not resp.content:
+        # NOTE(flaper87): We could also return None
+        # or an empty dict, however, we're giving
+        # more value to a consistent API here by
+        # returning a compliant dict with empty
+        # `links` and `messages`
+        return {'links': [], 'messages': []}
+
+    return resp.deserialized_content
+
+
+def message_post(transport, request, queue_name, messages, callback=None):
+    """Post messages to `queue_name`
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param queue_name: Queue reference name.
+    :type queue_name: str
+    :param messages: One or more messages to post.
+    :param messages: `list`
+    :param callback: Optional callable to use as callback.
+        If specified, this request will be sent asynchronously.
+        (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
+    :type callback: Callable object.
+    """
+
+    request.operation = 'message_post'
+    request.params['queue_name'] = queue_name
+    request.content = json.dumps(messages)
+
+    resp = transport.send(request)
+    return resp.deserialized_content
+
+
+def message_get(transport, request, queue_name, message_id, callback=None):
+    """Gets one message from the queue by id
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param queue_name: Queue reference name.
+    :type queue_name: str
+    :param message_id: Message reference.
+    :param message_id: str
+    :param callback: Optional callable to use as callback.
+        If specified, this request will be sent asynchronously.
+        (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
+    :type callback: Callable object.
+    """
+
+    request.operation = 'message_get'
+    request.params['queue_name'] = queue_name
+    request.params['message_id'] = message_id
+
+    resp = transport.send(request)
+    return resp.deserialized_content
+
+
+def message_get_many(transport, request, queue_name, messages, callback=None):
+    """Gets many messages by id
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param queue_name: Queue reference name.
+    :type queue_name: str
+    :param messages: Messages references.
+    :param messages: list of str
+    :param callback: Optional callable to use as callback.
+        If specified, this request will be sent asynchronously.
+        (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
+    :type callback: Callable object.
+    """
+
+    request.operation = 'message_get_many'
+    request.params['queue_name'] = queue_name
+    request.params['ids'] = messages
+
+    resp = transport.send(request)
+    return resp.deserialized_content
+
+
+def message_delete(transport, request, queue_name, message_id,
+                   claim_id=None, callback=None):
+    """Deletes messages from `queue_name`
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param queue_name: Queue reference name.
+    :type queue_name: str
+    :param message_id: Message reference.
+    :param message_id: str
+    :param callback: Optional callable to use as callback.
+        If specified, this request will be sent asynchronously.
+        (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
+    :type callback: Callable object.
+    """
+
+    request.operation = 'message_delete'
+    request.params['queue_name'] = queue_name
+    request.params['message_id'] = message_id
+    if claim_id:
+        request.params['claim_id'] = claim_id
+
+    transport.send(request)
+
+
+def message_delete_many(transport, request, queue_name,
+                        ids, callback=None):
+    """Deletes `ids` messages from `queue_name`
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param queue_name: Queue reference name.
+    :type queue_name: str
+    :param ids: Ids of the messages to delete
+    :type ids: List of str
+    :param callback: Optional callable to use as callback.
+        If specified, this request will be sent asynchronously.
+        (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
+    :type callback: Callable object.
+    """
+
+    request.operation = 'message_delete_many'
+    request.params['queue_name'] = queue_name
+    request.params['ids'] = ids
+    transport.send(request)
+
+
+def message_pop(transport, request, queue_name,
+                count, callback=None):
+    """Pops out `count` messages from `queue_name`
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param queue_name: Queue reference name.
+    :type queue_name: str
+    :param count: Number of messages to pop.
+    :type count: int
+    :param callback: Optional callable to use as callback.
+        If specified, this request will be sent asynchronously.
+        (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
+    :type callback: Callable object.
+    """
+
+    request.operation = 'message_delete_many'
+    request.params['queue_name'] = queue_name
+    request.params['pop'] = count
+
+    resp = transport.send(request)
+    return resp.deserialized_content
+
+
+def claim_create(transport, request, queue_name, **kwargs):
+    """Creates a Claim `claim_id` on the queue `queue_name`
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    """
+
+    request.operation = 'claim_create'
+    request.params['queue_name'] = queue_name
+
+    if 'limit' in kwargs:
+        request.params['limit'] = kwargs.pop('limit')
+
+    request.content = json.dumps(kwargs)
+
+    resp = transport.send(request)
+    return resp.deserialized_content
+
+
+def claim_get(transport, request, queue_name, claim_id):
+    """Gets a Claim `claim_id`
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    """
+
+    request.operation = 'claim_get'
+    request.params['queue_name'] = queue_name
+    request.params['claim_id'] = claim_id
+
+    resp = transport.send(request)
+    return resp.deserialized_content
+
+
+def claim_update(transport, request, queue_name, claim_id, **kwargs):
+    """Updates a Claim `claim_id`
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    """
+
+    request.operation = 'claim_update'
+    request.params['queue_name'] = queue_name
+    request.params['claim_id'] = claim_id
+    request.content = json.dumps(kwargs)
+
+    resp = transport.send(request)
+    return resp.deserialized_content
+
+
+def claim_delete(transport, request, queue_name, claim_id):
+    """Deletes a Claim `claim_id`
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    """
+    request.operation = 'claim_delete'
+    request.params['queue_name'] = queue_name
+    request.params['claim_id'] = claim_id
+
+    transport.send(request)
+
+
+def pool_get(transport, request, pool_name, callback=None):
+    """Gets pool data
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param pool_name: Pool reference name.
+    :type pool_name: str
+
+    """
+
+    request.operation = 'pool_get'
+    request.params['pool_name'] = pool_name
+
+    resp = transport.send(request)
+    return resp.deserialized_content
+
+
+def pool_create(transport, request, pool_name, pool_data):
+    """Creates a pool called `pool_name`
+
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param pool_name: Pool reference name.
+    :type pool_name: str
+    :param pool_data: Pool's properties, i.e: weight, uri, options.
+    :type pool_data: `dict`
+    """
+
+    request.operation = 'pool_create'
+    request.params['pool_name'] = pool_name
+    request.content = json.dumps(pool_data)
+    transport.send(request)
+
+
+def pool_update(transport, request, pool_name, pool_data):
+    """Updates the pool `pool_name`
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param pool_name: Pool reference name.
+    :type pool_name: str
+    :param pool_data: Pool's properties, i.e: weight, uri, options.
+    :type pool_data: `dict`
+    """
+
+    request.operation = 'pool_update'
+    request.params['pool_name'] = pool_name
+    request.content = json.dumps(pool_data)
+
+    resp = transport.send(request)
+    return resp.deserialized_content
+
+
+def pool_list(transport, request, **kwargs):
+    """Gets a list of pools
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param kwargs: Optional arguments for this operation.
+        - marker: Where to start getting pools from.
+        - limit: Maximum number of pools to get.
+    """
+
+    request.operation = 'pool_list'
+    request.params.update(kwargs)
+
+    resp = transport.send(request)
+
+    if not resp.content:
+        return {'links': [], 'pools': []}
+
+    return resp.deserialized_content
+
+
+def pool_delete(transport, request, pool_name):
+    """Deletes the pool `pool_name`
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param pool_name: Pool reference name.
+    :type pool_name: str
+    """
+
+    request.operation = 'pool_delete'
+    request.params['pool_name'] = pool_name
+    transport.send(request)
+
+
+def flavor_create(transport, request, name, flavor_data):
+    """Creates a flavor called `name`
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param name: Flavor reference name.
+    :type name: str
+    :param flavor_data: Flavor's properties, i.e: pool, capabilities.
+    :type flavor_data: `dict`
+    """
+
+    request.operation = 'flavor_create'
+    request.params['flavor_name'] = name
+    request.content = json.dumps(flavor_data)
+    transport.send(request)
+
+
+def flavor_get(transport, request, flavor_name, callback=None):
+    """Gets flavor data
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param flavor_name: Flavor reference name.
+    :type flavor_name: str
+
+    """
+
+    request.operation = 'flavor_get'
+    request.params['flavor_name'] = flavor_name
+
+    resp = transport.send(request)
+    return resp.deserialized_content
+
+
+def flavor_update(transport, request, flavor_name, flavor_data):
+    """Updates the flavor `flavor_name`
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param flavor_name: Flavor reference name.
+    :type flavor_name: str
+    :param flavor_data: Flavor's properties, i.e: pool, capabilities.
+    :type flavor_data: `dict`
+    """
+
+    request.operation = 'flavor_update'
+    request.params['flavor_name'] = flavor_name
+    request.content = json.dumps(flavor_data)
+
+    resp = transport.send(request)
+    return resp.deserialized_content
+
+
+def flavor_list(transport, request, **kwargs):
+    """Gets a list of flavors
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param kwargs: Optional arguments for this operation.
+        - marker: Where to start getting flavors from.
+        - limit: Maximum number of flavors to get.
+    """
+
+    request.operation = 'flavor_list'
+    request.params.update(kwargs)
+
+    resp = transport.send(request)
+
+    if not resp.content:
+        return {'links': [], 'flavors': []}
+
+    return resp.deserialized_content
+
+
+def flavor_delete(transport, request, name):
+    """Deletes the flavor `name`
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param name: Flavor reference name.
+    :type name: str
+    """
+
+    request.operation = 'flavor_delete'
+    request.params['flavor_name'] = name
+    transport.send(request)
 
 
 def signed_url_create(transport, request, queue_name, paths=None,

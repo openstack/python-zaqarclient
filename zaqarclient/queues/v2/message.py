@@ -12,12 +12,16 @@
 # implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""Implements a message controller that understands Zaqar messages."""
 
-from zaqarclient.queues.v1 import message
 from zaqarclient.queues.v2 import core
 
 
-class Message(message.Message):
+class Message(object):
+    """A handler for Zaqar server Message resources.
+
+    Attributes are only downloaded once - at creation time.
+    """
     def __init__(self, queue, ttl, age, body, href=None, id=None,
                  claim_id=None, claim_count=0, checksum=None):
         self.queue = queue

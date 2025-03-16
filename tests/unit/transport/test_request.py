@@ -16,7 +16,6 @@
 
 import json
 
-from zaqarclient.queues.v1 import api as api_v1
 from zaqarclient.queues.v2 import api as api_v2
 from zaqarclient.tests import base
 from zaqarclient.transport import request
@@ -49,18 +48,6 @@ class TestRequest(base.TestBase):
 
     def test_request_with_right_version(self):
         auth_opts = self.conf.get('auth_opts', {})
-        api_version = 1
-        req = request.prepare_request(auth_opts, api=api_version)
-        self.assertIsInstance(req.api, api_v1.V1)
-
-        api_version = 1.0
-        req = request.prepare_request(auth_opts, api=api_version)
-        self.assertIsInstance(req.api, api_v1.V1)
-
-        api_version = 1.1
-        req = request.prepare_request(auth_opts, api=api_version)
-        self.assertIsInstance(req.api, api_v1.V1_1)
-
         api_version = 2
         req = request.prepare_request(auth_opts, api=api_version)
         self.assertIsInstance(req.api, api_v2.V2)

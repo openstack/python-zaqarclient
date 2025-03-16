@@ -18,42 +18,49 @@ from unittest import mock
 
 from zaqarclient import errors
 from zaqarclient.queues import client
-from zaqarclient.queues.v1 import iterator
-from zaqarclient.queues.v1 import message
+from zaqarclient.queues.v2 import iterator
+from zaqarclient.queues.v2 import message
 from zaqarclient.queues.v2 import subscription
 from zaqarclient.tests.queues import base
 from zaqarclient.transport import response
 
 
-class QueuesV1QueueUnitTest(base.QueuesTestBase):
-
-    def test_queue_metadata(self):
-        test_metadata = {'type': 'Bank Accounts'}
-
-        with mock.patch.object(self.transport, 'send',
-                               autospec=True) as send_method:
-
-            resp = response.Response(None, json.dumps(test_metadata))
-            send_method.return_value = resp
-
-            metadata = self.queue.metadata(test_metadata)
-            self.assertEqual(test_metadata, metadata)
+class QueuesV2QueueUnitTest(base.QueuesTestBase):
 
     def test_queue_metadata_update(self):
-        test_metadata = {'type': 'Bank Accounts'}
-        new_meta = {'flavor': 'test'}
-
+        test_metadata = {'type': 'Bank Accounts', 'name': 'test1'}
         with mock.patch.object(self.transport, 'send',
                                autospec=True) as send_method:
 
             resp = response.Response(None, json.dumps(test_metadata))
             send_method.return_value = resp
 
-            metadata = self.queue.metadata(test_metadata)
+            # add 'test_metadata'
+            metadata = self.queue.metadata(new_meta=test_metadata)
             self.assertEqual(test_metadata, metadata)
 
-            metadata = self.queue.metadata(new_meta)
-            self.assertEqual(new_meta, metadata)
+        new_metadata_replace = {'type': 'test', 'name': 'test1'}
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, json.dumps(new_metadata_replace))
+            send_method.return_value = resp
+            # repalce 'type'
+            metadata = self.queue.metadata(
+                new_meta=new_metadata_replace)
+            expect_metadata = {'type': 'test', "name": 'test1'}
+            self.assertEqual(expect_metadata, metadata)
+
+        remove_metadata = {'name': 'test1'}
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, json.dumps(remove_metadata))
+            send_method.return_value = resp
+            # remove 'type'
+            metadata = self.queue.metadata(new_meta=remove_metadata)
+            expect_metadata = {"name": 'test1'}
+            self.assertEqual(expect_metadata, metadata)
 
     def test_queue_create(self):
         with mock.patch.object(self.transport, 'send',
@@ -178,27 +185,6 @@ class QueuesV1QueueUnitTest(base.QueuesTestBase):
             # just checking our way down to the transport
             # doesn't crash.
 
-    def test_message_get(self):
-        returned = {
-            'href': '/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01',
-            'ttl': 800,
-            'age': 790,
-            'body': {'event': 'ActivateAccount', 'mode': 'active'}
-        }
-
-        with mock.patch.object(self.transport, 'send',
-                               autospec=True) as send_method:
-
-            resp = response.Response(None, json.dumps(returned))
-            send_method.return_value = resp
-
-            msgs = self.queue.message('50b68a50d6f5b8c8a7c62b01')
-            self.assertIsInstance(msgs, message.Message)
-
-            # NOTE(flaper87): Nothing to assert here,
-            # just checking our way down to the transport
-            # doesn't crash.
-
     def test_message_get_many(self):
         returned = [{
             'href': '/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01',
@@ -241,27 +227,106 @@ class QueuesV1QueueUnitTest(base.QueuesTestBase):
             # just checking our way down to the transport
             # doesn't crash.
 
+    def test_message_pop(self):
+        returned = [{
+            'href': '/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01',
+            'ttl': 800,
+            'age': 790,
+            'body': {'event': 'ActivateAccount', 'mode': 'active'}
+        }, {
+            'href': '/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b02',
+            'ttl': 800,
+            'age': 790,
+            'body': {'event': 'ActivateAccount', 'mode': 'active'}
+        }]
 
-class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
 
-    def test_queue_create_functional(self):
-        queue = self.client.queue("nonono")
-        self.addCleanup(queue.delete)
-        queue._get_transport = mock.Mock(return_value=self.transport)
-        self.assertTrue(queue.exists())
+            resp = response.Response(None, json.dumps(returned))
+            send_method.return_value = resp
+
+            msg = self.queue.pop(count=2)
+            self.assertIsInstance(msg, iterator._Iterator)
+
+            # NOTE(flaper87): Nothing to assert here,
+            # just checking our way down to the transport
+            # doesn't crash.
+
+    def test_queue_subscriptions(self):
+        result = {
+            "subscriptions": [{
+                "source": 'test',
+                "id": "1",
+                "subscriber": 'http://trigger.me',
+                "ttl": 3600,
+                "age": 1800,
+                "confirmed": False,
+                "options": {}},
+                {
+                "source": 'test',
+                "id": "2",
+                "subscriber": 'http://trigger.you',
+                "ttl": 7200,
+                "age": 1800,
+                "confirmed": False,
+                "options": {}}]
+        }
+
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, json.dumps(result))
+            send_method.return_value = resp
+
+            subscriptions = self.queue.subscriptions()
+            subscriber_list = [s.subscriber for s in list(subscriptions)]
+            self.assertIn('http://trigger.me', subscriber_list)
+            self.assertIn('http://trigger.you', subscriber_list)
+
+    def test_queue_purge(self):
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, None)
+            send_method.return_value = resp
+
+            self.queue.purge()
+
+            # NOTE(flwang): Nothing to assert here,
+            # just checking our way down to the transport
+            # doesn't crash.
+
+    def test_queue_purge_messages(self):
+        with mock.patch.object(self.transport, 'send',
+                               autospec=True) as send_method:
+
+            resp = response.Response(None, None)
+            send_method.return_value = resp
+
+            self.queue.purge(resource_types=['messages'])
+            self.assertEqual({"resource_types": ["messages"]},
+                             json.loads(send_method.call_args[0][0].content))
+
+
+class QueuesV2QueueFunctionalTest(base.QueuesTestBase):
 
     def test_queue_delete_functional(self):
         queue = self.client.queue("nonono")
-        self.addCleanup(queue.delete)
         queue._get_transport = mock.Mock(return_value=self.transport)
-        self.assertTrue(queue.exists())
+        messages = [
+            {'ttl': 60, 'body': 'Post It 1!'},
+            {'ttl': 60, 'body': 'Post It 2!'},
+            {'ttl': 60, 'body': 'Post It 3!'},
+        ]
+
+        queue.post(messages)
         queue.delete()
-        self.assertFalse(queue.exists())
+        self.assertEqual(0, len(list(queue.messages(echo=True))))
 
     def test_queue_exists_functional(self):
-        queue = self.client.queue("404", auto_create=False)
-        queue._get_transport = mock.Mock(return_value=self.transport)
-        self.assertFalse(queue.exists())
+        queue = self.client.queue("404")
+        self.assertRaises(errors.InvalidOperation, queue.exists)
 
     def test_queue_stats_functional(self):
         messages = [
@@ -276,27 +341,6 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
         queue.post(messages)
         stats = queue.stats
         self.assertEqual(3, stats["messages"]["free"])
-
-    def test_queue_metadata_functional(self):
-        test_metadata = {'type': 'Bank Accounts'}
-        queue = self.client.queue("meta-test")
-        queue.metadata(test_metadata)
-
-        # NOTE(flaper87): Clear metadata's cache
-        queue._metadata = None
-        metadata = queue.metadata()
-        self.assertEqual(test_metadata['type'], metadata['type'])
-
-    def test_queue_metadata_reload_functional(self):
-        test_metadata = {'type': 'Bank Accounts'}
-        queue = self.client.queue("meta-test")
-        queue.metadata(test_metadata)
-
-        # NOTE(flaper87): Overwrite the cached value
-        # but don't clear it.
-        queue._metadata = 'test'
-        metadata = queue.metadata(force_reload=True)
-        self.assertEqual(test_metadata['type'], metadata['type'])
 
     def test_message_post_functional(self):
         messages = [
@@ -399,72 +443,6 @@ class QueuesV1QueueFunctionalTest(base.QueuesTestBase):
         messages = queue.messages()
         self.assertEqual(0, len(list(messages)))
 
-
-class QueuesV1_1QueueUnitTest(QueuesV1QueueUnitTest):
-
-    def test_message_pop(self):
-        returned = [{
-            'href': '/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01',
-            'ttl': 800,
-            'age': 790,
-            'body': {'event': 'ActivateAccount', 'mode': 'active'}
-        }, {
-            'href': '/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b02',
-            'ttl': 800,
-            'age': 790,
-            'body': {'event': 'ActivateAccount', 'mode': 'active'}
-        }]
-
-        with mock.patch.object(self.transport, 'send',
-                               autospec=True) as send_method:
-
-            resp = response.Response(None, json.dumps(returned))
-            send_method.return_value = resp
-
-            msg = self.queue.pop(count=2)
-            self.assertIsInstance(msg, iterator._Iterator)
-
-            # NOTE(flaper87): Nothing to assert here,
-            # just checking our way down to the transport
-            # doesn't crash.
-
-    def test_queue_metadata(self):
-        test_metadata = {'type': 'Bank Accounts'}
-
-        with mock.patch.object(self.transport, 'send',
-                               autospec=True) as send_method:
-
-            resp = response.Response(None, json.dumps(test_metadata))
-            send_method.return_value = resp
-            self.assertRaises(RuntimeError, self.queue.metadata, test_metadata)
-
-    def test_queue_metadata_update(self):
-        # v1.1 doesn't support set queue metadata
-        pass
-
-
-class QueuesV1_1QueueFunctionalTest(QueuesV1QueueFunctionalTest):
-
-    def test_queue_create_functional(self):
-        pass
-
-    def test_queue_exists_functional(self):
-        queue = self.client.queue("404")
-        self.assertRaises(errors.InvalidOperation, queue.exists)
-
-    def test_queue_delete_functional(self):
-        queue = self.client.queue("nonono")
-        queue._get_transport = mock.Mock(return_value=self.transport)
-        messages = [
-            {'ttl': 60, 'body': 'Post It 1!'},
-            {'ttl': 60, 'body': 'Post It 2!'},
-            {'ttl': 60, 'body': 'Post It 3!'},
-        ]
-
-        queue.post(messages)
-        queue.delete()
-        self.assertEqual(0, len(list(queue.messages(echo=True))))
-
     def test_message_pop(self):
         queue = self.client.queue("test_queue")
         self.addCleanup(queue.delete)
@@ -483,117 +461,6 @@ class QueuesV1_1QueueFunctionalTest(QueuesV1QueueFunctionalTest):
 
         remaining = queue.messages(echo=True)
         self.assertEqual(1, len(list(remaining)))
-
-    def test_queue_metadata_functional(self):
-        # v1.1 doesn't support set queue metadata
-        pass
-
-    def test_queue_metadata_reload_functional(self):
-        # v1.1 doesn't support set queue metadata
-        pass
-
-
-class QueuesV2QueueUnitTest(QueuesV1_1QueueUnitTest):
-
-    def test_message_get(self):
-        pass
-
-    def test_queue_subscriptions(self):
-        result = {
-            "subscriptions": [{
-                "source": 'test',
-                "id": "1",
-                "subscriber": 'http://trigger.me',
-                "ttl": 3600,
-                "age": 1800,
-                "confirmed": False,
-                "options": {}},
-                {
-                "source": 'test',
-                "id": "2",
-                "subscriber": 'http://trigger.you',
-                "ttl": 7200,
-                "age": 1800,
-                "confirmed": False,
-                "options": {}}]
-        }
-
-        with mock.patch.object(self.transport, 'send',
-                               autospec=True) as send_method:
-
-            resp = response.Response(None, json.dumps(result))
-            send_method.return_value = resp
-
-            subscriptions = self.queue.subscriptions()
-            subscriber_list = [s.subscriber for s in list(subscriptions)]
-            self.assertIn('http://trigger.me', subscriber_list)
-            self.assertIn('http://trigger.you', subscriber_list)
-
-    def test_queue_metadata(self):
-        # checked in "test_queue_metadata_update"
-        pass
-
-    def test_queue_metadata_update(self):
-        test_metadata = {'type': 'Bank Accounts', 'name': 'test1'}
-        with mock.patch.object(self.transport, 'send',
-                               autospec=True) as send_method:
-
-            resp = response.Response(None, json.dumps(test_metadata))
-            send_method.return_value = resp
-
-            # add 'test_metadata'
-            metadata = self.queue.metadata(new_meta=test_metadata)
-            self.assertEqual(test_metadata, metadata)
-
-        new_metadata_replace = {'type': 'test', 'name': 'test1'}
-        with mock.patch.object(self.transport, 'send',
-                               autospec=True) as send_method:
-
-            resp = response.Response(None, json.dumps(new_metadata_replace))
-            send_method.return_value = resp
-            # repalce 'type'
-            metadata = self.queue.metadata(
-                new_meta=new_metadata_replace)
-            expect_metadata = {'type': 'test', "name": 'test1'}
-            self.assertEqual(expect_metadata, metadata)
-
-        remove_metadata = {'name': 'test1'}
-        with mock.patch.object(self.transport, 'send',
-                               autospec=True) as send_method:
-
-            resp = response.Response(None, json.dumps(remove_metadata))
-            send_method.return_value = resp
-            # remove 'type'
-            metadata = self.queue.metadata(new_meta=remove_metadata)
-            expect_metadata = {"name": 'test1'}
-            self.assertEqual(expect_metadata, metadata)
-
-    def test_queue_purge(self):
-        with mock.patch.object(self.transport, 'send',
-                               autospec=True) as send_method:
-
-            resp = response.Response(None, None)
-            send_method.return_value = resp
-
-            self.queue.purge()
-
-            # NOTE(flwang): Nothing to assert here,
-            # just checking our way down to the transport
-            # doesn't crash.
-
-    def test_queue_purge_messages(self):
-        with mock.patch.object(self.transport, 'send',
-                               autospec=True) as send_method:
-
-            resp = response.Response(None, None)
-            send_method.return_value = resp
-
-            self.queue.purge(resource_types=['messages'])
-            self.assertEqual({"resource_types": ["messages"]},
-                             json.loads(send_method.call_args[0][0].content))
-
-
-class QueuesV2QueueFunctionalTest(QueuesV1_1QueueFunctionalTest):
 
     def test_signed_url(self):
         queue = self.client.queue('test_queue')

@@ -14,15 +14,17 @@
 # limitations under the License.
 
 from oslo_utils import uuidutils
-from zaqarclient.common import decorators
-from zaqarclient.queues.v1 import client
-from zaqarclient.queues.v1 import iterator
 from zaqarclient.queues.v2 import core
+from zaqarclient.queues.v2 import flavor
+from zaqarclient.queues.v2 import iterator
+from zaqarclient.queues.v2 import pool
 from zaqarclient.queues.v2 import queues
 from zaqarclient.queues.v2 import subscription
+from zaqarclient import transport
+from zaqarclient.transport import request
 
 
-class Client(client.Client):
+class Client(object):
     """Client base class
 
     :param url: Zaqar's instance base url.
@@ -44,6 +46,42 @@ class Client(client.Client):
         self.client_uuid = self.conf.get('client_uuid',
                                          uuidutils.generate_uuid(dashed=False))
         self.session = session
+
+    def _get_transport(self, request):
+        """Gets a transport and caches its instance
+
+        This method gets a transport instance based on
+        the request's endpoint and caches that for later
+        use. The transport instance is invalidated whenever
+        a session expires.
+
+        :param request: The request to use to load the
+            transport instance.
+        :type request: :class:`zaqarclient.transport.request.Request`
+        """
+
+        return transport.get_transport_for(request,
+                                           version=self.api_version,
+                                           options=self.conf)
+
+    def _request_and_transport(self):
+        req = request.prepare_request(self.auth_opts,
+                                      endpoint=self.api_url,
+                                      api=self.api_version,
+                                      session=self.session)
+
+        req.headers['Client-ID'] = self.client_uuid
+
+        trans = self._get_transport(req)
+        return req, trans
+
+    def transport(self):
+        """Gets a transport based the api url and version.
+
+        :rtype: :class:`zaqarclient.transport.base.Transport`
+        """
+        return transport.get_transport_for(self.api_url,
+                                           version=self.api_version)
 
     def queue(self, ref, **kwargs):
         """Returns a queue instance
@@ -74,7 +112,80 @@ class Client(client.Client):
                                        self.queues_module.create_object(self))
         return (list_iter, count)
 
-    @decorators.version(min_version=2)
+    def follow(self, ref):
+        """Follows ref.
+
+        This method instanciates a new request instance and requests
+        `ref`. It is intended to be used to follow a reference href
+        gotten from `links` sections in responses like queues' lists.
+
+        :params ref: The reference path.
+        :type ref: str
+        """
+        req, trans = self._request_and_transport()
+        req.ref = ref
+
+        return trans.send(req).deserialized_content
+
+    # ADMIN API
+    def pool(self, ref, **kwargs):
+        """Returns a pool instance
+
+        :param ref: Pool's reference name.
+        :type ref: str
+
+        :returns: A pool instance
+        :rtype: `pool.Pool`
+        """
+        return pool.Pool(self, ref, **kwargs)
+
+    def pools(self, **params):
+        """Gets a list of pools from the server
+
+        :param params: Filters to use for getting pools
+        :type params: dict.
+
+        :returns: A list of pools
+        :rtype: `list`
+        """
+        req, trans = self._request_and_transport()
+
+        pool_list = core.pool_list(trans, req, **params)
+
+        return iterator._Iterator(self,
+                                  pool_list,
+                                  'pools',
+                                  pool.create_object(self))
+
+    def flavor(self, ref, **kwargs):
+        """Returns a flavor instance
+
+        :param ref: Flavor's reference name.
+        :type ref: str
+
+        :returns: A flavor instance
+        :rtype: `flavor.Flavor`
+        """
+        return flavor.Flavor(self, ref, **kwargs)
+
+    def flavors(self, **params):
+        """Gets a list of flavors from the server
+
+        :param params: Filters to use for getting flavors
+        :type params: dict.
+
+        :returns: A list of flavors
+        :rtype: `list`
+        """
+        req, trans = self._request_and_transport()
+
+        flavor_list = core.flavor_list(trans, req, **params)
+
+        return iterator._Iterator(self,
+                                  flavor_list,
+                                  'flavors',
+                                  flavor.create_object(self))
+
     def subscription(self, queue_name, **kwargs):
         """Returns a subscription instance
 
@@ -86,7 +197,6 @@ class Client(client.Client):
         """
         return subscription.Subscription(self, queue_name, **kwargs)
 
-    @decorators.version(min_version=2)
     def subscriptions(self, queue_name, **params):
         """Gets a list of subscriptions from the server
 
@@ -111,13 +221,11 @@ class Client(client.Client):
         req, trans = self._request_and_transport()
         return core.ping(trans, req)
 
-    @decorators.version(min_version=1.1)
     def health(self):
         """Gets the detailed health status of Zaqar server."""
         req, trans = self._request_and_transport()
         return core.health(trans, req)
 
-    @decorators.version(min_version=1.1)
     def homedoc(self):
         """Get the detailed resource doc of Zaqar server"""
         req, trans = self._request_and_transport()
