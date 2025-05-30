@@ -1,0 +1,7 @@
+[run]
+branch = True
+source = zaqarclient
+omit = zaqarclient/tests/*
+
+[report]
+ignore_errors = True
