@@ -33,7 +33,7 @@ class QueuesTestBase(base.TestBase):
 
     transport_cls = dummy.DummyTransport
     url = ZAQAR_ENDPOINT
-    version = 1
+    version = 2
 
     def setUp(self):
         super(QueuesTestBase, self).setUp()

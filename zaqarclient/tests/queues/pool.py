@@ -16,12 +16,12 @@
 import json
 from unittest import mock
 
-from zaqarclient.queues.v1 import iterator
+from zaqarclient.queues.v2 import iterator
 from zaqarclient.tests.queues import base
 from zaqarclient.transport import response
 
 
-class QueuesV1PoolUnitTest(base.QueuesTestBase):
+class QueuesV2PoolUnitTest(base.QueuesTestBase):
 
     def test_pool_create(self):
         pool_data = {'weight': 10,
@@ -125,7 +125,7 @@ class QueuesV1PoolUnitTest(base.QueuesTestBase):
             # doesn't crash.
 
 
-class QueuesV1_1PoolFunctionalTest(base.QueuesTestBase):
+class QueuesV2PoolFunctionalTest(base.QueuesTestBase):
 
     def test_pool_get(self):
         pool_data = {'weight': 10,
@@ -173,11 +173,3 @@ class QueuesV1_1PoolFunctionalTest(base.QueuesTestBase):
 
         pool = self.client.pool('FuncTestPool', **pool_data)
         pool.delete()
-
-
-class QueuesV2PoolUnitTest(QueuesV1PoolUnitTest):
-    pass
-
-
-class QueuesV2PoolFunctionalTest(QueuesV1_1PoolFunctionalTest):
-    pass

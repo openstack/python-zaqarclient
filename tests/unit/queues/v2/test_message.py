@@ -16,7 +16,7 @@
 import json
 from unittest import mock
 
-from zaqarclient.queues.v1 import iterator as iterate
+from zaqarclient.queues.v2 import iterator
 from zaqarclient.queues.v2 import message
 from zaqarclient.tests.queues import base
 from zaqarclient.tests.queues import messages as test_message
@@ -36,11 +36,11 @@ class TestMessageIterator(base.QueuesTestBase):
                     }]
                     }
 
-        iterator = iterate._Iterator(self.queue.client,
-                                     messages,
-                                     'messages',
-                                     message.create_object(self.queue))
-        iterated = [msg for msg in iterator]
+        msg_iterator = iterator._Iterator(self.queue.client,
+                                          messages,
+                                          'messages',
+                                          message.create_object(self.queue))
+        iterated = [msg for msg in msg_iterator]
         self.assertEqual(len(iterated), 1)
 
     def test_stream(self):
@@ -67,11 +67,12 @@ class TestMessageIterator(base.QueuesTestBase):
                     'href': "/v2/queues/mine/messages?marker=6244-244224-783"}
             messages['links'].append(link)
 
-            iterator = iterate._Iterator(self.queue.client,
-                                         messages,
-                                         'messages',
-                                         message.create_object(self.queue))
-            iterated = [msg for msg in iterator.stream()]
+            msg_iterator = iterator._Iterator(
+                self.queue.client,
+                messages,
+                'messages',
+                message.create_object(self.queue))
+            iterated = [msg for msg in msg_iterator.stream()]
             self.assertEqual(len(iterated), 2)
 
     def test_iterator_respect_paging(self):
@@ -95,11 +96,12 @@ class TestMessageIterator(base.QueuesTestBase):
                     'href': "/v2/queues/mine/messages?marker=6244-244224-783"}
             messages['links'].append(link)
 
-            iterator = iterate._Iterator(self.queue.client,
-                                         messages,
-                                         'messages',
-                                         message.create_object(self.queue))
-            iterated = [msg for msg in iterator]
+            msg_iterator = iterator._Iterator(
+                self.queue.client,
+                messages,
+                'messages',
+                message.create_object(self.queue))
+            iterated = [msg for msg in msg_iterator]
             self.assertEqual(len(iterated), 1)
 
 

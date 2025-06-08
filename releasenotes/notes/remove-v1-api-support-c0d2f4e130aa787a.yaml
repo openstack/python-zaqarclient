@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    Support for v1 API and v1.1 API has been removed.

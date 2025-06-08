@@ -16,7 +16,6 @@
 import json
 
 from oslo_utils import importutils
-from oslo_utils import versionutils
 
 from zaqarclient.common import http
 from zaqarclient.transport import base
@@ -78,8 +77,7 @@ class HttpTransport(base.Transport):
         # NOTE(flape87): Do not modify
         # request's headers directly.
         headers = request.headers.copy()
-        if (request.operation == 'queue_update' and
-                versionutils.is_compatible(request.api.label, 'v2')):
+        if request.operation == 'queue_update':
             headers['content-type'] = \
                 'application/openstack-messaging-v2.0-json-patch'
         else:

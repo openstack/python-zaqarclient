@@ -16,12 +16,12 @@
 import json
 from unittest import mock
 
-from zaqarclient.queues.v1 import iterator
+from zaqarclient.queues.v2 import iterator
 from zaqarclient.tests.queues import base
 from zaqarclient.transport import response
 
 
-class QueuesV1_1FlavorUnitTest(base.QueuesTestBase):
+class QueuesV2FlavorUnitTest(base.QueuesTestBase):
 
     def test_flavor_create(self):
         pool_list = ['pool1', 'pool2']
@@ -112,7 +112,7 @@ class QueuesV1_1FlavorUnitTest(base.QueuesTestBase):
             # doesn't crash.
 
 
-class QueuesV1_1FlavorFunctionalTest(base.QueuesTestBase):
+class QueuesV2FlavorFunctionalTest(base.QueuesTestBase):
 
     def test_flavor_create(self):
         pool_data = {'uri': 'mongodb://127.0.0.1:27017',
@@ -184,11 +184,3 @@ class QueuesV1_1FlavorFunctionalTest(base.QueuesTestBase):
         flavor_data = {'pool_list': pool_list}
         flavor = self.client.flavor('tasty', **flavor_data)
         flavor.delete()
-
-
-class QueuesV2FlavorUnitTest(QueuesV1_1FlavorUnitTest):
-    pass
-
-
-class QueuesV2FlavorFunctionalTest(QueuesV1_1FlavorFunctionalTest):
-    pass
