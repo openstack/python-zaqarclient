@@ -170,9 +170,6 @@ class SetQueueMetadata(command.Command):
         client = _get_client(self, parsed_args)
         queue_name = parsed_args.queue_name
         queue_metadata = parsed_args.queue_metadata
-        if (client.api_version == 1 and
-                not client.queue(queue_name, auto_create=False).exists()):
-            raise RuntimeError("Queue(%s) does not exist." % queue_name)
 
         try:
             valid_metadata = json.loads(queue_metadata)
@@ -202,9 +199,6 @@ class GetQueueMetadata(command.ShowOne):
         client = _get_client(self, parsed_args)
         queue_name = parsed_args.queue_name
         queue = client.queue(queue_name, auto_create=False)
-
-        if client.api_version == 1 and not queue.exists():
-            raise RuntimeError("Queue(%s) does not exist." % queue_name)
 
         columns = ("Metadata",)
         data = dict(metadata=queue.metadata())
