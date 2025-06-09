@@ -100,7 +100,7 @@ class Request(object):
                  headers=None, api=None, verify=True, cert=None, session=None):
 
         self._api = None
-        # ensure that some values like "v1.0" could work as "v1"
+        # ensure that some values like "v2.0" could work as "v2"
         self._api_mod = None
         if api and int(api) == api:
             self._api_mod = 'queues.v' + str(int(api))

@@ -83,7 +83,7 @@ class QueuesV2PoolUnitTest(base.QueuesTestBase):
         returned = {
             'links': [{
                 'rel': 'next',
-                'href': '/v1.1/pools?marker=6244-244224-783'
+                'href': '/v2/pools?marker=6244-244224-783'
             }],
             'pools': [{
                 'name': 'stomach',

@@ -36,9 +36,9 @@ class Message(object):
         # necessary? Should this be returned
         # by Zaqar?
         # The url has two forms depending on if it has been claimed.
-        # /v1/queues/worker-jobs/messages/5c6939a8?claim_id=63c9a592
+        # /v2/queues/worker-jobs/messages/5c6939a8?claim_id=63c9a592
         # or
-        # /v1/queues/worker-jobs/messages/5c6939a8
+        # /v2/queues/worker-jobs/messages/5c6939a8
         if id is None:
             self.id = href.split('/')[-1]
             if '?' in self.id:

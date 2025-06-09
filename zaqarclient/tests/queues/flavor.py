@@ -74,7 +74,7 @@ class QueuesV2FlavorUnitTest(base.QueuesTestBase):
         returned = {
             'links': [{
                 'rel': 'next',
-                'href': '/v1.1/flavors?marker=6244-244224-783'
+                'href': '/v2/flavors?marker=6244-244224-783'
             }],
             'flavors': [{
                 'name': 'tasty'

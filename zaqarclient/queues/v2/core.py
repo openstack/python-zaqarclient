@@ -68,7 +68,7 @@ def queue_create(transport, request, name,
     :type request: `transport.request.Request`
     :param name: Queue reference name.
     :type name: str
-    :param metadata: Queue's metadata object. (>=v1.1)
+    :param metadata: Queue's metadata object.
     :type metadata: `dict`
     :param callback: Optional callable to use as callback.
         If specified, this request will be sent asynchronously.

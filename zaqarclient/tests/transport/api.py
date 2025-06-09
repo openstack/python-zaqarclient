@@ -17,7 +17,7 @@ from zaqarclient.transport import api
 
 
 class FakeApi(api.Api):
-    label = 'v1'
+    label = 'v2'
 
     schema = {
         'test_operation': {

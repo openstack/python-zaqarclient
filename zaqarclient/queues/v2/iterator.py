@@ -33,7 +33,7 @@ class _Iterator(object):
     doesn't return more objects after a `next-page` call.
 
     :param client: The client instance used by the queue
-    :type client: `v1.Client`
+    :type client: `v2.Client`
     :param listing_response: Response returned by the listing call
     :type listing_response: Dict
     """

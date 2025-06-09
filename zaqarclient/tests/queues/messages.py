@@ -24,7 +24,7 @@ class QueuesV1MessageUnitTest(base.QueuesTestBase):
 
     def test_message_delete(self):
         returned = {
-            'href': '/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01',
+            'href': '/v2/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01',
             'ttl': 800,
             'age': 790,
             'body': {'event': 'ActivateAccount', 'mode': 'active'}
@@ -43,7 +43,7 @@ class QueuesV1MessageUnitTest(base.QueuesTestBase):
 
     def test_message_delete_with_claim(self):
         returned = {
-            'href': '/v1/queues/fizbit/messages/50b68a50d6?claim_id=5388b5dd0',
+            'href': '/v2/queues/fizbit/messages/50b68a50d6?claim_id=5388b5dd0',
             'ttl': 800,
             'age': 790,
             'body': {'event': 'ActivateAccount', 'mode': 'active'}

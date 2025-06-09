@@ -15,7 +15,7 @@
 """Easy creation of mock Zaqar message replies."""
 
 
-def message(href='/v1/queues/dgq/messages/w78sdwsqdsib',
+def message(href='/v2/queues/dgq/messages/w78sdwsqdsib',
             ttl=0, age=0, body=None):
     body = body or {}
     return {
