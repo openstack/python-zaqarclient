@@ -20,14 +20,14 @@ from stevedore import driver
 from zaqarclient import errors as _errors
 
 
-def get_transport(transport='http', version=1, options=None):
+def get_transport(transport='http', version=2, options=None):
     """Gets a transport and returns it.
 
     :param transport: Transport name.
         Default: http
     :type transport: str
     :param version: Version of the target transport.
-        Default: 1
+        Default: 2
     :type version: int
 
     :returns: A `Transport` instance.
@@ -48,18 +48,18 @@ def get_transport(transport='http', version=1, options=None):
     return mgr.driver
 
 
-def get_transport_for(url_or_request, version=1, options=None):
+def get_transport_for(url_or_request, version=2, options=None):
     """Gets a transport for a given url.
 
     An example transport URL might be::
 
-        zmq://example.org:8888/v1/
+        zmq://example.org:8888/v2/
 
     :param url_or_request: a transport URL
     :type url_or_request: str or
         `zaqarclient.transport.request.Request`
     :param version: Version of the target transport.
-        Default: 1
+        Default: 2
     :type version: int
 
     :returns: A `Transport` instance.

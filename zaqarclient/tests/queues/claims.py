@@ -27,12 +27,12 @@ class QueueV2ClaimUnitTest(base.QueuesTestBase):
 
     def test_claim(self):
         result = [{
-            'href': '/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01',
+            'href': '/v2/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01',
             'ttl': 800,
             'age': 790,
             'body': {'event': 'ActivateAccount', 'mode': 'active'}
         }, {
-            'href': '/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b02',
+            'href': '/v2/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b02',
             'ttl': 800,
             'age': 790,
             'body': {'event': 'ActivateAccount', 'mode': 'active'}
@@ -68,11 +68,11 @@ class QueueV2ClaimUnitTest(base.QueuesTestBase):
 
     def test_claim_get_by_id(self):
         result = {
-            'href': '/v1/queues/fizbit/messages/50b68a50d6cb01?claim_id=4524',
+            'href': '/v2/queues/fizbit/messages/50b68a50d6cb01?claim_id=4524',
             'age': 790,
             'ttl': 800,
             'messages': [{
-                'href': '/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01',
+                'href': '/v2/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01',
                 'ttl': 800,
                 'age': 790,
                 'body': {'event': 'ActivateAccount', 'mode': 'active'}

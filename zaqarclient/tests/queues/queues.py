@@ -117,12 +117,12 @@ class QueuesV2QueueUnitTest(base.QueuesTestBase):
                 "claimed": 2409,
                 "total": 149338,
                 "oldest": {
-                    "href": "/v1/queues/qq/messages/50b68a50d6f5b8c8a7c62b01",
+                    "href": "/v2/queues/qq/messages/50b68a50d6f5b8c8a7c62b01",
                     "age": 63,
                     "created": "2013-08-12T20:44:55Z"
                 },
                 "newest": {
-                    "href": "/v1/queues/qq/messages/50b68a50d6f5b8c8a7c62b01",
+                    "href": "/v2/queues/qq/messages/50b68a50d6f5b8c8a7c62b01",
                     "age": 12,
                     "created": "2013-08-12T20:45:46Z"
                 }
@@ -143,7 +143,7 @@ class QueuesV2QueueUnitTest(base.QueuesTestBase):
 
         result = {
             "resources": [
-                "/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01"
+                "/v2/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01"
             ],
             "partial": False
         }
@@ -161,10 +161,10 @@ class QueuesV2QueueUnitTest(base.QueuesTestBase):
         returned = {
             'links': [{
                 'rel': 'next',
-                'href': '/v1/queues/fizbit/messages?marker=6244-244224-783'
+                'href': '/v2/queues/fizbit/messages?marker=6244-244224-783'
             }],
             'messages': [{
-                'href': '/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01',
+                'href': '/v2/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01',
                 'ttl': 800,
                 'age': 790,
                 'body': {'event': 'ActivateAccount',
@@ -187,12 +187,12 @@ class QueuesV2QueueUnitTest(base.QueuesTestBase):
 
     def test_message_get_many(self):
         returned = [{
-            'href': '/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01',
+            'href': '/v2/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01',
             'ttl': 800,
             'age': 790,
             'body': {'event': 'ActivateAccount', 'mode': 'active'}
         }, {
-            'href': '/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b02',
+            'href': '/v2/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b02',
             'ttl': 800,
             'age': 790,
             'body': {'event': 'ActivateAccount', 'mode': 'active'}
@@ -229,12 +229,12 @@ class QueuesV2QueueUnitTest(base.QueuesTestBase):
 
     def test_message_pop(self):
         returned = [{
-            'href': '/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01',
+            'href': '/v2/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b01',
             'ttl': 800,
             'age': 790,
             'body': {'event': 'ActivateAccount', 'mode': 'active'}
         }, {
-            'href': '/v1/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b02',
+            'href': '/v2/queues/fizbit/messages/50b68a50d6f5b8c8a7c62b02',
             'ttl': 800,
             'age': 790,
             'body': {'event': 'ActivateAccount', 'mode': 'active'}
