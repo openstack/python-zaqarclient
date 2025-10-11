@@ -108,7 +108,7 @@ openstack messaging queue set metadata
 
    usage: openstack messaging queue set metadata [-h] <queue_name> <queue_metadata>
 
-Set queue metadata.All the metadata of the queue will be replaced by 
+Set queue metadata.All the metadata of the queue will be replaced by
 queue_metadata.
 
 **Positional arguments:**
