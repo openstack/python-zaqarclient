@@ -18,7 +18,7 @@ import json
 import requests
 
 
-class Client(object):
+class Client:
 
     def __init__(self, *args, **kwargs):
         self.session = requests.session(*args, **kwargs)

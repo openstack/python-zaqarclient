@@ -16,7 +16,7 @@
 import abc
 
 
-class AuthBackend(object, metaclass=abc.ABCMeta):
+class AuthBackend(metaclass=abc.ABCMeta):
 
     def __init__(self, conf):
         self.conf = conf

@@ -19,7 +19,7 @@ from jsonschema import validators
 from zaqarclient import errors
 
 
-class Api(object):
+class Api:
 
     schema = {}
     label = None
@@ -52,7 +52,7 @@ class Api(object):
             return self.schema[operation]
         except KeyError:
             # TODO(flaper87): gettext support
-            msg = '{0} is not a valid operation'.format(operation)
+            msg = '{} is not a valid operation'.format(operation)
             raise errors.InvalidOperation(msg)
 
     def validate(self, operation, params):

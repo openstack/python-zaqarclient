@@ -34,7 +34,7 @@ def get_transport(transport='http', version=2, options=None):
     :rtype: `zaqarclient.transport.Transport`
     """
 
-    entry_point = '{0}.v{1}'.format(transport, version)
+    entry_point = '{}.v{}'.format(transport, version)
 
     try:
         namespace = 'zaqarclient.transport'

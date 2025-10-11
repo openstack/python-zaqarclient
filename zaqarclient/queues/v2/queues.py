@@ -26,7 +26,7 @@ from zaqarclient.queues.v2 import message
 QUEUE_NAME_REGEX = re.compile(r'^[a-zA-Z0-9_\-]+$')
 
 
-class Queue(object):
+class Queue:
 
     message_module = message
 

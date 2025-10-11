@@ -21,7 +21,7 @@ from zaqarclient.tests.transport import api as tapi
 class TestApi(base.TestBase):
 
     def setUp(self):
-        super(TestApi, self).setUp()
+        super().setUp()
         self.api = tapi.FakeApi()
 
     def test_valid_params(self):

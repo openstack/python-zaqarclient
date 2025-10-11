@@ -16,7 +16,7 @@
 from zaqarclient.queues.v2 import core
 
 
-class Subscription(object):
+class Subscription:
 
     def __init__(self, client, queue_name, subscriber=None, ttl=60, id=None,
                  auto_create=True, **kwargs):

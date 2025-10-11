@@ -35,7 +35,7 @@ class CreateQueue(command.ShowOne):
     log = logging.getLogger(__name__ + ".CreateQueue")
 
     def get_parser(self, prog_name):
-        parser = super(CreateQueue, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "queue_name",
             metavar="<queue_name>",
@@ -57,7 +57,7 @@ class DeleteQueue(command.Command):
     log = logging.getLogger(__name__ + ".DeleteQueue")
 
     def get_parser(self, prog_name):
-        parser = super(DeleteQueue, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "queue_name",
             metavar="<queue_name>",
@@ -77,7 +77,7 @@ class ListQueues(command.Lister):
     log = logging.getLogger(__name__ + ".ListQueues")
 
     def get_parser(self, prog_name):
-        parser = super(ListQueues, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "--marker",
             metavar="<queue_id>",
@@ -125,7 +125,7 @@ class GetQueueStats(command.ShowOne):
     log = logging.getLogger(__name__ + ".GetQueueStats")
 
     def get_parser(self, prog_name):
-        parser = super(GetQueueStats, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "queue_name",
             metavar="<queue_name>",
@@ -154,7 +154,7 @@ class SetQueueMetadata(command.Command):
     log = logging.getLogger(__name__ + ".SetQueueMetadata")
 
     def get_parser(self, prog_name):
-        parser = super(SetQueueMetadata, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "queue_name",
             metavar="<queue_name>",
@@ -188,7 +188,7 @@ class GetQueueMetadata(command.ShowOne):
     log = logging.getLogger(__name__ + ".GetQueueMetadata")
 
     def get_parser(self, prog_name):
-        parser = super(GetQueueMetadata, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "queue_name",
             metavar="<queue_name>",
@@ -212,7 +212,7 @@ class PostMessages(command.Command):
     log = logging.getLogger(__name__ + ".PostMessages")
 
     def get_parser(self, prog_name):
-        parser = super(PostMessages, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "queue_name",
             metavar="<queue_name>",
@@ -252,7 +252,7 @@ class ListMessages(command.Lister):
     log = logging.getLogger(__name__ + ".ListMessages")
 
     def get_parser(self, prog_name):
-        parser = super(ListMessages, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "queue_name",
             metavar="<queue_name>",
@@ -327,7 +327,7 @@ class PurgeQueue(command.Command):
     log = logging.getLogger(__name__ + ".PurgeQueue")
 
     def get_parser(self, prog_name):
-        parser = super(PurgeQueue, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "queue_name",
             metavar="<queue_name>",
@@ -354,7 +354,7 @@ class CreatePool(command.ShowOne):
     log = logging.getLogger(__name__ + ".CreatePool")
 
     def get_parser(self, prog_name):
-        parser = super(CreatePool, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "pool_name",
             metavar="<pool_name>",
@@ -410,7 +410,7 @@ class ShowPool(command.ShowOne):
     log = logging.getLogger(__name__ + ".ShowPool")
 
     def get_parser(self, prog_name):
-        parser = super(ShowPool, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "pool_name",
             metavar="<pool_name>",
@@ -434,7 +434,7 @@ class UpdatePool(command.ShowOne):
     log = logging.getLogger(__name__ + ".UpdatePool")
 
     def get_parser(self, prog_name):
-        parser = super(UpdatePool, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "pool_name",
             metavar="<pool_name>",
@@ -487,7 +487,7 @@ class DeletePool(command.Command):
     log = logging.getLogger(__name__ + ".DeletePool")
 
     def get_parser(self, prog_name):
-        parser = super(DeletePool, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "pool_name",
             metavar="<pool_name>",
@@ -507,7 +507,7 @@ class ListPools(command.Lister):
     log = logging.getLogger(__name__ + ".ListPools")
 
     def get_parser(self, prog_name):
-        parser = super(ListPools, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "--marker",
             metavar="<pool_name>",
@@ -549,7 +549,7 @@ class DeleteFlavor(command.Command):
     log = logging.getLogger(__name__ + ".DeleteFlavor")
 
     def get_parser(self, prog_name):
-        parser = super(DeleteFlavor, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "flavor_name",
             metavar="<flavor_name>",
@@ -569,7 +569,7 @@ class ShowFlavor(command.ShowOne):
     log = logging.getLogger(__name__ + ".ShowFlavor")
 
     def get_parser(self, prog_name):
-        parser = super(ShowFlavor, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "flavor_name",
             metavar="<flavor_name>",
@@ -593,7 +593,7 @@ class ListFlavors(command.Lister):
     log = logging.getLogger(__name__ + ".ListFlavors")
 
     def get_parser(self, prog_name):
-        parser = super(ListFlavors, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "--marker",
             metavar="<flavor_name>",
@@ -633,7 +633,7 @@ class UpdateFlavor(command.ShowOne):
     log = logging.getLogger(__name__ + ".UpdateFlavor")
 
     def get_parser(self, prog_name):
-        parser = super(UpdateFlavor, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "flavor_name",
             metavar="<flavor_name>",
@@ -673,7 +673,7 @@ class CreateFlavor(command.ShowOne):
     log = logging.getLogger(__name__ + ".CreateFlavor")
 
     def get_parser(self, prog_name):
-        parser = super(CreateFlavor, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "flavor_name",
             metavar="<flavor_name>",
@@ -706,7 +706,7 @@ class CreateSubscription(command.ShowOne):
     log = logging.getLogger(__name__ + ".CreateSubscription")
 
     def get_parser(self, prog_name):
-        parser = super(CreateSubscription, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "queue_name",
             metavar="<queue_name>",
@@ -754,7 +754,7 @@ class UpdateSubscription(command.ShowOne):
     log = logging.getLogger(__name__ + ".UpdateSubscription")
 
     def get_parser(self, prog_name):
-        parser = super(UpdateSubscription, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "queue_name",
             metavar="<queue_name>",
@@ -805,7 +805,7 @@ class DeleteSubscription(command.Command):
     log = logging.getLogger(__name__ + ".DeleteSubscription")
 
     def get_parser(self, prog_name):
-        parser = super(DeleteSubscription, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "queue_name",
             metavar="<queue_name>",
@@ -831,7 +831,7 @@ class ShowSubscription(command.ShowOne):
     log = logging.getLogger(__name__ + ".ShowSubscription")
 
     def get_parser(self, prog_name):
-        parser = super(ShowSubscription, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "queue_name",
             metavar="<queue_name>",
@@ -860,7 +860,7 @@ class ListSubscriptions(command.Lister):
     log = logging.getLogger(__name__ + ".ListSubscriptions")
 
     def get_parser(self, prog_name):
-        parser = super(ListSubscriptions, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "queue_name",
             metavar="<queue_name>",
@@ -900,7 +900,7 @@ class CreateClaim(command.Lister):
     log = logging.getLogger(__name__ + ".CreateClaim")
 
     def get_parser(self, prog_name):
-        parser = super(CreateClaim, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "queue_name",
             metavar="<queue_name>",
@@ -953,7 +953,7 @@ class QueryClaim(command.Lister):
     log = logging.getLogger(__name__ + ".QueryClaim")
 
     def get_parser(self, prog_name):
-        parser = super(QueryClaim, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "queue_name",
             metavar="<queue_name>",
@@ -984,7 +984,7 @@ class RenewClaim(command.Lister):
     log = logging.getLogger(__name__ + ".RenewClaim")
 
     def get_parser(self, prog_name):
-        parser = super(RenewClaim, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "queue_name",
             metavar="<queue_name>",
@@ -1033,7 +1033,7 @@ class ReleaseClaim(command.Command):
     log = logging.getLogger(__name__ + ".ReleaseClaim")
 
     def get_parser(self, prog_name):
-        parser = super(ReleaseClaim, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "queue_name",
             metavar="<queue_name>",
@@ -1059,7 +1059,7 @@ class CreateSignedUrl(command.ShowOne):
     log = logging.getLogger(__name__ + ".CreateSignedUrl")
 
     def get_parser(self, prog_name):
-        parser = super(CreateSignedUrl, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument(
             "queue_name",
             metavar="<queue_name>",

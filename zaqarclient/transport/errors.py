@@ -33,14 +33,14 @@ class TransportError(errors.ZaqarError):
     code = None
 
     def __init__(self, title=None, description=None, text=None):
-        msg = 'Error response from Zaqar. Code: {0}.'.format(self.code)
+        msg = 'Error response from Zaqar. Code: {}.'.format(self.code)
         if title:
-            msg += ' Title: {0}.'.format(title)
+            msg += ' Title: {}.'.format(title)
         if description:
-            msg += ' Description: {0}.'.format(description)
+            msg += ' Description: {}.'.format(description)
         if text:
-            msg += ' Text: {0}.'.format(text)
-        super(TransportError, self).__init__(msg)
+            msg += ' Text: {}.'.format(text)
+        super().__init__(msg)
 
 
 class ResourceNotFound(TransportError):

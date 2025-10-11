@@ -24,7 +24,7 @@ from zaqarclient.tests import base
 class TestCommonHttp(base.TestBase):
 
     def setUp(self):
-        super(TestCommonHttp, self).setUp()
+        super().setUp()
         self.client = http.Client()
 
     def test_data_serialization(self):

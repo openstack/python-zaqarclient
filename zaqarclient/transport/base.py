@@ -18,7 +18,7 @@ import abc
 from zaqarclient.transport import errors
 
 
-class Transport(object, metaclass=abc.ABCMeta):
+class Transport(metaclass=abc.ABCMeta):
 
     # common HTTP codes used by multiple transports
     http_to_zaqar = {

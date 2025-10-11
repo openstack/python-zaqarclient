@@ -14,7 +14,7 @@
 # limitations under the License.
 
 
-class _Iterator(object):
+class _Iterator:
     """Base Iterator
 
     This iterator is not meant to be used outside

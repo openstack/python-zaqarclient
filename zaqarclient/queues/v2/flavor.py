@@ -16,7 +16,7 @@
 from zaqarclient.queues.v2 import core
 
 
-class Flavor(object):
+class Flavor:
 
     def __init__(self, client, name,
                  pool_list=None, auto_create=True,

@@ -17,7 +17,7 @@
 from zaqarclient.queues.v2 import core
 
 
-class Message(object):
+class Message:
     """A handler for Zaqar server Message resources.
 
     Attributes are only downloaded once - at creation time.

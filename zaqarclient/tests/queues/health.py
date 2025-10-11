@@ -23,10 +23,13 @@ from zaqarclient.transport import response
 class QueuesV2HealthUnitTest(base.QueuesTestBase):
 
     def test_health(self):
-        expect_health = {u'catalog_reachable': True,
-                         u'redis': {u'operation_status': {},
-                                    u'storage_reachable': True}
-                         }
+        expect_health = {
+            'catalog_reachable': True,
+            'redis': {
+                'operation_status': {},
+                'storage_reachable': True
+            }
+        }
 
         with mock.patch.object(self.transport, 'send',
                                autospec=True) as send_method:

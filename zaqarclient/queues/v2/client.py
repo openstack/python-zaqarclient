@@ -24,7 +24,7 @@ from zaqarclient import transport
 from zaqarclient.transport import request
 
 
-class Client(object):
+class Client:
     """Client base class
 
     :param url: Zaqar's instance base url.

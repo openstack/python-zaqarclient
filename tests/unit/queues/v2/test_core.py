@@ -27,7 +27,7 @@ from zaqarclient.transport import response
 class TestV2Core(base.TestBase):
 
     def setUp(self):
-        super(TestV2Core, self).setUp()
+        super().setUp()
         self.transport = dummy.DummyTransport(self.conf)
 
     def test_queue_create(self):

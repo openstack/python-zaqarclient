@@ -27,7 +27,7 @@ osprofiler_web = importutils.try_import("osprofiler.web")
 class HttpTransport(base.Transport):
 
     def __init__(self, options):
-        super(HttpTransport, self).__init__(options)
+        super().__init__(options)
         self.client = http.Client()
 
     def _prepare(self, request):
@@ -66,9 +66,9 @@ class HttpTransport(base.Transport):
 
                 ref_params[param] = value
 
-        url = '{0}/{1}/{2}'.format(request.endpoint.rstrip('/'),
-                                   request.api.label,
-                                   ref.format(**ref_params))
+        url = '{}/{}/{}'.format(request.endpoint.rstrip('/'),
+                                request.api.label,
+                                ref.format(**ref_params))
         return url, schema.get('method', 'GET'), request
 
     def send(self, request):

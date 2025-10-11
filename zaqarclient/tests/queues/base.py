@@ -36,7 +36,7 @@ class QueuesTestBase(base.TestBase):
     version = 2
 
     def setUp(self):
-        super(QueuesTestBase, self).setUp()
+        super().setUp()
         self.transport = self.transport_cls(self.conf)
 
         self.client = client.Client(self.url, self.version,

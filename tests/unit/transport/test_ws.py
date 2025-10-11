@@ -21,7 +21,7 @@ from zaqarclient.transport import ws
 class TestWsTransport(base.TestBase):
 
     def setUp(self):
-        super(TestWsTransport, self).setUp()
+        super().setUp()
         os_opts = {
             'os_auth_token': 'FAKE_TOKEN',
             'os_auth_url': 'http://127.0.0.0:5000/v3',

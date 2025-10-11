@@ -16,7 +16,7 @@
 from zaqarclient.queues.v2 import core
 
 
-class Pool(object):
+class Pool:
 
     def __init__(self, client, name,
                  weight=None, uri=None,

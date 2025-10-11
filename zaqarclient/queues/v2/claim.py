@@ -18,7 +18,7 @@ from zaqarclient.queues.v2 import iterator
 from zaqarclient.queues.v2 import message
 
 
-class Claim(object):
+class Claim:
     def __init__(self, queue, id=None,
                  ttl=None, grace=None, limit=None):
         self._queue = queue

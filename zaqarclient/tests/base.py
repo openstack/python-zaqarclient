@@ -31,7 +31,7 @@ class TestBase(testtools.TestCase):
     is_functional = False
 
     def setUp(self):
-        super(TestBase, self).setUp()
+        super().setUp()
 
         self.conf = {
             'auth_opts': {

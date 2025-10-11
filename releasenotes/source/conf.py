@@ -54,8 +54,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'ZaqarClientReleaseNotes'
-copyright = u'2016, OpenStack Foundation'
+project = 'ZaqarClientReleaseNotes'
+copyright = '2016, OpenStack Foundation'
 
 # Release notes are version independent.
 # The short X.Y version.
@@ -203,8 +203,8 @@ latex_elements = {}
 # author, documentclass [howto, manual, or own class]).
 latex_documents = [
     ('index', 'ZaqarClientReleaseNotes.tex',
-     u'ZaqarClient ReleaseNotes Documentation',
-     u'OpenStack Foundation', 'manual'),
+     'ZaqarClient ReleaseNotes Documentation',
+     'OpenStack Foundation', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -234,8 +234,8 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'ZaqarClientReleaseNotes',
-     u'ZaqarClient ReleaseNotes Documentation',
-     [u'OpenStack Foundation'], 1)
+     'ZaqarClient ReleaseNotes Documentation',
+     ['OpenStack Foundation'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -249,8 +249,8 @@ man_pages = [
 # dir menu entry, description, category)
 texinfo_documents = [
     ('index', 'ZaqarClientReleaseNotes',
-     u'ZaqarClient ReleaseNotes Documentation',
-     u'OpenStack Foundation', 'ZaqarClientReleaseNotes',
+     'ZaqarClient ReleaseNotes Documentation',
+     'OpenStack Foundation', 'ZaqarClientReleaseNotes',
      'One line description of project.',
      'Miscellaneous'),
 ]

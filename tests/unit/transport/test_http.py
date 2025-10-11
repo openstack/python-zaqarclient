@@ -29,7 +29,7 @@ class TestHttpTransport(base.TestBase):
     """Tests for the HTTP transport."""
 
     def setUp(self):
-        super(TestHttpTransport, self).setUp()
+        super().setUp()
         self.api = api.FakeApi()
         self.transport = http.HttpTransport(self.conf)
 

@@ -65,7 +65,7 @@ def prepare_request(auth_opts=None, data=None, **kwargs):
     return req
 
 
-class Request(object):
+class Request:
     """General data for a Zaqar request
 
     The idea is to be declarative i.e. specify *what* is desired. It's up to

@@ -417,9 +417,9 @@ class QueuesV2QueueFunctionalTest(base.QueuesTestBase):
         messages = list(messages)
         length = len(messages)
         if length == 3:
-            bodies = set(message.body for message in messages)
+            bodies = {message.body for message in messages}
             self.assertEqual(
-                set(['Post It 1!', 'Post It 2!', 'Post It 3!']), bodies)
+                {'Post It 1!', 'Post It 2!', 'Post It 3!'}, bodies)
         elif length == 1:
             # FIXME(therve): Old broken behavior, remove it as some point
             pass

@@ -53,7 +53,7 @@ class QueuesV2SubscriptionUnitTest(base.QueuesTestBase):
         with mock.patch.object(self.transport.client, 'request',
                                autospec=True) as request_method:
 
-            class FakeRawResponse(object):
+            class FakeRawResponse:
                 def __init__(self):
                     self.text = ''
                     self.headers = {}
@@ -182,7 +182,7 @@ class QueuesV2SubscriptionUnitTest(base.QueuesTestBase):
 class QueuesV2SubscriptionFunctionalTest(base.QueuesTestBase):
 
     def setUp(self):
-        super(QueuesV2SubscriptionFunctionalTest, self).setUp()
+        super().setUp()
 
         self.queue_name = 'beijing'
         queue = self.client.queue(self.queue_name, force_create=True)

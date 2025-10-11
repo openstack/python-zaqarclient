@@ -16,7 +16,7 @@
 import json
 
 
-class Response(object):
+class Response:
     """Common response class for Zaqarclient.
 
     All `zaqarclient.transport.base.Transport` implementations

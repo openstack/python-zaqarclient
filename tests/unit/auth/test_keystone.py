@@ -26,7 +26,7 @@ from zaqarclient.transport import request
 class TestKeystoneAuth(base.TestBase):
 
     def setUp(self):
-        super(TestKeystoneAuth, self).setUp()
+        super().setUp()
 
         self.auth = auth.get_backend(options=self.conf)
 
