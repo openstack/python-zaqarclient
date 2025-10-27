@@ -1,3 +1,91 @@
 [build-system]
 requires = ["pbr>=6.1.1"]
 build-backend = "pbr.build"
+
+[project]
+name = "python-zaqarclient"
+description = "Client Library for OpenStack Zaqar Messaging API"
+authors = [
+    {name = "OpenStack", email = "openstack-discuss@lists.openstack.org"},
+]
+readme = {file = "README.rst", content-type = "text/x-rst"}
+license = {text = "Apache-2.0"}
+dynamic = ["version", "dependencies"]
+requires-python = ">=3.11"
+classifiers = [
+  "Environment :: Console",
+  "Environment :: OpenStack",
+  "Intended Audience :: Information Technology",
+  "Intended Audience :: Developers",
+  "Intended Audience :: System Administrators",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: Implementation :: CPython",
+]
+
+[project.urls]
+Homepage = "https://docs.openstack.org/python-zaqarclient"
+Repository = "https://opendev.org/openstack/python-zaqarclient"
+
+[project.optional-dependencies]
+websocket = [
+    "websocket-client>=0.44.0", # LGPLv2+
+]
+
+[tool.setuptools]
+packages = [
+    "zaqarclient"
+]
+
+[project.entry-points."zaqarclient.transport"]
+"http.v2" = "zaqarclient.transport.http:HttpTransport"
+"https.v2" = "zaqarclient.transport.http:HttpTransport"
+"ws.v2" = "zaqarclient.transport.ws:WebsocketTransport"
+"wss.v2" = "zaqarclient.transport.ws:WebsocketTransport"
+
+[project.entry-points."zaqarclient.api"]
+"queues.v2" = "zaqarclient.queues.v2.api:V2"
+
+[project.entry-points."openstack.cli.extension"]
+messaging = "zaqarclient.queues.cli"
+
+[project.entry-points."openstack.messaging.v2"]
+messaging_queue_list = "zaqarclient.queues.v2.cli:ListQueues"
+messaging_queue_create = "zaqarclient.queues.v2.cli:CreateQueue"
+messaging_queue_delete = "zaqarclient.queues.v2.cli:DeleteQueue"
+messaging_queue_stats = "zaqarclient.queues.v2.cli:GetQueueStats"
+messaging_queue_set_metadata = "zaqarclient.queues.v2.cli:SetQueueMetadata"
+messaging_queue_get_metadata = "zaqarclient.queues.v2.cli:GetQueueMetadata"
+messaging_queue_purge = "zaqarclient.queues.v2.cli:PurgeQueue"
+messaging_pool_create = "zaqarclient.queues.v2.cli:CreatePool"
+messaging_pool_show = "zaqarclient.queues.v2.cli:ShowPool"
+messaging_pool_update = "zaqarclient.queues.v2.cli:UpdatePool"
+messaging_pool_delete = "zaqarclient.queues.v2.cli:DeletePool"
+messaging_pool_list = "zaqarclient.queues.v2.cli:ListPools"
+messaging_flavor_list = "zaqarclient.queues.v2.cli:ListFlavors"
+messaging_flavor_delete = "zaqarclient.queues.v2.cli:DeleteFlavor"
+messaging_flavor_update = "zaqarclient.queues.v2.cli:UpdateFlavor"
+messaging_flavor_show = "zaqarclient.queues.v2.cli:ShowFlavor"
+messaging_flavor_create = "zaqarclient.queues.v2.cli:CreateFlavor"
+messaging_claim_create = "zaqarclient.queues.v2.cli:CreateClaim"
+messaging_claim_query = "zaqarclient.queues.v2.cli:QueryClaim"
+messaging_claim_renew = "zaqarclient.queues.v2.cli:RenewClaim"
+messaging_claim_release = "zaqarclient.queues.v2.cli:ReleaseClaim"
+messaging_subscription_create = "zaqarclient.queues.v2.cli:CreateSubscription"
+messaging_subscription_update = "zaqarclient.queues.v2.cli:UpdateSubscription"
+messaging_subscription_delete = "zaqarclient.queues.v2.cli:DeleteSubscription"
+messaging_subscription_show = "zaqarclient.queues.v2.cli:ShowSubscription"
+messaging_subscription_list = "zaqarclient.queues.v2.cli:ListSubscriptions"
+messaging_queue_signed_url = "zaqarclient.queues.v2.cli:CreateSignedUrl"
+messaging_ping = "zaqarclient.queues.v2.cli:Ping"
+messaging_health = "zaqarclient.queues.v2.cli:Health"
+messaging_homedoc = "zaqarclient.queues.v2.cli:HomeDoc"
+messaging_message_post = "zaqarclient.queues.v2.cli:PostMessages"
+messaging_message_list = "zaqarclient.queues.v2.cli:ListMessages"
