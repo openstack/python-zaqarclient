@@ -1,14 +1,10 @@
-========================
-Team and repository tags
-========================
-
-.. image:: http://governance.openstack.org/tc/badges/python-zaqarclient.svg
-    :target: http://governance.openstack.org/tc/reference/tags/index.html
-
-.. Change things from this point on
-
+===================
 Python Zaqar Client
 ===================
+
+.. image:: http://governance.openstack.org/tc/badges/python-zaqarclient.svg
+
+.. Change things from this point on
 
 .. image:: https://img.shields.io/pypi/v/python-zaqarclient.svg
     :target: https://pypi.org/project/python-zaqarclient/
