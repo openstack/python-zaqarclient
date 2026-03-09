@@ -113,7 +113,7 @@ class ListQueues(command.Lister):
 
         data, count = client.queues(**kwargs)
         if count:
-            print("Queues in total: %s" % count)
+            self.log.debug("Queues in total: %s" % count)
         columns = tuple(columns)
         return (columns, (utils.get_item_properties(s, columns) for s in data))
 
@@ -1091,9 +1091,9 @@ class CreateSignedUrl(command.ShowOne):
 
         paths = parsed_args.paths.split(',')
         if not all([p in self.allowed_paths for p in paths]):
-            print("Invalid path supplied! Received {}. "
-                  "Valid paths are: messages, subscriptions, "
-                  "claims".format(','.join(paths)))
+            self.log.warning("Invalid path supplied! Received %s. "
+                             "Valid paths are: messages, subscriptions, "
+                             "claims", ','.join(paths))
 
         kwargs = {
             'methods': parsed_args.methods.split(','),
