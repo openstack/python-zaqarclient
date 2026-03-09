@@ -15,6 +15,11 @@
 
 import json
 
+from oslo_log import log as logging
+
+
+LOG = logging.getLogger(__name__)
+
 
 class Response:
     """Common response class for Zaqarclient.
@@ -51,5 +56,5 @@ class Response:
                 self._deserialized = json.loads(self.content)
             return self._deserialized
         except ValueError as ex:
-            print("Response is not a JSON object.", ex)
+            LOG.warning("Response is not a JSON object.: %s", ex)
         return None
