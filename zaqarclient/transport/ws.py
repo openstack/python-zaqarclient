@@ -56,6 +56,9 @@ class WebsocketTransport(base.Transport):
 
     """
     def __init__(self, options):
+        if not websocket:
+            raise RuntimeError('The websocket-client library is not installed')
+
         super().__init__(options)
         option = options['auth_opts']['options']
         # TODO(wangxiyuan): To keep backwards compatibility, we leave

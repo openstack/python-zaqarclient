@@ -9,3 +9,5 @@ stestr>=1.0.0 # Apache-2.0
 coverage!=4.4,>=4.0 # Apache-2.0
 
 ddt>=1.0.1 # MIT
+
+websocket-client>=0.44.0 # LGPLv2+
