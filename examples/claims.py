@@ -41,7 +41,7 @@ def process_jobs():
     claim1 = queue.claim(ttl=500, grace=900, limit=2)
     for msg in claim1:
         claim_id = msg.claim_id
-        print('{claim_id} =? {id}'.format(claim_id=claim_id, id=claim1.id))
+        print(f'{claim_id} =? {claim1.id}')
         print('processing job %s' % (msg))
         msg.delete()
         time.sleep(0.5)

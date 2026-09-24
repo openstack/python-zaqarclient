@@ -33,13 +33,13 @@ class TransportError(errors.ZaqarError):
     code = None
 
     def __init__(self, title=None, description=None, text=None):
-        msg = 'Error response from Zaqar. Code: {}.'.format(self.code)
+        msg = f'Error response from Zaqar. Code: {self.code}.'
         if title:
-            msg += ' Title: {}.'.format(title)
+            msg += f' Title: {title}.'
         if description:
-            msg += ' Description: {}.'.format(description)
+            msg += f' Description: {description}.'
         if text:
-            msg += ' Text: {}.'.format(text)
+            msg += f' Text: {text}.'
         super().__init__(msg)
 
 

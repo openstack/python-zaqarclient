@@ -54,7 +54,7 @@ class HttpTransport(base.Transport):
         ref = ref.lstrip('/' + request.api.label)
 
         for param in list(request.params.keys()):
-            if '{{{0}}}'.format(param) in ref:
+            if f'{{{param}}}' in ref:
                 value = request.params.pop(param)
 
                 # NOTE(flaper87): Zaqar API parses

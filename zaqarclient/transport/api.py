@@ -52,7 +52,7 @@ class Api:
             return self.schema[operation]
         except KeyError:
             # TODO(flaper87): gettext support
-            msg = '{} is not a valid operation'.format(operation)
+            msg = f'{operation} is not a valid operation'
             raise errors.InvalidOperation(msg)
 
     def validate(self, operation, params):
