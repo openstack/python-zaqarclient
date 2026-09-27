@@ -44,14 +44,6 @@ class V2(api.Api):
                 'queue_name': {'type': 'string'}
             }
         },
-        'queue_exists': {
-            'ref': 'queues/{queue_name}',
-            'method': 'HEAD',
-            'required': ['queue_name'],
-            'properties': {
-                'queue_name': {'type': 'string'}
-            }
-        },
         'queue_update': {
             'ref': 'queues/{queue_name}',
             'method': 'PATCH',
