@@ -110,29 +110,78 @@ def queue_update(transport, request, name, metadata, callback=None):
 
 
 def queue_exists(transport, request, name, callback=None):
-    """Checks if the queue exists."""
+    """Checks if the queue exists.
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param name: Queue reference name.
+    :type name: str
+    :param callback: Optional callable to use as callback.
+        If specified, this request will be sent asynchronously.
+        (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
+    :type callback: Callable object.
+    """
     try:
-        _common_queue_ops('queue_exists', transport,
-                          request, name, callback=callback)
+        queue_get(transport, request, name, callback=callback)
         return True
     except errors.ResourceNotFound:
         return False
 
 
 def queue_get(transport, request, name, callback=None):
-    """Retrieve a queue."""
+    """Retrieve a queue.
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param name: Queue reference name.
+    :type name: str
+    :param callback: Optional callable to use as callback.
+        If specified, this request will be sent asynchronously.
+        (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
+    :type callback: Callable object.
+    """
     return _common_queue_ops('queue_get', transport,
                              request, name, callback=callback)
 
 
 def queue_get_metadata(transport, request, name, callback=None):
-    """Gets queue metadata."""
+    """Gets queue metadata.
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param name: Queue reference name.
+    :type name: str
+    :param callback: Optional callable to use as callback.
+        If specified, this request will be sent asynchronously.
+        (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
+    :type callback: Callable object.
+    """
     return _common_queue_ops('queue_get_metadata', transport,
                              request, name, callback=callback)
 
 
 def queue_set_metadata(transport, request, name, metadata, callback=None):
-    """Sets queue metadata."""
+    """Sets queue metadata.
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param name: Queue reference name.
+    :type name: str
+    :param metadata: Queue's metadata object.
+    :type metadata: `list`
+    :param callback: Optional callable to use as callback.
+        If specified, this request will be sent asynchronously.
+        (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
+    :type callback: Callable object.
+    """
 
     request.operation = 'queue_set_metadata'
     request.params['queue_name'] = name
@@ -147,7 +196,19 @@ def queue_get_stats(transport, request, name):
 
 
 def queue_delete(transport, request, name, callback=None):
-    """Deletes queue."""
+    """Deletes queue.
+
+    :param transport: Transport instance to use
+    :type transport: `transport.base.Transport`
+    :param request: Request instance ready to be sent.
+    :type request: `transport.request.Request`
+    :param name: Queue reference name.
+    :type name: str
+    :param callback: Optional callable to use as callback.
+        If specified, this request will be sent asynchronously.
+        (IGNORED UNTIL ASYNC SUPPORT IS COMPLETE)
+    :type callback: Callable object.
+    """
     return _common_queue_ops('queue_delete', transport,
                              request, name, callback=callback)
 
